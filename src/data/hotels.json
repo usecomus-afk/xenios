@@ -1,0 +1,2969 @@
+[
+  {
+    "id": "hotel-1",
+    "name": "Hotel Sultanahmet",
+    "district": "Sultanahmet / Fatih",
+    "type": "Butik Otel",
+    "address": "Alemdar Divanyolu Cd. No:20 Fatih/İstanbul",
+    "phone": "+90 545 652 23 34",
+    "website": "http://www.hotelsultanahmet.com/",
+    "ratingStr": "3.9 (350+ Yorum)",
+    "targetReason": "Teraslı turist yoğunluğu yüksek otel",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Hotel_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Hotel_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Hotel_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Hotel_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Hotel_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Hotel_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": true
+  },
+  {
+    "id": "hotel-2",
+    "name": "Erba Hotel & Cafe Sultanahmet",
+    "district": "Sultanahmet / Fatih",
+    "type": "Butik Otel & Kafe",
+    "address": "Alemdar Molla Fenari Çk. No:1 Fatih/İstanbul",
+    "phone": "+90 212 522 91 49",
+    "website": "https://maps.google.com/?cid=9121922336440533536",
+    "ratingStr": "5.0 (130+ Yorum)",
+    "targetReason": "Yabancı turist yoğunluklu tarihi bölge",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Erba_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Erba_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Erba_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Erba_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Erba_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Erba_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": true
+  },
+  {
+    "id": "hotel-3",
+    "name": "Madrigal Boutique Hotel",
+    "district": "Sultanahmet / Fatih",
+    "type": "Tasarım Butik Otel",
+    "address": "Alemdar Dr. Eminpaşa Sk. No:8 Fatih/İstanbul",
+    "phone": "+90 532 308 92 47",
+    "website": "https://madrigalhotel.com/",
+    "ratingStr": "4.5 (15+ Yorum)",
+    "targetReason": "Lüks turiste yönelik oda içi concierge ihtiyacı",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Madrigal_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Madrigal_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Madrigal_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Madrigal_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Madrigal_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Madrigal_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": true
+  },
+  {
+    "id": "hotel-4",
+    "name": "Blu Ma'Cel Sultanahmet Boutique Hotel",
+    "district": "Sultanahmet / Fatih",
+    "type": "Lüks Butik Otel",
+    "address": "Sultanahmet Konut Sk. No:4 Fatih/İstanbul",
+    "phone": "+90 212 458 18 65",
+    "website": "https://blumacel.com/",
+    "ratingStr": "4.9 (335+ Yorum)",
+    "targetReason": "Yüksek memnuniyetli turiste tur/transfer satışı",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Blu_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Blu_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Blu_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Blu_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Blu_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Blu_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": true
+  },
+  {
+    "id": "hotel-5",
+    "name": "Boutique Sultan Hotel",
+    "district": "Sultanahmet / Fatih",
+    "type": "Bütçe Dostu Butik Otel",
+    "address": "Küçük Ayasofya Aksakal Sk. No:10 Fatih/İstanbul",
+    "phone": "+90 536 553 14 34",
+    "website": "https://maps.google.com/?cid=13214571936551061811",
+    "ratingStr": "4.0 (135+ Yorum)",
+    "targetReason": "Cazip ek gelir arayan bağımsız otel",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Boutique_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Boutique_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Boutique_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Boutique_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Boutique_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Boutique_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": true
+  },
+  {
+    "id": "hotel-6",
+    "name": "Mitspark Hotel",
+    "district": "Sultanahmet / Fatih",
+    "type": "Sultanahmet Butik Otel",
+    "address": "Cankurtaran Cankurtaran Cd. No:24 Fatih/İstanbul",
+    "phone": "+90 212 560 10 00",
+    "website": "https://www.mitspark.com/",
+    "ratingStr": "4.7 (100+ Yorum)",
+    "targetReason": "Müzelere yakın turiste tur yönlendirme",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Mitspark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Mitspark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Mitspark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Mitspark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Mitspark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Mitspark_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": true
+  },
+  {
+    "id": "hotel-7",
+    "name": "Saratoga Hotel Sultanahmet",
+    "district": "Sultanahmet / Fatih",
+    "type": "3 Yıldızlı Butik Otel",
+    "address": "Küçük Ayasofya Nakilbent Sk. No:25 Fatih/İstanbul",
+    "phone": "+90 532 459 14 32",
+    "website": "http://www.saratoga.com.tr/",
+    "ratingStr": "4.6 (225+ Yorum)",
+    "targetReason": "Uzun konaklayan turiste pasif gelir fırsatı",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Saratoga_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Saratoga_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Saratoga_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Saratoga_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Saratoga_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Saratoga_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-8",
+    "name": "No:12 Hotel Sultanahmet",
+    "district": "Sultanahmet / Fatih",
+    "type": "Tarihi Butik Otel",
+    "address": "Alemdar Prof. Kazım İsmail Gürkan Cd. No:12 Fatih/İstanbul",
+    "phone": "+90 212 621 64 65",
+    "website": "http://www.no12hotelsultanahmet.com/",
+    "ratingStr": "4.7 (1390+ Yorum)",
+    "targetReason": "Tarihi yarımada yürüyüş turu yönlendirmesi",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "No:12_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "No:12_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "No:12_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "No:12_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "No:12_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "No:12_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-9",
+    "name": "AJWA Sultanahmet",
+    "district": "Sultanahmet / Fatih",
+    "type": "Lüks 5 Yıldızlı Butik Otel",
+    "address": "Emin Sinan Piyer Loti Cd. No:30 Fatih/İstanbul",
+    "phone": "+90 212 638 22 00",
+    "website": "https://www.ajwa.com.tr/",
+    "ratingStr": "4.7 (1190+ Yorum)",
+    "targetReason": "Lüks segment VIP transfer ve tur satışı",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "AJWA_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "AJWA_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "AJWA_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "AJWA_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "AJWA_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "AJWA_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-10",
+    "name": "Bonita Apart",
+    "district": "Sultanahmet / Fatih",
+    "type": "Apart Otel / Daire",
+    "address": "Cankurtaran Kutlugün Sk. No:14/A Fatih/İstanbul",
+    "phone": "+90 530 544 21 41",
+    "website": "https://bonitaapart.com/",
+    "ratingStr": "4.7 (180+ Yorum)",
+    "targetReason": "Resepsiyonsuz dairelere dijital rehber ihtiyacı",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Bonita_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Bonita_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Bonita_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Bonita_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Bonita_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Bonita_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-11",
+    "name": "Sultanahmet Apart Hotel House",
+    "district": "Sultanahmet / Fatih",
+    "type": "Kiralık Apart Daireler",
+    "address": "Küçük Ayasofya Şht. Mehmetpaşa Ykş. No:46 Fatih/İstanbul",
+    "phone": "+90 553 160 15 23",
+    "website": "https://maps.google.com/?cid=6282823611310189219",
+    "ratingStr": "4.8 (25+ Yorum)",
+    "targetReason": "Avisiz bağımsız host işletmesi",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-12",
+    "name": "Özdemir Apart Sultanahmet",
+    "district": "Sultanahmet / Fatih",
+    "type": "Aile Tipi Apart Daire",
+    "address": "Cankurtaran Cankurtaran Cd. No:15 Fatih/İstanbul",
+    "phone": "+90 535 321 20 53",
+    "website": "https://www.instagram.com/ozdemirapart",
+    "ratingStr": "5.0 (160+ Yorum)",
+    "targetReason": "Park ve deniz manzaralı turist dairesi",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Özdemir_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Özdemir_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Özdemir_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Özdemir_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Özdemir_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Özdemir_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-13",
+    "name": "Sultanahmet Timeks Apart",
+    "district": "Sultanahmet / Fatih",
+    "type": "Apart Otel",
+    "address": "Sultanahmet Oğul Sk. No:8 Fatih/İstanbul",
+    "phone": "+90 212 516 60 84",
+    "website": "https://maps.google.com/?cid=12140417933100652812",
+    "ratingStr": "3.7 (40+ Yorum)",
+    "targetReason": "Havalimanı transferi komisyonu kazanma",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-14",
+    "name": "Sah Apart Hotel",
+    "district": "Sultanahmet / Fatih",
+    "type": "Guesthouse / Apart",
+    "address": "Binbirdirek Babayani Sk. No:4 Fatih/İstanbul",
+    "phone": "Online Form / WhatsApp",
+    "website": "https://maps.google.com/?cid=14013146435345795086",
+    "ratingStr": "4.8 (20+ Yorum)",
+    "targetReason": "Sultanahmet manzaralı apart daireler",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Sah_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Sah_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Sah_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Sah_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Sah_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Sah_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-15",
+    "name": "Medellin Apart Hotel",
+    "district": "Sultanahmet / Fatih",
+    "type": "Bütçe Dostu Apart",
+    "address": "Sultanahmet Kupacılar Sk. No:6 Fatih/İstanbul",
+    "phone": "+90 537 660 02 17",
+    "website": "http://medellin-apart-hotel-istanbul.hotel-istanbul.net/",
+    "ratingStr": "3.9 (85+ Yorum)",
+    "targetReason": "QR ile oda içi talep toplama",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Medellin_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Medellin_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Medellin_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Medellin_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Medellin_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Medellin_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-16",
+    "name": "Deluxe Valeria Sultanahmet",
+    "district": "Sultanahmet / Fatih",
+    "type": "Butik Apart Otel",
+    "address": "Emin Sinan Cephaneci Sk. No:15 Fatih/İstanbul",
+    "phone": "+90 542 214 40 03",
+    "website": "https://maps.google.com/?cid=3121966141386764878",
+    "ratingStr": "3.2 (220+ Yorum)",
+    "targetReason": "Operasyonel yükü dijitalleştirme",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Deluxe_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Deluxe_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Deluxe_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Deluxe_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Deluxe_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Deluxe_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-17",
+    "name": "Sultanahmet Music House",
+    "district": "Sultanahmet / Fatih",
+    "type": "Deniz Manzaralı Guesthouse",
+    "address": "Sultanahmet Oyuncu Çk. No:10 Fatih/İstanbul",
+    "phone": "+90 544 349 33 36",
+    "website": "https://www.facebook.com/apart.inistanbul/",
+    "ratingStr": "4.7 (115+ Yorum)",
+    "targetReason": "Teraslı bağımsız turist evi",
+    "coords": {
+      "lat": 41.0054,
+      "lng": 28.9768
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Sultanahmet_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-18",
+    "name": "P. Galata Boutique Hotel",
+    "district": "Galata & Karaköy / Beyoğlu",
+    "type": "Tasarım Butik Otel",
+    "address": "Müeyyetzade Aynalı Lokanta Sk. No:6 Beyoğlu/İstanbul",
+    "phone": "+90 212 243 77 71",
+    "website": "https://www.pgalata.com/",
+    "ratingStr": "4.2 (465+ Yorum)",
+    "targetReason": "Karaköy vapur/transfer yönlendirmesi",
+    "coords": {
+      "lat": 41.0369,
+      "lng": 28.9775
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "P._Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "P._Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "P._Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "P._Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "P._Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "P._Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-19",
+    "name": "Aşeka Karaköy Suite",
+    "district": "Galata & Karaköy / Beyoğlu",
+    "type": "Lüks Apart & Restoran",
+    "address": "Müeyyetzade Arap Oğlan Sk. No:6 Beyoğlu/İstanbul",
+    "phone": "+90 530 398 54 04",
+    "website": "https://www.aseka.co/",
+    "ratingStr": "4.7 (640+ Yorum)",
+    "targetReason": "Fine-dining & tur eşleştirme",
+    "coords": {
+      "lat": 41.0369,
+      "lng": 28.9775
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Aşeka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Aşeka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Aşeka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Aşeka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Aşeka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Aşeka_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-20",
+    "name": "Glow Balat Apart Suites",
+    "district": "Galata & Karaköy / Beyoğlu",
+    "type": "Kültürel Apart Daireler",
+    "address": "Ayvansaray Balat Leblebiciler Sk. No:9C Fatih/İstanbul",
+    "phone": "+90 545 534 12 35",
+    "website": "https://glowbalat.com/",
+    "ratingStr": "5.0 (20+ Yorum)",
+    "targetReason": "Atölye ve kültür turu satışı",
+    "coords": {
+      "lat": 41.0369,
+      "lng": 28.9775
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Glow_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Glow_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Glow_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Glow_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Glow_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Glow_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-21",
+    "name": "Elegance Apart Hotel Cihangir",
+    "district": "Cihangir & Taksim / Beyoğlu",
+    "type": "Profesyonel Apart Otel",
+    "address": "Katip Mustafa Çelebi Sadri Alışık Sk. No:45 Beyoğlu/İstanbul",
+    "phone": "+90 536 061 93 02",
+    "website": "https://maps.google.com/?cid=17782161386121408771",
+    "ratingStr": "4.5 (150+ Yorum)",
+    "targetReason": "İstiklal turisti için gece/gezi turları",
+    "coords": {
+      "lat": 41.0369,
+      "lng": 28.9775
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Elegance_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Elegance_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Elegance_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Elegance_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Elegance_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Elegance_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-22",
+    "name": "Apart 71 Taksim",
+    "district": "Cihangir & Taksim / Beyoğlu",
+    "type": "Taksim Aile Apartı",
+    "address": "Şehit Muhtar Tarlabaşı Blv. No:70 Beyoğlu/İstanbul",
+    "phone": "+90 536 870 08 04",
+    "website": "https://maps.google.com/?cid=17032128766100513148",
+    "ratingStr": "4.9 (70+ Yorum)",
+    "targetReason": "Metroya yakın turiste transfer imkanı",
+    "coords": {
+      "lat": 41.0369,
+      "lng": 28.9775
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Apart_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Apart_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Apart_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Apart_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Apart_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Apart_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-23",
+    "name": "Petra Otel Suit",
+    "district": "Cihangir & Taksim / Beyoğlu",
+    "type": "Taksim Suit Daireler",
+    "address": "Çukur Demirbaş Sk. No:9 Beyoğlu/İstanbul",
+    "phone": "+90 539 429 34 56",
+    "website": "http://34taksimapart.com/",
+    "ratingStr": "3.8 (90+ Yorum)",
+    "targetReason": "Otomatik QR concierge kullanımı",
+    "coords": {
+      "lat": 41.0369,
+      "lng": 28.9775
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Petra_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Petra_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Petra_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Petra_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Petra_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Petra_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-24",
+    "name": "Pasaport Pier Hotel",
+    "district": "Kadıköy & Moda",
+    "type": "Tarihi Butik Otel",
+    "address": "Caferağa Güner Sk. No:2 Kadıköy/İstanbul",
+    "phone": "+90 216 450 22 23",
+    "website": "https://istanbulpasaportpier.com/",
+    "ratingStr": "3.4 (550+ Yorum)",
+    "targetReason": "Kadıköy yemek turları ve deniz ulaşımı",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Pasaport_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Pasaport_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Pasaport_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Pasaport_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Pasaport_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Pasaport_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-25",
+    "name": "Moda Suites",
+    "district": "Kadıköy & Moda",
+    "type": "Butik Apart Suites",
+    "address": "Caferağa Rıza Paşa Sk. No:33 Kadıköy/İstanbul",
+    "phone": "+90 535 020 90 63",
+    "website": "https://www.modasuitehotel.com/",
+    "ratingStr": "4.0 (335+ Yorum)",
+    "targetReason": "Girit/Yunan meyhane ve atölye yönlendirmesi",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Moda_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Moda_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Moda_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Moda_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Moda_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Moda_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-26",
+    "name": "Melek Hotels Moda",
+    "district": "Kadıköy & Moda",
+    "type": "Moda Teras Butik Otel",
+    "address": "Caferağa Dr. Esat Işık Cd. No:96/A Kadıköy/İstanbul",
+    "phone": "+90 216 414 80 10",
+    "website": "http://www.melekhotels.com/",
+    "ratingStr": "4.3 (485+ Yorum)",
+    "targetReason": "Teraslı deniz manzaralı turiste deneyim satışı",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Melek_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Melek_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Melek_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Melek_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Melek_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Melek_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-27",
+    "name": "Vicolo Moda",
+    "district": "Kadıköy & Moda",
+    "type": "Butik Otel & Kafe",
+    "address": "Caferağa Neşe Sk. Kadıköy/İstanbul",
+    "phone": "+90 534 549 26 48",
+    "website": "https://maps.google.com/?cid=217112196614138676",
+    "ratingStr": "3.5 (180+ Yorum)",
+    "targetReason": "Genç turist kitlesine workshop satışı",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Vicolo_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Vicolo_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Vicolo_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Vicolo_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Vicolo_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Vicolo_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-28",
+    "name": "Dimora Kadıköy",
+    "district": "Kadıköy & Moda",
+    "type": "Tarihi Konak Butik Otel",
+    "address": "Osmanağa Nüshetefendi Sk. No:39 Kadıköy/İstanbul",
+    "phone": "+90 546 459 66 87",
+    "website": "https://www.dimorahotels.com.tr/",
+    "ratingStr": "4.8 (175+ Yorum)",
+    "targetReason": "Kültürel Kadıköy sokak lezzeti turları",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Dimora_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Dimora_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Dimora_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Dimora_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Dimora_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Dimora_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-29",
+    "name": "Riva's Moda Butik Otel",
+    "district": "Kadıköy & Moda",
+    "type": "Moda Sahil Otel",
+    "address": "Caferağa Dr. Esat Işık Cd. No:98 Kadıköy/İstanbul",
+    "phone": "+90 533 306 57 65",
+    "website": "http://www.rivasmoda.com/",
+    "ratingStr": "4.3 (290+ Yorum)",
+    "targetReason": "Anadolu yakası VIP transfer komisyonu",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Riva's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Riva's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Riva's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Riva's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Riva's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Riva's_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-30",
+    "name": "Redstone Kadıköy Otel & Suit",
+    "district": "Kadıköy & Moda",
+    "type": "Çarşı İçi Suit Otel",
+    "address": "Caferağa Mühürdar Cd. No:49/A Kadıköy/İstanbul",
+    "phone": "+90 216 336 09 36",
+    "website": "http://redstonehotels.com.tr/",
+    "ratingStr": "4.1 (420+ Yorum)",
+    "targetReason": "Kadıköy çarşı içi turiste aktivite önerisi",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Redstone_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Redstone_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Redstone_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Redstone_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Redstone_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Redstone_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-31",
+    "name": "The Best City Kadıköy",
+    "district": "Kadıköy & Moda",
+    "type": "Merkezi Butik Otel",
+    "address": "Osmanağa Reşitefendi Sk. No:13A Kadıköy/İstanbul",
+    "phone": "+90 554 535 05 00",
+    "website": "https://www.thebestcitykadikoy.com/",
+    "ratingStr": "4.8 (230+ Yorum)",
+    "targetReason": "Vapur ve metroya yakın turiste gezi rehberi",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-32",
+    "name": "Rubby Suite Kadıköy",
+    "district": "Kadıköy & Moda",
+    "type": "Şık Suit Apart",
+    "address": "Osmanağa Çilek Sk. No:11 Kadıköy/İstanbul",
+    "phone": "+90 532 503 60 10",
+    "website": "https://www.rubby.com.tr/",
+    "ratingStr": "4.8 (430+ Yorum)",
+    "targetReason": "Uzun konaklayan turiste pasif komisyon",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Rubby_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Rubby_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Rubby_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Rubby_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Rubby_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Rubby_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-33",
+    "name": "Loka Suites Moda",
+    "district": "Kadıköy & Moda",
+    "type": "Çatı Teraslı Butik Otel",
+    "address": "Caferağa Serasker Cd. No:20 Kadıköy/İstanbul",
+    "phone": "+90 216 338 28 58",
+    "website": "http://www.lokasuites.com/",
+    "ratingStr": "4.4 (310+ Yorum)",
+    "targetReason": "Oda içi QR ile kişiselleştirilmiş rehber",
+    "coords": {
+      "lat": 40.9906,
+      "lng": 29.0254
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Loka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Loka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Loka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Loka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Loka_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Loka_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-34",
+    "name": "Nishant Boutique Hotel",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Lüks Butik Otel",
+    "address": "Halaskargazi Kuyumcu İrfan Sk. No:13 Şişli/İstanbul",
+    "phone": "+90 212 230 13 10",
+    "website": "http://www.nishanthotel.com/",
+    "ratingStr": "4.2 (135+ Yorum)",
+    "targetReason": "Alışveriş & VIP transfer yönlendirmesi",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Nishant_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Nishant_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Nishant_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Nishant_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Nishant_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Nishant_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-35",
+    "name": "İdil's Apartments Hotel",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Beşiktaş Apart Daireler",
+    "address": "Türkali Şht. Asım Cd. No:53 Beşiktaş/İstanbul",
+    "phone": "+90 507 705 49 97",
+    "website": "https://www.idilshotel.com/",
+    "ratingStr": "4.9 (55+ Yorum)",
+    "targetReason": "Beşiktaş iskelesi vapur & tur turları",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "İdil's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "İdil's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "İdil's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "İdil's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "İdil's_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "İdil's_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-36",
+    "name": "Forty Nişantaşı Hotel & Spa",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Lüks Spa & Butik Otel",
+    "address": "Teşvikiye Hacı Emin Efendi Sk. No:59 Şişli/İstanbul",
+    "phone": "+90 212 830 10 80",
+    "website": "http://www.fortynisantasihotel.com/",
+    "ratingStr": "4.9 (65+ Yorum)",
+    "targetReason": "Fine dining restoran & hamam yönlendirmesi",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Forty_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Forty_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Forty_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Forty_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Forty_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Forty_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-37",
+    "name": "Riva Hotel Nişantaşı",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "4 Yıldızlı Butik Otel",
+    "address": "Halaskargazi Rumeli Cd. No:15 Şişli/İstanbul",
+    "phone": "+90 212 256 44 20",
+    "website": "https://www.rivahotel.com.tr/",
+    "ratingStr": "4.6 (100+ Yorum)",
+    "targetReason": "Nişantaşı turisti için boğaz turu satışı",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Riva_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Riva_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Riva_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Riva_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Riva_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Riva_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-38",
+    "name": "Hallmark Hotel & Spa",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Nişantaşı Spa & Otel",
+    "address": "Halaskargazi Matbaacı Osmanbey Sk. No:30 Şişli/İstanbul",
+    "phone": "+90 212 291 00 91",
+    "website": "https://hallmarkhotelspa.com/",
+    "ratingStr": "4.4 (260+ Yorum)",
+    "targetReason": "Havalimanı VIP Vito transfer satışı",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Hallmark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Hallmark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Hallmark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Hallmark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Hallmark_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Hallmark_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-39",
+    "name": "Gleam Collection Hotel",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Lüks Collection Otel",
+    "address": "Halaskargazi Dershane Sk. No:16 Şişli/İstanbul",
+    "phone": "+90 212 368 71 75",
+    "website": "http://www.gleamcollection.com/",
+    "ratingStr": "4.6 (940+ Yorum)",
+    "targetReason": "Tasarım otel müşterisine özel tur imkanı",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Gleam_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Gleam_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Gleam_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Gleam_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Gleam_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Gleam_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-40",
+    "name": "Konak Akaretler Suit",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Akaretler Suit Daireler",
+    "address": "Vişnezade Servirevan Sk. No:8 Beşiktaş/İstanbul",
+    "phone": "+90 534 898 00 96",
+    "website": "https://maps.google.com/?cid=14961314612861342",
+    "ratingStr": "3.9 (25+ Yorum)",
+    "targetReason": "Akaretler genç turist dairesi",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Konak_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Konak_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Konak_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Konak_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Konak_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Konak_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-41",
+    "name": "MAS Suites Hotel Nişantaşı",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Lüks Suit Otel",
+    "address": "Harbiye Teşvikiye Cd. No:39 Şişli/İstanbul",
+    "phone": "+90 212 230 40 66",
+    "website": "https://nisantasi.massuites.com/",
+    "ratingStr": "4.0 (105+ Yorum)",
+    "targetReason": "Aile tipi turiste özel VIP vito transfer",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "MAS_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "MAS_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "MAS_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "MAS_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "MAS_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "MAS_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-42",
+    "name": "Barkod Hotel Beşiktaş",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Merkezi Beşiktaş Oteli",
+    "address": "Sinanpaşa Sinanpaşa Köprüsü Sk. No:5/A Beşiktaş/İstanbul",
+    "phone": "+90 212 327 32 32",
+    "website": "http://barkodotel.com/",
+    "ratingStr": "3.8 (390+ Yorum)",
+    "targetReason": "Beşiktaş çarşı ve deniz turları",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "Barkod_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "Barkod_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "Barkod_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "Barkod_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "Barkod_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "Barkod_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  },
+  {
+    "id": "hotel-43",
+    "name": "The Capital Hotel Beşiktaş",
+    "district": "Beşiktaş & Nişantaşı",
+    "type": "Beşiktaş Butik Otel",
+    "address": "Vişnezade Şair Nedim Cd. No:29 Beşiktaş/İstanbul",
+    "phone": "+90 212 258 01 17",
+    "website": "http://the-capitalsuites.com/tr",
+    "ratingStr": "3.8 (240+ Yorum)",
+    "targetReason": "Bütçe dostu turist için Boğaz seyir turu",
+    "coords": {
+      "lat": 41.0428,
+      "lng": 29.0077
+    },
+    "rooms": [
+      {
+        "id": "101",
+        "number": "101",
+        "type": "Deluxe Oda",
+        "floor": "1. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "102",
+        "number": "102",
+        "type": "Standart Çift Kişilik",
+        "floor": "1. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "201",
+        "number": "201",
+        "type": "Sultan Suite (Boğaz Manzaralı)",
+        "floor": "2. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "202",
+        "number": "202",
+        "type": "Superior Oda",
+        "floor": "2. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "301",
+        "number": "301",
+        "type": "Panoramik Teras Suite",
+        "floor": "3. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      },
+      {
+        "id": "302",
+        "number": "302",
+        "type": "Deluxe Aile Odası",
+        "floor": "3. Kat",
+        "wifiSsid": "The_Guest",
+        "wifiPass": "Xenios2026!"
+      }
+    ],
+    "breakfastHours": "07:30 - 10:30",
+    "checkoutTime": "12:00",
+    "receptionExt": "9 (veya WhatsApp)",
+    "featured": false
+  }
+]

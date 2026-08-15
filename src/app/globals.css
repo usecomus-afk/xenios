@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+:root {
+  /* Xenios Guest Elegant Sand & Warm Gold Theme */
+  --xenios-sand-bg: #f8f6f0;
+  --xenios-sand-card: rgba(255, 255, 255, 0.88);
+  --xenios-sand-border: #e8e2d4;
+  --xenios-terracotta: #c45b36;
+  --xenios-gold: #c9a227;
+  --xenios-gold-soft: #dfbe58;
+  --xenios-ink: #1e2129;
+  --xenios-ink-muted: #6e727e;
+  --xenios-tile-bg: rgba(255, 255, 255, 0.92);
+  --xenios-tile-border: rgba(201, 162, 39, 0.25);
+  --xenios-tile-shadow: 0 4px 18px rgba(30, 33, 41, 0.04);
+
+  /* Cockpit Olympus Dark Theme */
+  --cockpit-bg: #0b0c0f;
+  --cockpit-elevated: #12141a;
+  --cockpit-surface: #171a22;
+  --cockpit-surface-2: #1e222c;
+  --cockpit-border: #2c313d;
+  --cockpit-gold: #c9a227;
+  --cockpit-stone: #8b909a;
+  --cockpit-ink: #f2efe8;
+
+  --background: var(--xenios-sand-bg);
+  --foreground: var(--xenios-ink);
+}
+
+@theme inline {
+  --color-sand-bg: var(--xenios-sand-bg);
+  --color-sand-card: var(--xenios-sand-card);
+  --color-sand-border: var(--xenios-sand-border);
+  --color-terracotta: var(--xenios-terracotta);
+  --color-gold: var(--xenios-gold);
+  --color-gold-soft: var(--xenios-gold-soft);
+  --color-ink: var(--xenios-ink);
+  --color-ink-muted: var(--xenios-ink-muted);
+  
+  --color-cockpit-bg: var(--cockpit-bg);
+  --color-cockpit-elevated: var(--cockpit-elevated);
+  --color-cockpit-surface: var(--cockpit-surface);
+  --color-cockpit-surface-2: var(--cockpit-surface-2);
+  --color-cockpit-border: var(--cockpit-border);
+  --color-cockpit-gold: var(--cockpit-gold);
+  --color-cockpit-stone: var(--cockpit-stone);
+  --color-cockpit-ink: var(--cockpit-ink);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  color: var(--xenios-ink);
+  background-color: var(--xenios-sand-bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism tile for guest in-room services */
+.xenios-tile {
+  background: var(--xenios-tile-bg);
+  border: 1px solid var(--xenios-tile-border);
+  box-shadow: var(--xenios-tile-shadow);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.xenios-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(201, 162, 39, 0.55);
+  box-shadow: 0 8px 24px rgba(201, 162, 39, 0.12);
+}
+
+.xenios-tile:active {
+  transform: scale(0.97);
+}
+
+/* Cockpit pulse effect */
+@keyframes xenios-pulse-line {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.cockpit-scan {
+  position: relative;
+}
+.cockpit-scan::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cockpit-gold), transparent);
+  animation: xenios-pulse-line 3.2s ease-in-out infinite;
+}
+
+/* Mobile Safe Areas */
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.safe-top {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 162, 39, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 162, 39, 0.5);
+}
