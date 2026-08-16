@@ -159,14 +159,14 @@ export default function GuestPage() {
               </button>
             </div>
 
-            {/* Tourist Ombudsman & Consumer Rights Banner */}
+            {/* Xenios Misafir Kalkanı & Adil Alışveriş Politikası Banner */}
             <div className="bg-white rounded-3xl p-5 border border-red-200/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="space-y-1 text-center sm:text-left">
                 <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-red-100 text-red-800 font-bold uppercase tracking-wider">
-                    🛡️ Misafir Güvencesi
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-red-100 text-red-800 font-bold uppercase tracking-wider">
+                    🛡️ Xenios Misafir Kalkanı
                   </span>
-                  <span className="text-xs text-zinc-500 font-serif">İstanbul Misafir Hakları & Hakem Masası</span>
+                  <span className="text-xs text-zinc-500 font-serif">⚖️ Xenios Adil Alışveriş Politikası</span>
                 </div>
                 <h4 className="text-sm font-bold text-zinc-900">
                   Fahiş Fiyat, Dolandırıcılık veya Haksız Kazanç Mağduru musunuz?
@@ -178,9 +178,9 @@ export default function GuestPage() {
 
               <Link
                 href="/complaints"
-                className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs shadow-md shadow-red-500/20 shrink-0 transition flex items-center gap-1.5"
+                className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs shadow-md shadow-red-500/20 shrink-0 transition flex items-center gap-1.5 cursor-pointer"
               >
-                <span>Şikayet & İade Masası →</span>
+                <span>Şikayet Bildir →</span>
               </Link>
             </div>
           </div>

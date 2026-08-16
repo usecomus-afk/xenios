@@ -131,7 +131,7 @@ export default function GuestComplaintsPage() {
 
           <div className="flex items-center gap-1.5 bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-300/60 text-xs font-bold text-amber-900">
             <Scale className="w-3.5 h-3.5 text-amber-700" />
-            <span>Misafir Hakları & Hakem Masası</span>
+            <span>Xenios Adil Alışveriş Politikası</span>
           </div>
         </div>
       </header>
@@ -170,7 +170,7 @@ export default function GuestComplaintsPage() {
             }`}
           >
             <FileText className="w-3.5 h-3.5" />
-            <span>Şikayet & İade Bildir</span>
+            <span>Şikayet</span>
           </button>
 
           <button
