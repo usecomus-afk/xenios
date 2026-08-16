@@ -2,25 +2,24 @@
 
 import { Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
-import { Home, Compass, Bell } from 'lucide-react';
+import { Home, Compass, LayoutGrid } from 'lucide-react';
 import Image from 'next/image';
 
 interface GuestTabBarProps {
-  activeTab: 'services' | 'experiences' | 'ai' | 'practical' | 'requests';
-  onTabChange: (tab: 'services' | 'experiences' | 'ai' | 'practical' | 'requests') => void;
+  activeTab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical';
+  onTabChange: (tab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical') => void;
   lang: Language;
-  requestCount?: number;
 }
 
-export function GuestTabBar({ activeTab, onTabChange, lang, requestCount = 0 }: GuestTabBarProps) {
+export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) {
   const t = getT(lang);
 
   const tabs = [
-    { id: 'services', label: t.tabs.services, iconType: 'lucide', icon: Home },
-    { id: 'experiences', label: t.tabs.experiences, iconType: 'lucide', icon: Compass },
-    { id: 'ai', label: t.tabs.aiGuide, iconType: 'image', imgSrc: '/icons/menu/aiGuide.png', highlight: true },
-    { id: 'practical', label: t.tabs.practical, iconType: 'image', imgSrc: '/icons/menu/practical.png' },
-    { id: 'requests', label: t.tabs.requests, iconType: 'lucide', icon: Bell, badge: requestCount }
+    { id: 'services', label: 'Oda Hizmetleri', iconType: 'lucide', icon: Home },
+    { id: 'experiences', label: 'Deneyimler', iconType: 'lucide', icon: Compass },
+    { id: 'categories', label: 'Kategoriler', iconType: 'lucide', icon: LayoutGrid },
+    { id: 'ai', label: 'comusAI', iconType: 'image', imgSrc: '/icons/menu/aiGuide.png', highlight: true },
+    { id: 'practical', label: 'Rehber & Haklar', iconType: 'image', imgSrc: '/icons/menu/practical.png' }
   ];
 
   return (
@@ -33,7 +32,7 @@ export function GuestTabBar({ activeTab, onTabChange, lang, requestCount = 0 }: 
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id as any)}
-              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition relative ${
+              className={`flex flex-col items-center justify-center py-1 px-2 rounded-2xl transition relative cursor-pointer ${
                 isActive 
                   ? 'text-amber-700 font-bold' 
                   : 'text-zinc-500 hover:text-zinc-800'
@@ -61,12 +60,6 @@ export function GuestTabBar({ activeTab, onTabChange, lang, requestCount = 0 }: 
                 )}
               </div>
               <span className="text-[10px] tracking-tight mt-0.5">{tab.label}</span>
-
-              {tab.badge && tab.badge > 0 ? (
-                <span className="absolute top-0 right-2 w-4 h-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center shadow-sm animate-pulse">
-                  {tab.badge}
-                </span>
-              ) : null}
             </button>
           );
         })}

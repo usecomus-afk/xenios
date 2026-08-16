@@ -3,27 +3,38 @@
 import { Experience, Hotel, Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
-import { MapPin, Clock, Star, Navigation, CreditCard, ShieldCheck } from 'lucide-react';
+import { MapPin, Clock, Star, Navigation, CreditCard, Info } from 'lucide-react';
 import Image from 'next/image';
 
 interface ExperienceCardProps {
   experience: Experience;
   hotel: Hotel;
   lang: Language;
+  onSelect: (exp: Experience) => void;
   onOpenTransit: (exp: Experience) => void;
   onOpenCheckout: (exp: Experience) => void;
 }
 
-export function ExperienceCard({ experience, hotel, lang, onOpenTransit, onOpenCheckout }: ExperienceCardProps) {
+export function ExperienceCard({ 
+  experience, 
+  hotel, 
+  lang, 
+  onSelect,
+  onOpenTransit, 
+  onOpenCheckout 
+}: ExperienceCardProps) {
   const t = getT(lang);
-
   const imageSrc = experience.image || `/images/experiences/${experience.id}.jpg`;
 
   return (
     <div className="bg-white rounded-3xl overflow-hidden border border-amber-200/70 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
-      <div>
+      {/* Clickable Card Header & Image Area */}
+      <div 
+        onClick={() => onSelect(experience)}
+        className="cursor-pointer"
+      >
         {/* Photo + Category + Rating Tag */}
-        <div className="relative h-44 w-full overflow-hidden bg-zinc-900">
+        <div className="relative h-48 w-full overflow-hidden bg-zinc-900">
           <Image
             src={imageSrc}
             alt={experience.title}
@@ -47,7 +58,7 @@ export function ExperienceCard({ experience, hotel, lang, onOpenTransit, onOpenC
             <span className="text-[11px] text-amber-300 font-medium block truncate">
               {experience.provider}
             </span>
-            <h3 className="text-sm font-bold font-serif leading-snug line-clamp-1">
+            <h3 className="text-sm font-bold font-serif leading-snug line-clamp-1 group-hover:text-amber-300 transition-colors">
               {experience.title}
             </h3>
           </div>
@@ -66,7 +77,7 @@ export function ExperienceCard({ experience, hotel, lang, onOpenTransit, onOpenC
             </div>
           </div>
 
-          <p className="text-xs text-zinc-600 line-clamp-2 leading-relaxed bg-amber-50/40 p-2 rounded-xl border border-amber-100/60">
+          <p className="text-xs text-zinc-600 line-clamp-2 leading-relaxed bg-amber-50/40 p-2.5 rounded-xl border border-amber-100/60">
             {experience.agentNote}
           </p>
 
@@ -79,22 +90,41 @@ export function ExperienceCard({ experience, hotel, lang, onOpenTransit, onOpenC
             </div>
 
             <button
-              onClick={() => onOpenTransit(experience)}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 text-xs font-semibold border border-amber-200 transition"
-              title="Otelden Ulaşım Seçenekleri"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(experience);
+              }}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 text-xs font-semibold border border-amber-200 transition cursor-pointer"
             >
-              <Navigation className="w-3.5 h-3.5 text-amber-700" />
-              <span>Ulaşım</span>
+              <Info className="w-3.5 h-3.5 text-amber-700" />
+              <span>Detaylar</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Action Footer */}
-      <div className="p-4 pt-0">
+      <div className="p-4 pt-0 flex items-center gap-2">
         <button
-          onClick={() => onOpenCheckout(experience)}
-          className="w-full py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-md shadow-amber-500/25 flex items-center justify-center gap-2 transition transform active:scale-95"
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenTransit(experience);
+          }}
+          className="p-2.5 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-semibold flex items-center justify-center transition cursor-pointer"
+          title="Otelden Ulaşım Seçenekleri"
+        >
+          <Navigation className="w-4 h-4 text-amber-700" />
+        </button>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenCheckout(experience);
+          }}
+          className="flex-1 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
         >
           <CreditCard className="w-3.5 h-3.5" />
           <span>{t.buyNow} ({formatPrice(experience.price, experience.currency)})</span>

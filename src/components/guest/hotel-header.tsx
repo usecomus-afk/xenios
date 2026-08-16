@@ -1,9 +1,9 @@
 "use client";
 
-import { Hotel, Language } from '@/lib/types';
+import { Hotel, Language, ServiceRequest } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { LanguageSelector } from './language-selector';
-import { Wifi, Phone, MapPin, Copy, Check, ShieldCheck, Sparkles } from 'lucide-react';
+import { Wifi, MapPin, Copy, Check, BellRing } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { BrandMark } from '../brand-mark';
@@ -13,9 +13,18 @@ interface HotelHeaderProps {
   roomNumber: string;
   lang: Language;
   onLanguageChange: (l: Language) => void;
+  activeRequestsCount?: number;
+  onOpenRequests?: () => void;
 }
 
-export function HotelHeader({ hotel, roomNumber, lang, onLanguageChange }: HotelHeaderProps) {
+export function HotelHeader({ 
+  hotel, 
+  roomNumber, 
+  lang, 
+  onLanguageChange,
+  activeRequestsCount = 0,
+  onOpenRequests
+}: HotelHeaderProps) {
   const t = getT(lang);
   const [copied, setCopied] = useState(false);
 
@@ -46,11 +55,11 @@ export function HotelHeader({ hotel, roomNumber, lang, onLanguageChange }: Hotel
           </div>
         </div>
 
-        {/* Hotel Info Banner */}
+        {/* Hotel Info Banner with In-Card Requests Button */}
         <div className="bg-white/95 rounded-2xl p-4 shadow-sm border border-amber-200/60 backdrop-blur-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-lg sm:text-xl font-bold font-serif text-zinc-900 leading-tight">
                   {hotel.name}
                 </h1>
@@ -64,8 +73,29 @@ export function HotelHeader({ hotel, roomNumber, lang, onLanguageChange }: Hotel
               </p>
             </div>
 
-            {/* Quick Actions / Hours */}
-            <div className="flex items-center gap-2 text-xs text-zinc-600 pt-2 sm:pt-0 border-t sm:border-t-0 border-amber-100">
+            {/* In-Card Taleplerim (Requests) Button + Hours */}
+            <div className="flex items-center gap-2 text-xs text-zinc-600 pt-2 sm:pt-0 border-t sm:border-t-0 border-amber-100 flex-wrap">
+              {/* Requests Pill in Header Card */}
+              {onOpenRequests && (
+                <button
+                  type="button"
+                  onClick={onOpenRequests}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer border ${
+                    activeRequestsCount > 0
+                      ? 'bg-amber-500 text-white border-amber-600 animate-pulse'
+                      : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border-zinc-200'
+                  }`}
+                >
+                  <BellRing className="w-3.5 h-3.5" />
+                  <span>Oda Taleplerim</span>
+                  {activeRequestsCount > 0 && (
+                    <span className="px-1.5 py-0.2 bg-white text-amber-700 text-[10px] rounded-full font-extrabold ml-0.5">
+                      {activeRequestsCount}
+                    </span>
+                  )}
+                </button>
+              )}
+
               <div className="bg-amber-50/80 px-2.5 py-1.5 rounded-xl border border-amber-200/40">
                 <span className="text-[10px] uppercase text-zinc-400 block font-semibold">{t.breakfast}</span>
                 <span className="font-semibold text-zinc-800">{hotel.breakfastHours}</span>
@@ -96,7 +126,7 @@ export function HotelHeader({ hotel, roomNumber, lang, onLanguageChange }: Hotel
 
             <button
               onClick={copyWifi}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold shadow-sm transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold shadow-sm transition cursor-pointer"
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? t.wifiCopied : t.wifiCopy}</span>
