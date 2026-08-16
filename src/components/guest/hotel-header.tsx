@@ -1,12 +1,13 @@
 "use client";
 
-import { Hotel, Language } from '@/lib/types';
+import { Hotel, Language, XeniosUser } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { LanguageSelector } from './language-selector';
-import { Wifi, MapPin, Copy, Check, BellRing, User, DoorOpen } from 'lucide-react';
-import { useState } from 'react';
+import { Wifi, MapPin, Copy, Check, BellRing, User, DoorOpen, LogOut, ChevronDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { BrandMark } from '../brand-mark';
+import { XeniosStore } from '@/lib/store';
 
 interface HotelHeaderProps {
   hotel: Hotel;
@@ -29,6 +30,18 @@ export function HotelHeader({
 }: HotelHeaderProps) {
   const t = getT(lang);
   const [copied, setCopied] = useState(false);
+  const [user, setUser] = useState<XeniosUser | null>(null);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+
+  useEffect(() => {
+    setUser(XeniosStore.getUser());
+
+    const handleAuth = () => {
+      setUser(XeniosStore.getUser());
+    };
+    window.addEventListener('xenios_auth_updated', handleAuth);
+    return () => window.removeEventListener('xenios_auth_updated', handleAuth);
+  }, []);
 
   const room = hotel.rooms.find(r => r.number === roomNumber) || hotel.rooms[0];
   const wifiPass = room?.wifiPass || 'Xenios2026!';
@@ -41,23 +54,80 @@ export function HotelHeader({
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const handleLogout = () => {
+    XeniosStore.logout();
+    setShowUserDropdown(false);
+    toast.info("Oturum kapatıldı.");
+  };
+
   return (
     <header className="bg-gradient-to-b from-amber-500/10 via-amber-100/30 to-transparent pt-3 pb-4 px-4 border-b border-amber-200/50">
       <div className="max-w-4xl mx-auto space-y-3">
-        {/* Top bar: Brand + User Login Button + Lang */}
+        {/* Top bar: Brand + User Account Session + Lang */}
         <div className="flex items-center justify-between">
           <BrandMark size={36} showText={true} />
           
-          <div className="flex items-center gap-2">
-            {/* User Sign-In / Account Button in Top Nav */}
-            <button
-              type="button"
-              onClick={onOpenAuth}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-black text-amber-400 rounded-full text-xs font-bold shadow-sm tracking-wide transition cursor-pointer"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>Giriş Yap</span>
-            </button>
+          <div className="flex items-center gap-2 relative">
+            {/* User Session Profile Badge / Login Button */}
+            {user ? (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowUserDropdown(!showUserDropdown)}
+                  className="flex items-center gap-2 pl-1.5 pr-2.5 py-1 bg-white hover:bg-amber-50 border border-amber-300 rounded-full shadow-xs transition cursor-pointer text-xs"
+                >
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-6 h-6 rounded-full object-cover border border-amber-400" />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-[10px]">
+                      {user.name.charAt(0)}
+                    </div>
+                  )}
+                  <span className="font-bold text-zinc-800 max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
+                  <ChevronDown className="w-3 h-3 text-zinc-500" />
+                </button>
+
+                {/* User Dropdown */}
+                {showUserDropdown && (
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl p-3 shadow-xl border border-amber-200 z-50 space-y-2 animate-in fade-in">
+                    <div className="border-b border-zinc-100 pb-2">
+                      <strong className="text-xs text-zinc-900 block truncate">{user.name}</strong>
+                      <span className="text-[10px] text-zinc-500 block truncate">{user.email}</span>
+                      <span className="text-[9px] px-2 py-0.5 bg-amber-100 text-amber-800 font-semibold rounded-md mt-1 inline-block">
+                        {user.role === 'hotel' ? 'Otel Yöneticisi' : 'Misafir Hesabı'}
+                      </span>
+                    </div>
+
+                    {user.role === 'hotel' && (
+                      <a
+                        href="/dashboard"
+                        className="block px-2 py-1.5 bg-zinc-900 text-amber-400 rounded-xl text-xs font-bold text-center hover:bg-black transition"
+                      >
+                        Kokpit Paneli ➔
+                      </a>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="w-full py-1.5 px-2 text-left text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Çıkış Yap</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={onOpenAuth}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-black text-amber-400 rounded-full text-xs font-bold shadow-sm tracking-wide transition cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>Giriş Yap</span>
+              </button>
+            )}
 
             <LanguageSelector currentLang={lang} onSelect={onLanguageChange} />
           </div>

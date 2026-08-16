@@ -151,3 +151,16 @@ export interface Complaint {
   updatedAt: string;
 }
 
+
+export interface XeniosUser {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  role: 'guest' | 'hotel';
+  hotelCode?: string;
+  hotelName?: string;
+  provider: 'google' | 'email';
+  phone?: string;
+  createdAt: string;
+}

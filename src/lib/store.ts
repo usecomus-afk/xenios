@@ -1,4 +1,4 @@
-import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus } from './types';
+import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser } from './types';
 import rawHotels from '@/data/hotels.json';
 import rawExperiences from '@/data/experiences.json';
 
@@ -11,7 +11,8 @@ const STORAGE_KEYS = {
   REQUESTS: 'xenios_live_requests',
   BOOKINGS: 'xenios_bookings',
   PROFILE: 'xenios_guest_profile',
-  COMPLAINTS: 'xenios_tourist_complaints'
+  COMPLAINTS: 'xenios_tourist_complaints',
+  CURRENT_USER: 'xenios_auth_user'
 };
 
 function safeGet(key: string, defaultVal: string = ''): string {
@@ -31,6 +32,32 @@ function safeSet(key: string, val: string): void {
 }
 
 export const XeniosStore = {
+  // User Authentication
+  getUser(): XeniosUser | null {
+    try {
+      const stored = safeGet(STORAGE_KEYS.CURRENT_USER);
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return null;
+  },
+
+  setUser(user: XeniosUser | null) {
+    if (user) {
+      safeSet(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
+    } else {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+      }
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_auth_updated'));
+    }
+  },
+
+  logout() {
+    this.setUser(null);
+  },
+
   getHotels(): Hotel[] {
     return hotelsData;
   },
