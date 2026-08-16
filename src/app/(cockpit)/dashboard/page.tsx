@@ -133,25 +133,29 @@ export default function CockpitDashboard() {
         {requests.length === 0 ? (
           <p className="text-xs text-zinc-500 py-4 text-center">Henüz talep bulunmuyor.</p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {requests.slice(0, 5).map((req) => (
               <div
                 key={req.id}
-                className="p-3.5 rounded-2xl bg-[#12141a] border border-[#2c313d] flex items-center justify-between gap-3 text-xs"
+                className="p-3.5 rounded-2xl bg-[#12141a] border border-[#2c313d] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs overflow-hidden"
               >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 font-mono font-bold text-[11px]">
+                <div className="space-y-1 min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 font-mono font-bold text-[11px] shrink-0">
                       Oda {req.roomNumber}
                     </span>
-                    <strong className="text-zinc-200">{req.serviceTitle}</strong>
-                    <span className="text-zinc-500 text-[10px]">• {req.hotelName}</span>
+                    <strong className="text-zinc-200 truncate">{req.serviceTitle}</strong>
+                    <span className="text-zinc-500 text-[10px] truncate">• {req.hotelName}</span>
                   </div>
-                  {req.notes && <p className="text-zinc-400 text-[11px]">{req.notes}</p>}
+                  {req.notes && (
+                    <p className="text-zinc-400 text-[11px] line-clamp-2 break-words">
+                      {req.notes}
+                    </p>
+                  )}
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
                     req.status === 'completed'
                       ? 'bg-emerald-500/20 text-emerald-400'
                       : req.status === 'in_progress'
@@ -164,7 +168,7 @@ export default function CockpitDashboard() {
                   {req.status !== 'completed' && (
                     <button
                       onClick={() => XeniosStore.updateRequestStatus(req.id, 'completed')}
-                      className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold transition"
+                      className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold transition shrink-0 whitespace-nowrap cursor-pointer"
                     >
                       ✓ Çözüldü
                     </button>

@@ -64,26 +64,26 @@ export default function LiveRequestsPage() {
           {filtered.map((req) => (
             <div
               key={req.id}
-              className="p-4 rounded-2xl bg-[#171a22] border border-[#2c313d] hover:border-amber-500/40 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs"
+              className="p-4 rounded-2xl bg-[#171a22] border border-[#2c313d] hover:border-amber-500/40 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs overflow-hidden"
             >
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold text-xs">
+              <div className="space-y-1.5 min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold text-xs shrink-0">
                     Oda {req.roomNumber}
                   </span>
-                  <strong className="text-sm text-white">{req.serviceTitle}</strong>
+                  <strong className="text-sm text-white truncate">{req.serviceTitle}</strong>
                 </div>
 
-                <div className="flex items-center gap-2 text-zinc-400 text-[11px]">
-                  <Building2 className="w-3.5 h-3.5 text-zinc-500" />
-                  <span>{req.hotelName}</span>
+                <div className="flex flex-wrap items-center gap-2 text-zinc-400 text-[11px]">
+                  <Building2 className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                  <span className="truncate">{req.hotelName}</span>
                   <span>•</span>
-                  <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                  <Clock className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
                   <span className="font-mono">{new Date(req.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
 
                 {req.notes && (
-                  <div className="bg-[#12141a] p-2.5 rounded-xl border border-[#2c313d] text-zinc-300 text-[11px]">
+                  <div className="bg-[#12141a] p-2.5 rounded-xl border border-[#2c313d] text-zinc-300 text-[11px] break-words">
                     <strong className="text-amber-400/80 block text-[10px]">Misafir Notu:</strong>
                     {req.notes}
                   </div>
@@ -91,7 +91,7 @@ export default function LiveRequestsPage() {
               </div>
 
               {/* Status Action Buttons */}
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
                 {req.status === 'pending' && (
                   <button
                     onClick={() => handleStatusChange(req.id, 'in_progress')}
