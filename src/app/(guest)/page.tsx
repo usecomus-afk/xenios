@@ -78,18 +78,18 @@ export default function GuestPage() {
   // Extract unique categories
   const categories = ['all', ...Array.from(new Set(allExperiences.map(e => e.category)))];
 
-  // Category Catalog Grid Items
+  // Category Catalog Grid Items with Custom Canva PNG Icons
   const categoryShowcase = [
-    { key: 'Boğaz Turları & Yat', icon: Ship, color: 'from-blue-600 to-cyan-700', count: 7, desc: 'Akşam yemekli turlar, özel yat kiralama & Adalar rotaları' },
-    { key: 'Tarih & Müzeler', icon: Landmark, color: 'from-amber-600 to-yellow-700', count: 8, desc: 'Ayasofya, Topkapı Sarayı, Yerebatan & Arkeoloji Müzeleri' },
-    { key: 'Gastronomi & Gurme', icon: Utensils, color: 'from-red-600 to-orange-700', count: 6, desc: 'Sokak lezzetleri, Türk kahvesi atölyesi & Boğaz meyhaneleri' },
-    { key: 'Fotoğraf & Kostüm', icon: Camera, color: 'from-purple-600 to-pink-700', count: 5, desc: 'Uçuşan elbise çekimi & otantik Osmanlı kaftan çekimleri' },
-    { key: 'Macera & Doğa', icon: Trees, color: 'from-emerald-600 to-teal-700', count: 4, desc: 'Orman içi zipline, ip parkuru & kano safarileri' },
-    { key: 'Türk Hamamı & Spa', icon: Bath, color: 'from-amber-700 to-stone-800', count: 4, desc: 'Tarihi Kılıç Ali Paşa, Hürrem Sultan & VIP köpük masajı' },
-    { key: 'Alışveriş & Çarşılar', icon: ShoppingBag, color: 'from-amber-500 to-rose-700', count: 4, desc: 'Kapalıçarşı, Mısır Çarşısı & el dokuma halı rehberi' },
-    { key: 'Sanat & Semazen', icon: Palette, color: 'from-indigo-600 to-purple-800', count: 4, desc: 'Mevlevi Sema ayini, ebru & mozaik lamba yapımı' },
-    { key: 'Kültürel Miras', icon: Scroll, color: 'from-stone-600 to-stone-800', count: 5, desc: 'Fener-Balat, Musevi Sinagogları & Süryani mirası' },
-    { key: 'Özel VIP Transfer', icon: Car, color: 'from-zinc-700 to-zinc-950', count: 5, desc: 'Havalimanı karşılama, şoförlü lüks Mercedes Vito' }
+    { key: 'Boğaz Turları & Yat', iconPath: '/icons/categories/bogaz-yatturlari.png', count: 7, desc: 'Akşam yemekli turlar, özel yat kiralama & Adalar rotaları' },
+    { key: 'Tarih & Müzeler', iconPath: '/icons/categories/tarih-muzeler.png', count: 8, desc: 'Ayasofya, Topkapı Sarayı, Yerebatan & Arkeoloji Müzeleri' },
+    { key: 'Gastronomi & Gurme', iconPath: '/icons/categories/gastronomi-gurme.png', count: 6, desc: 'Sokak lezzetleri, Türk kahvesi atölyesi & Boğaz meyhaneleri' },
+    { key: 'Fotoğraf & Kostüm', iconPath: '/icons/categories/fotograf-kostum.png', count: 5, desc: 'Uçuşan elbise çekimi & otantik Osmanlı kaftan çekimleri' },
+    { key: 'Macera & Doğa', iconPath: '/icons/categories/macera-doga.png', count: 4, desc: 'Orman içi zipline, ip parkuru & kano safarileri' },
+    { key: 'Türk Hamamı & Spa', iconPath: '/icons/categories/turk-hamami-spa.png', count: 4, desc: 'Tarihi Kılıç Ali Paşa, Hürrem Sultan & VIP köpük masajı' },
+    { key: 'Alışveriş & Çarşılar', iconPath: '/icons/categories/alisveris-carsilar.png', count: 4, desc: 'Kapalıçarşı, Mısır Çarşısı & el dokuma halı rehberi' },
+    { key: 'Sanat & Semazen', iconPath: '/icons/categories/sanat-semazen.png', count: 4, desc: 'Mevlevi Sema ayini, ebru & mozaik lamba yapımı' },
+    { key: 'Kültürel Miras', iconPath: '/icons/categories/kulturel-miras.png', count: 5, desc: 'Fener-Balat, Musevi Sinagogları & Süryani mirası' },
+    { key: 'Özel VIP Transfer', iconPath: '/icons/categories/ozel-vip-transfer.png', count: 5, desc: 'Havalimanı karşılama, şoförlü lüks Mercedes Vito' }
   ];
 
   // Filter experiences
@@ -252,7 +252,6 @@ export default function GuestPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {categoryShowcase.map((cat, idx) => {
-                const IconComponent = cat.icon;
                 return (
                   <div
                     key={idx}
@@ -264,8 +263,12 @@ export default function GuestPage() {
                     className="p-4 rounded-3xl bg-white border border-amber-200/70 hover:border-amber-400 shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-between gap-4 group"
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
-                      <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${cat.color} text-white flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform`}>
-                        <IconComponent className="w-6 h-6" />
+                      <div className="w-14 h-14 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-1 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+                        <img 
+                          src={cat.iconPath} 
+                          alt={cat.key} 
+                          className="w-full h-full object-contain"
+                        />
                       </div>
                       <div className="min-w-0">
                         <h3 className="text-sm font-bold text-zinc-900 group-hover:text-amber-700 transition-colors">
