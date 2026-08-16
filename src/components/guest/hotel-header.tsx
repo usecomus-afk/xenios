@@ -1,9 +1,9 @@
 "use client";
 
-import { Hotel, Language, ServiceRequest } from '@/lib/types';
+import { Hotel, Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { LanguageSelector } from './language-selector';
-import { Wifi, MapPin, Copy, Check, BellRing } from 'lucide-react';
+import { Wifi, MapPin, Copy, Check, BellRing, User, DoorOpen } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { BrandMark } from '../brand-mark';
@@ -15,6 +15,7 @@ interface HotelHeaderProps {
   onLanguageChange: (l: Language) => void;
   activeRequestsCount?: number;
   onOpenRequests?: () => void;
+  onOpenAuth?: () => void;
 }
 
 export function HotelHeader({ 
@@ -23,7 +24,8 @@ export function HotelHeader({
   lang, 
   onLanguageChange,
   activeRequestsCount = 0,
-  onOpenRequests
+  onOpenRequests,
+  onOpenAuth
 }: HotelHeaderProps) {
   const t = getT(lang);
   const [copied, setCopied] = useState(false);
@@ -42,20 +44,26 @@ export function HotelHeader({
   return (
     <header className="bg-gradient-to-b from-amber-500/10 via-amber-100/30 to-transparent pt-3 pb-4 px-4 border-b border-amber-200/50">
       <div className="max-w-4xl mx-auto space-y-3">
-        {/* Top bar: Brand + Room Badge + Lang */}
+        {/* Top bar: Brand + User Login Button + Lang */}
         <div className="flex items-center justify-between">
           <BrandMark size={36} showText={true} />
           
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500 text-white rounded-full text-xs font-bold shadow-sm tracking-wide">
-              <span>{t.room}</span>
-              <span className="bg-white/25 px-1.5 py-0.5 rounded-full text-[11px]">{roomNumber}</span>
-            </div>
+            {/* User Sign-In / Account Button in Top Nav */}
+            <button
+              type="button"
+              onClick={onOpenAuth}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-black text-amber-400 rounded-full text-xs font-bold shadow-sm tracking-wide transition cursor-pointer"
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>Giriş Yap</span>
+            </button>
+
             <LanguageSelector currentLang={lang} onSelect={onLanguageChange} />
           </div>
         </div>
 
-        {/* Hotel Info Banner with In-Card Requests Button */}
+        {/* Hotel Info Banner with In-Card Room Badge & Requests Button */}
         <div className="bg-white/95 rounded-2xl p-4 shadow-sm border border-amber-200/60 backdrop-blur-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
@@ -63,6 +71,13 @@ export function HotelHeader({
                 <h1 className="text-lg sm:text-xl font-bold font-serif text-zinc-900 leading-tight">
                   {hotel.name}
                 </h1>
+                
+                {/* Room Number Badge (Inside Hotel Card) */}
+                <div className="flex items-center gap-1 px-2.5 py-0.5 bg-amber-500 text-white rounded-lg text-xs font-bold shadow-xs">
+                  <DoorOpen className="w-3.5 h-3.5" />
+                  <span>Oda {roomNumber}</span>
+                </div>
+
                 <span className="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">
                   {hotel.type}
                 </span>

@@ -12,12 +12,12 @@ import { GuestTabBar } from '@/components/guest/guest-tab-bar';
 import { TransitModal } from '@/components/guest/transit-modal';
 import { VirtualPosModal } from '@/components/guest/virtual-pos-modal';
 import { AiChatDrawer } from '@/components/guest/ai-chat-drawer';
+import { AuthModal } from '@/components/auth-modal';
 import Link from 'next/link';
 import { 
   Search, 
   Sparkles, 
   ExternalLink, 
-  QrCode, 
   Bell, 
   X, 
   Compass, 
@@ -31,13 +31,10 @@ import {
   Palette, 
   Scroll, 
   Car,
-  Layers,
   ArrowRight,
   ShieldCheck,
-  CheckCircle2,
   Clock
 } from 'lucide-react';
-import Image from 'next/image';
 
 export default function GuestPage() {
   const hotels = XeniosStore.getHotels();
@@ -55,10 +52,10 @@ export default function GuestPage() {
   const [transitExp, setTransitExp] = useState<Experience | null>(null);
   const [checkoutExp, setCheckoutExp] = useState<Experience | null>(null);
   const [isAiOpen, setIsAiOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [showRequestsModal, setShowRequestsModal] = useState(false);
-  const [showHotelPicker, setShowHotelPicker] = useState(false);
 
   useEffect(() => {
     const detected = detectBrowserLanguage();
@@ -109,19 +106,11 @@ export default function GuestPage() {
     XeniosStore.setLanguage(newLang);
   };
 
-  const handleHotelChange = (hId: string, rNum: string) => {
-    setActiveHotelId(hId);
-    setActiveRoomNumber(rNum);
-    XeniosStore.setActiveHotelId(hId);
-    XeniosStore.setActiveRoomId(rNum);
-    setShowHotelPicker(false);
-  };
-
   const activePendingRequests = requests.filter(r => r.status !== 'completed');
 
   return (
     <div className="min-h-screen bg-[#f8f6f0] pb-28 text-zinc-900">
-      {/* Hotel Header & Credentials (with in-card Requests Button) */}
+      {/* Hotel Header & Credentials */}
       <HotelHeader
         hotel={currentHotel}
         roomNumber={activeRoomNumber}
@@ -129,34 +118,8 @@ export default function GuestPage() {
         onLanguageChange={handleLanguageChange}
         activeRequestsCount={activePendingRequests.length}
         onOpenRequests={() => setShowRequestsModal(true)}
+        onOpenAuth={() => setShowAuthModal(true)}
       />
-
-      {/* Hotel & Room Switcher Bar (Demo & Testing Purpose) */}
-      <div className="max-w-4xl mx-auto px-4 mt-2">
-        <div className="bg-amber-500/10 border border-amber-200 rounded-2xl px-3 py-2 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <QrCode className="w-4 h-4 text-amber-700 shrink-0" />
-            <span className="text-zinc-600 truncate">
-              QR Simülasyonu: <strong>{currentHotel.name} (Oda {activeRoomNumber})</strong>
-            </span>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => setShowHotelPicker(true)}
-              className="font-bold text-amber-800 hover:text-amber-950 underline text-[11px] cursor-pointer"
-            >
-              Otel Değiştir
-            </button>
-            <span className="text-zinc-300">|</span>
-            <a
-              href="/dashboard"
-              className="px-2 py-1 bg-zinc-900 text-amber-400 hover:bg-zinc-800 rounded-lg text-[10px] font-bold tracking-wider uppercase transition shadow-sm"
-            >
-              Kokpit ➔
-            </a>
-          </div>
-        </div>
-      </div>
 
       {/* Main Content Area */}
       <main className="max-w-4xl mx-auto px-4 mt-4 space-y-6">
@@ -293,7 +256,6 @@ export default function GuestPage() {
                   <div
                     key={idx}
                     onClick={() => {
-                      // Find matching category in data or filter
                       const matched = categories.find(c => c.toLowerCase().includes(cat.key.split(' ')[0].toLowerCase())) || 'all';
                       setSelectedCategory(matched);
                       setActiveTab('experiences');
@@ -478,7 +440,7 @@ export default function GuestPage() {
                       <strong className="text-zinc-900 block">{req.serviceTitle}</strong>
                       {req.notes && <p className="text-[11px] text-zinc-600">{req.notes}</p>}
                       <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-mono">
-                        <Clock className="w-3 h-3 text-zinc-400" />
+                        <Clock className="w-3.5 h-3.5 text-zinc-400" />
                         <span>{new Date(req.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
                     </div>
@@ -499,6 +461,12 @@ export default function GuestPage() {
           </div>
         </div>
       )}
+
+      {/* Auth Modal (Login / Register / Hotel Cockpit Entry) */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
 
       {/* AI Concierge Chat Drawer */}
       <AiChatDrawer
@@ -545,47 +513,6 @@ export default function GuestPage() {
         }}
         lang={lang}
       />
-
-      {/* Hotel & Room Switcher Modal for Testing */}
-      {showHotelPicker && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-amber-200 max-h-[85vh] overflow-y-auto space-y-4">
-            <div className="flex items-center justify-between border-b border-amber-100 pb-3">
-              <h3 className="text-sm font-bold text-zinc-900">43 Otel ve Oda Seçimi (QR Simülasyonu)</h3>
-              <button onClick={() => setShowHotelPicker(false)} className="font-bold text-zinc-400 cursor-pointer">✕</button>
-            </div>
-
-            <div className="space-y-2">
-              {hotels.map((h) => (
-                <div key={h.id} className="p-3 rounded-xl border border-amber-100 hover:border-amber-400 bg-amber-50/30 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <strong className="text-xs text-zinc-900 block">{h.name}</strong>
-                      <span className="text-[10px] text-zinc-500">{h.district} • {h.type}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {h.rooms.map((r) => (
-                      <button
-                        key={r.id}
-                        onClick={() => handleHotelChange(h.id, r.number)}
-                        className={`text-[10px] px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
-                          activeHotelId === h.id && activeRoomNumber === r.number
-                            ? 'bg-amber-500 text-white'
-                            : 'bg-white border border-amber-200 text-zinc-700 hover:bg-amber-100'
-                        }`}
-                      >
-                        Oda {r.number} ({r.type})
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
