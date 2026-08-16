@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   description: "ComusV2 Istanbul Digital In-Room Directory, QR Check-in, City Experiences & Gemini AI Concierge",
   manifest: "/manifest.json",
   icons: {
-    icon: "/logo.svg",
-    apple: "/logo.svg"
+    icon: "/icon.png",
+    apple: "/apple-icon.png"
   }
 };
 

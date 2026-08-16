@@ -17,7 +17,7 @@ export function BrandMark({ size = 44, showText = true, theme = 'sand' }: BrandM
         style={{ width: size, height: size }}
       >
         <Image 
-          src="/logo.svg" 
+          src="/logo.png" 
           alt="Xenios Istanbul" 
           width={size} 
           height={size}
