@@ -79,19 +79,19 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
             <button
               key={item.key}
               onClick={() => setSelectedService({ key: item.key, title: item.label, iconSrc: item.icon })}
-              className="xenios-tile rounded-3xl p-4 flex flex-col items-center text-center justify-between gap-2.5 min-h-[125px] group cursor-pointer border border-amber-200/70 hover:border-amber-400/90 transition-all shadow-sm"
+              className="xenios-tile rounded-3xl p-4 sm:p-5 flex flex-col items-center text-center justify-between gap-3 min-h-[145px] group cursor-pointer border border-amber-200/70 hover:border-amber-400/90 transition-all shadow-sm hover:shadow-md bg-white"
             >
-              <div className="w-14 h-14 rounded-2xl bg-amber-50/70 p-1.5 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-[#fbf8f1] p-2 flex items-center justify-center group-hover:scale-105 transition-transform border border-amber-100/60 shadow-inner">
                 <Image
                   src={item.icon}
                   alt={item.label}
-                  width={52}
-                  height={52}
+                  width={76}
+                  height={76}
                   className="object-contain w-full h-full drop-shadow-sm"
                 />
               </div>
-              <div>
-                <span className="text-xs font-bold text-zinc-800 leading-snug block">
+              <div className="w-full">
+                <span className="text-xs sm:text-sm font-bold text-zinc-800 leading-tight block">
                   {item.label}
                 </span>
                 <span className="text-[10px] text-zinc-400 line-clamp-1 mt-0.5">
