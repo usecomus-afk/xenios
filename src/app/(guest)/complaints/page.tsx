@@ -28,10 +28,11 @@ import Link from 'next/link';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { BrandMark } from '@/components/brand-mark';
+import { FairShoppingPolicy } from '@/components/guest/fair-shopping-policy';
 
 export default function GuestComplaintsPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
-  const [activeTab, setActiveTab] = useState<'report' | 'advisory' | 'track'>('report');
+  const [activeTab, setActiveTab] = useState<'report' | 'policy' | 'advisory' | 'track'>('report');
   
   // Form States
   const [businessName, setBusinessName] = useState('');
@@ -173,6 +174,16 @@ export default function GuestComplaintsPage() {
           </button>
 
           <button
+            onClick={() => setActiveTab('policy')}
+            className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 ${
+              activeTab === 'policy' ? 'bg-amber-500 text-white shadow-sm' : 'text-zinc-600 hover:bg-amber-50'
+            }`}
+          >
+            <Scale className="w-3.5 h-3.5" />
+            <span>Adil Alışveriş Politikası</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('advisory')}
             className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 ${
               activeTab === 'advisory' ? 'bg-amber-500 text-white shadow-sm' : 'text-zinc-600 hover:bg-amber-50'
@@ -192,6 +203,12 @@ export default function GuestComplaintsPage() {
             <span>Durum Sorgula</span>
           </button>
         </div>
+
+        
+        {/* Tab Policy: Fair Shopping Policy & Shield */}
+        {activeTab === 'policy' && (
+          <FairShoppingPolicy />
+        )}
 
         {/* Tab 1: File a Dispute / Complaint */}
         {activeTab === 'report' && (

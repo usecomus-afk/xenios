@@ -13,6 +13,7 @@ import { TransitModal } from '@/components/guest/transit-modal';
 import { VirtualPosModal } from '@/components/guest/virtual-pos-modal';
 import { AiChatDrawer } from '@/components/guest/ai-chat-drawer';
 import { AuthModal } from '@/components/auth-modal';
+import { FairShoppingPolicy } from '@/components/guest/fair-shopping-policy';
 import Link from 'next/link';
 import { 
   Search, 
@@ -291,34 +292,14 @@ export default function GuestPage() {
 
         {/* TAB 4: Practical Info & Ombudsman (Rehber & Haklar) */}
         {activeTab === 'practical' && (
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div>
               <h2 className="text-xl font-bold font-serif text-zinc-900">{t.practicalTitle}</h2>
-              <p className="text-xs text-zinc-500">İstanbul seyahatinizi kolaylaştıracak resmi bilet, kart ve acil bilgiler.</p>
+              <p className="text-xs text-zinc-500">İstanbul seyahatinizi kolaylaştıracak resmi bilet, kart, güvenlik kalkanı ve acil bilgiler.</p>
             </div>
 
-            {/* Tourist Ombudsman Priority Card */}
-            <div className="bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-3xl p-5 shadow-lg space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-white text-red-700 font-bold uppercase tracking-wider">
-                  Resmi Hakem Heyeti
-                </span>
-                <ShieldCheck className="w-5 h-5 text-white/90" />
-              </div>
-              <h3 className="text-base font-bold font-serif">
-                İstanbul Misafir Hakları & Şikayet Masası
-              </h3>
-              <p className="text-xs text-white/90 leading-relaxed">
-                Şüpheli alışveriş, fahiş taksi ücreti veya yanıltıcı faturalarda işletmelerden resmi açıklama talep edip aradaki farkın hesabınıza iadesini sağlıyoruz.
-              </p>
-              <Link
-                href="/complaints"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-red-700 font-bold text-xs rounded-xl shadow-md hover:bg-zinc-100 transition"
-              >
-                <span>Şikayet Bildir veya Takip Et</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+            {/* Xenios Fair Shopping Policy & Misafir Kalkanı Component */}
+            <FairShoppingPolicy />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Istanbulkart Official Card */}
