@@ -34,8 +34,8 @@ export default function HotelsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold font-serif text-white">43 Otel & Tesis Yönetimi</h1>
-          <p className="text-xs text-zinc-400">ComusHost V2 Hedef Otel Envanteri ve Oda Yönetimi</p>
+          <h1 className="text-xl font-bold font-serif text-white">Anlaşmalı Oteller & Tesis Yönetimi</h1>
+          <p className="text-xs text-zinc-400">Xenios Sözleşmeli Partner Otel Envanteri ve Oda Yönetimi</p>
         </div>
 
         <Link

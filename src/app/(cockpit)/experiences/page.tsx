@@ -25,8 +25,8 @@ export default function ExperiencesCockpitPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold font-serif text-white">52 Hizmet & Deneyim Sağlayıcısı Kataloğu</h1>
-        <p className="text-xs text-zinc-400">13 Kategoride TÜRSAB Lisanslı Acenteler, Boğaz Turları, Hamamlar & Rehberler</p>
+        <h1 className="text-xl font-bold font-serif text-white">Gerçek İşletme & Deneyim Kataloğu</h1>
+        <p className="text-xs text-zinc-400">13 Kategoride TÜRSAB Lisanslı Doğrulanmış Acenteler, Boğaz Turları, Hamamlar & Rehberler</p>
       </div>
 
       {/* Filters */}

@@ -206,13 +206,11 @@ export function ExperienceDetailModal({
             <span>Türkçe, İngilizce & Arapça rehberlik desteği</span>
           </div>
 
-          <div className="flex items-center gap-2 text-sm font-bold text-zinc-900 pt-1">
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 fill-zinc-900 text-zinc-900" />
-              <span>{experience.scoreStr || '4.94'}</span>
-            </div>
-            <span>·</span>
-            <span className="underline font-semibold text-zinc-700">1.239 değerlendirme</span>
+          <div className="flex items-center gap-2 text-xs font-bold text-zinc-900 pt-1">
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Doğrulanmış İşletme & TÜRSAB Güvencesi</span>
+            </span>
           </div>
         </div>
 
@@ -271,43 +269,31 @@ export function ExperienceDetailModal({
           </div>
         </div>
 
-        {/* DEĞERLENDİRMELER (Airbnb Review Cards) */}
+        {/* DEĞERLENDİRMELER & KALİTE GÜVENCESİ */}
         <div className="space-y-4 pb-7 border-b border-zinc-200">
-          <div className="flex items-center gap-2">
-            <Star className="w-5 h-5 fill-zinc-900 text-zinc-900" />
+          <div className="flex items-center justify-between">
             <h2 className="text-lg sm:text-xl font-bold font-serif text-zinc-900">
-              {experience.scoreStr || '4.94'} · 1.239 değerlendirme
+              Misafir Değerlendirmeleri & Kalite Güvencesi
             </h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold">
+              Yeni İlan
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {reviews.map((rev, rIdx) => (
-              <div key={rIdx} className="p-4 rounded-2xl bg-white border border-zinc-200 shadow-xs space-y-2.5">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full overflow-hidden relative bg-zinc-200">
-                    <Image src={rev.avatar} alt={rev.author} fill className="object-cover" />
-                  </div>
-                  <div>
-                    <h5 className="text-xs font-bold text-zinc-900">{rev.author}</h5>
-                    <span className="text-[10px] text-zinc-500">{rev.location} · {rev.date}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-0.5 text-amber-500 text-xs">
-                  {'★'.repeat(rev.rating)}
-                </div>
-                <p className="text-xs text-zinc-700 leading-relaxed line-clamp-4">
-                  "{rev.content}"
-                </p>
+          <div className="p-5 rounded-3xl bg-amber-50/50 border border-amber-200/80 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-800 flex items-center justify-center font-bold text-lg">
+                ★
               </div>
-            ))}
+              <div>
+                <strong className="text-xs text-zinc-900 block font-bold">İlk Değerlendirmeyi Siz Yapın</strong>
+                <span className="text-[11px] text-zinc-500">Bu işletme Xenios kalite ve tüketici hakları onaylıdır.</span>
+              </div>
+            </div>
+            <p className="text-xs text-zinc-600 leading-relaxed">
+              Katıldığınız bu deneyim sonrasında değerlendirme yaparak İstanbul'u ziyaret eden diğer misafirlere rehberlik edebilirsiniz.
+            </p>
           </div>
-
-          <button
-            onClick={() => toast.info("Tüm değerlendirmeler 5 üzerinden 4.94 puana sahiptir.")}
-            className="w-full py-2.5 rounded-xl border border-zinc-300 hover:bg-zinc-100 text-zinc-800 text-xs font-bold transition cursor-pointer"
-          >
-            Tüm değerlendirmeleri göster
-          </button>
         </div>
 
         {/* YAKIN GELECEKTEKİ UYGUNLUK DURUMU (Slots) */}

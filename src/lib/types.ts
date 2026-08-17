@@ -157,7 +157,7 @@ export interface XeniosUser {
   name: string;
   email: string;
   avatar?: string;
-  role: 'guest' | 'hotel';
+  role: 'guest' | 'hotel' | 'pilot';
   hotelCode?: string;
   hotelName?: string;
   provider: 'google' | 'email';

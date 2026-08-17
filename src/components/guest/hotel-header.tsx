@@ -112,9 +112,18 @@ export function HotelHeader({
                       <strong className="text-xs text-zinc-900 block truncate">{user.name}</strong>
                       <span className="text-[10px] text-zinc-500 block truncate">{user.email}</span>
                       <span className="text-[9px] px-2 py-0.5 bg-amber-100 text-amber-800 font-semibold rounded-md mt-1 inline-block">
-                        {user.role === 'hotel' ? 'Otel Yöneticisi' : 'Misafir Hesabı'}
+                        {user.role === 'pilot' ? '✨ Pilot & Kurucu' : user.role === 'hotel' ? 'Otel Yöneticisi' : 'Misafir Hesabı'}
                       </span>
                     </div>
+
+                    {user.role === 'pilot' && (
+                      <a
+                        href="/pilot"
+                        className="block px-2 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl text-xs font-bold text-center hover:brightness-105 transition shadow-sm"
+                      >
+                        Pilot Masası ➔
+                      </a>
+                    )}
 
                     {user.role === 'hotel' && (
                       <a

@@ -20,14 +20,15 @@ export function CockpitSideNav() {
   const pathname = usePathname();
 
   const navItems = [
+    { href: "/pilot", label: "Pilot & Kurucu Masası", icon: Sparkles, badge: "Pilot" },
     { href: "/dashboard", label: "Kokpit / Özet", icon: LayoutDashboard },
     { href: "/live-requests", label: "Canlı Oda Talepleri", icon: BellRing, badge: "Canlı" },
     { href: "/disputes", label: "Misafir Hakları & Hakem", icon: Scale, badge: "Hakem" },
-    { href: "/hotels", label: "43 Otel Yönetimi", icon: Building2 },
+    { href: "/hotels", label: "Anlaşmalı Oteller", icon: Building2 },
     { href: "/qr-generator", label: "Oda QR Üretici", icon: QrCode },
-    { href: "/experiences", label: "52 Deneyim Kataloğu", icon: Compass },
+    { href: "/experiences", label: "İşletme İlanları", icon: Compass },
     { href: "/bookings", label: "Sanal POS Rezervasyonları", icon: CreditCard },
-    { href: "/settings", label: "Gemini & Sistem Ayarları", icon: Settings },
+    { href: "/settings", label: "Sistem & AI Ayarları", icon: Settings },
   ];
 
   return (

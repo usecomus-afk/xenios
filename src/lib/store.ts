@@ -1,4 +1,4 @@
-import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser } from './types';
+import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience } from './types';
 import rawHotels from '@/data/hotels.json';
 import rawExperiences from '@/data/experiences.json';
 
@@ -59,19 +59,73 @@ export const XeniosStore = {
   },
 
   getHotels(): Hotel[] {
+    try {
+      const stored = safeGet('xenios_custom_hotels');
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
     return hotelsData;
   },
 
-  getHotelById(id: string): Hotel | undefined {
-    return hotelsData.find(h => h.id === id) || hotelsData[0];
+  saveHotels(hotels: Hotel[]) {
+    safeSet('xenios_custom_hotels', JSON.stringify(hotels));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_hotels_updated'));
+    }
   },
 
-  getExperiences() {
-    return rawExperiences;
+  addHotel(hotel: Hotel) {
+    const list = this.getHotels();
+    list.push(hotel);
+    this.saveHotels(list);
+  },
+
+  updateHotel(id: string, updated: Partial<Hotel>) {
+    const list = this.getHotels().map(h => h.id === id ? { ...h, ...updated } : h);
+    this.saveHotels(list);
+  },
+
+  deleteHotel(id: string) {
+    const list = this.getHotels().filter(h => h.id !== id);
+    this.saveHotels(list);
+  },
+
+  getHotelById(id: string): Hotel | undefined {
+    return this.getHotels().find(h => h.id === id) || this.getHotels()[0];
+  },
+
+  getExperiences(): Experience[] {
+    try {
+      const stored = safeGet('xenios_custom_experiences');
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return rawExperiences as Experience[];
+  },
+
+  saveExperiences(exps: Experience[]) {
+    safeSet('xenios_custom_experiences', JSON.stringify(exps));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_experiences_updated'));
+    }
+  },
+
+  updateExperience(id: string, updated: Partial<Experience>) {
+    const list = this.getExperiences().map(e => e.id === id ? { ...e, ...updated } : e);
+    this.saveExperiences(list);
+  },
+
+  addExperience(exp: Experience) {
+    const list = this.getExperiences();
+    list.unshift(exp);
+    this.saveExperiences(list);
+  },
+
+  deleteExperience(id: string) {
+    const list = this.getExperiences().filter(e => e.id !== id);
+    this.saveExperiences(list);
   },
 
   getExperienceById(id: string) {
-    return rawExperiences.find((e: any) => e.id === id);
+    return this.getExperiences().find((e: any) => e.id === id);
   },
 
   // Active Session
