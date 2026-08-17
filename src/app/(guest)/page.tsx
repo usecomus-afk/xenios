@@ -134,29 +134,58 @@ export default function GuestPage() {
               lang={lang}
             />
 
-            {/* Quick Banner for Curated Experiences */}
-            <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="space-y-1 text-center sm:text-left">
-                <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-500 text-black font-bold uppercase tracking-wider">
-                    Seçkin Hizmetler
-                  </span>
-                  <span className="text-xs text-amber-400 font-serif">İstanbul Deneyimleri Kataloğu</span>
-                </div>
-                <h3 className="text-base sm:text-lg font-bold font-serif text-white">
-                  Boğaz Turları, Tarihi Hamamlar & VIP Deneyimler
-                </h3>
-                <p className="text-xs text-zinc-400 max-w-md">
-                  52 seçkin ve lisanslı acente ilanı arasından otelinizden tek tıkla rezervasyon yapın.
-                </p>
-              </div>
+            {/* Curated Istanbul Experiences Banner (Kataloğu Keşfet Modülü) */}
+            <div className="bg-white rounded-3xl p-5 sm:p-6 border border-amber-300/80 shadow-md hover:shadow-lg transition space-y-4 relative overflow-hidden bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30">
+              
+              {/* Decorative subtle ambient light */}
+              <div className="absolute -top-12 -right-12 w-44 h-44 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
 
-              <button
-                onClick={() => setActiveTab('experiences')}
-                className="px-5 py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-2xl text-xs shadow-lg shadow-amber-500/30 shrink-0 transition cursor-pointer"
-              >
-                Kataloğu Keşfet →
-              </button>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+                <div className="space-y-2 text-left">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-3 py-1 rounded-full text-[10px] bg-amber-500 text-white font-extrabold uppercase tracking-widest shadow-xs">
+                      ✨ TÜRSAB Lisanslı İlanlar
+                    </span>
+                    <span className="text-xs font-bold text-amber-900/80 font-serif">
+                      İstanbul Deneyimleri Kataloğu
+                    </span>
+                  </div>
+
+                  <h3 className="text-base sm:text-lg font-bold font-serif text-zinc-900 leading-snug">
+                    Boğaz Turları, Tarihi Hamamlar & VIP Şehir Deneyimleri
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed max-w-xl font-medium">
+                    İstanbul'un 52 seçkin ve doğrulanmış işletme ilanını inceleyin; otelinizden ayrılmadan güvenle yerinizi ayırtın.
+                  </p>
+
+                  {/* Featured Micro-Pills for quick preview */}
+                  <div className="flex items-center gap-2 pt-1 flex-wrap text-[11px] font-semibold text-zinc-700">
+                    <span className="bg-amber-100/70 border border-amber-200 text-amber-900 px-2.5 py-1 rounded-xl flex items-center gap-1">
+                      🛥️ Lüks Yat & Boğaz
+                    </span>
+                    <span className="bg-amber-100/70 border border-amber-200 text-amber-900 px-2.5 py-1 rounded-xl flex items-center gap-1">
+                      🏛️ Hamam & SPA
+                    </span>
+                    <span className="bg-amber-100/70 border border-amber-200 text-amber-900 px-2.5 py-1 rounded-xl flex items-center gap-1">
+                      📸 Teras Kostüm
+                    </span>
+                    <span className="bg-amber-100/70 border border-amber-200 text-amber-900 px-2.5 py-1 rounded-xl flex items-center gap-1">
+                      🚐 VIP Transfer
+                    </span>
+                  </div>
+                </div>
+
+                <div className="shrink-0 pt-2 sm:pt-0">
+                  <button
+                    onClick={() => setActiveTab('experiences')}
+                    className="w-full sm:w-auto px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs sm:text-sm shadow-md shadow-amber-500/25 transition transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Compass className="w-4 h-4" />
+                    <span>Kataloğu Keşfet (52 İlan) →</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
             
