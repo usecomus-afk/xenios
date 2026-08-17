@@ -144,9 +144,6 @@ export default function GuestPage() {
                 <div className="space-y-2 text-left">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="px-3 py-1 rounded-full text-[10px] bg-amber-500 text-white font-extrabold uppercase tracking-widest shadow-xs">
-                      ✨ TÜRSAB Lisanslı İlanlar
-                    </span>
-                    <span className="text-xs font-bold text-amber-900/80 font-serif">
                       İstanbul Deneyimleri Kataloğu
                     </span>
                   </div>
@@ -158,22 +155,6 @@ export default function GuestPage() {
                   <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed max-w-xl font-medium">
                     İstanbul'un 52 seçkin ve doğrulanmış işletme ilanını inceleyin; otelinizden ayrılmadan güvenle yerinizi ayırtın.
                   </p>
-
-                  {/* Featured Micro-Pills for quick preview */}
-                  <div className="flex items-center gap-2 pt-1 flex-wrap text-[11px] font-semibold text-zinc-700">
-                    <span className="bg-amber-100/70 border border-amber-200 text-amber-900 px-2.5 py-1 rounded-xl flex items-center gap-1">
-                      🛥️ Lüks Yat & Boğaz
-                    </span>
-                    <span className="bg-amber-100/70 border border-amber-200 text-amber-900 px-2.5 py-1 rounded-xl flex items-center gap-1">
-                      🏛️ Hamam & SPA
-                    </span>
-                    <span className="bg-amber-100/70 border border-amber-200 text-amber-900 px-2.5 py-1 rounded-xl flex items-center gap-1">
-                      📸 Teras Kostüm
-                    </span>
-                    <span className="bg-amber-100/70 border border-amber-200 text-amber-900 px-2.5 py-1 rounded-xl flex items-center gap-1">
-                      🚐 VIP Transfer
-                    </span>
-                  </div>
                 </div>
 
                 <div className="shrink-0 pt-2 sm:pt-0">
