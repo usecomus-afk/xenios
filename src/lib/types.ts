@@ -50,6 +50,8 @@ export interface Experience {
 
 export type ServiceStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
 
+export type ServicePriority = 'standart' | 'acil';
+
 export interface ServiceRequest {
   id: string;
   hotelId: string;
@@ -61,6 +63,11 @@ export interface ServiceRequest {
   status: ServiceStatus;
   createdAt: string;
   updatedAt: string;
+  // Structured per-module form data (see src/lib/service-modules.ts)
+  details?: Record<string, string | number | boolean | string[]>;
+  department?: string;
+  priority?: ServicePriority;
+  stage?: string;
 }
 
 export type BookingStatus = 'payment_success' | 'provider_pending' | 'confirmed' | 'cancelled';

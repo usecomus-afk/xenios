@@ -171,6 +171,10 @@ export const XeniosStore = {
         serviceTitle: 'Temiz Havlu Talebi',
         notes: '2 adet banyo havlusu rica ediyoruz.',
         status: 'in_progress',
+        stage: 'preparing',
+        department: 'Housekeeping & Çamaşırhane Envanteri',
+        priority: 'standart',
+        details: { towelType: 'Banyo Havlusu', quantity: 2, deliveryTime: '30 Dakika İçinde', oldTowelPickup: true },
         createdAt: new Date(Date.now() - 15 * 60000).toISOString(),
         updatedAt: new Date().toISOString()
       },
@@ -183,6 +187,10 @@ export const XeniosStore = {
         serviceTitle: 'Odaya Kahvaltı Talebi',
         notes: 'Saat 08:30 için 2 kişilik Türk kahvaltısı',
         status: 'pending',
+        stage: 'pending',
+        department: 'Room Service (Mutfak KDS)',
+        priority: 'standart',
+        details: { breakfastType: 'Türk Kahvaltısı', guestCount: 2, time: '08:30', specialRequests: '' },
         createdAt: new Date(Date.now() - 35 * 60000).toISOString(),
         updatedAt: new Date().toISOString()
       }
@@ -209,6 +217,20 @@ export const XeniosStore = {
     const list = this.getRequests();
     const item = list.find(r => r.id === id);
     if (item) {
+      item.status = status;
+      item.updatedAt = new Date().toISOString();
+      try {
+        safeSet(STORAGE_KEYS.REQUESTS, JSON.stringify(list));
+        if (typeof window !== 'undefined') window.dispatchEvent(new Event('xenios_requests_updated'));
+      } catch (e) {}
+    }
+  },
+
+  updateRequestStage(id: string, stage: string, status: ServiceRequest['status']) {
+    const list = this.getRequests();
+    const item = list.find(r => r.id === id);
+    if (item) {
+      item.stage = stage;
       item.status = status;
       item.updatedAt = new Date().toISOString();
       try {

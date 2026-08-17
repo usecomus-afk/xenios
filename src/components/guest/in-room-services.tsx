@@ -1,12 +1,13 @@
 "use client";
 
-import { Language, Hotel, ServiceRequest } from '@/lib/types';
+import { Language, Hotel } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { XeniosStore } from '@/lib/store';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { Send } from 'lucide-react';
+import { getModuleConfig, deriveStatus, formatFieldValue } from '@/lib/service-modules';
+import { ServiceRequestForm } from './service-request-form';
 
 interface InRoomServicesProps {
   hotel: Hotel;
@@ -17,7 +18,6 @@ interface InRoomServicesProps {
 export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps) {
   const t = getT(lang);
   const [selectedService, setSelectedService] = useState<{ key: string; title: string; iconSrc: string } | null>(null);
-  const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 16 In-Room Services with custom illustrated PNG icons matching the PDF design
@@ -40,19 +40,31 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
     { key: 'taxi', label: t.services.taxi, icon: '/icons/menu/taksi.png', desc: "Otel kapısına sarı taksi" }
   ];
 
-  const handleRequestSubmit = () => {
+  const handleRequestSubmit = (details: Record<string, any>) => {
     if (!selectedService) return;
+    const config = getModuleConfig(selectedService.key);
     setIsSubmitting(true);
 
     setTimeout(() => {
+      const firstStage = config?.stages[0]?.id ?? 'pending';
+      const isUrgent = config?.urgentIf?.(details) ?? false;
+      const summaryFields = config?.fields.filter((f) => f.type !== 'display') ?? [];
+      const notesSummary = summaryFields
+        .map((f) => `${f.label}: ${formatFieldValue(f, details[f.key])}`)
+        .join(' · ');
+
       XeniosStore.addRequest({
         hotelId: hotel.id,
         hotelName: hotel.name,
         roomNumber: roomNumber,
         serviceKey: selectedService.key,
         serviceTitle: selectedService.title,
-        notes: notes,
-        status: 'pending'
+        notes: notesSummary,
+        status: config ? deriveStatus(config, firstStage) : 'pending',
+        details,
+        department: config?.department,
+        stage: firstStage,
+        priority: isUrgent ? 'acil' : 'standart'
       });
 
       toast.success(`Oda ${roomNumber} için "${selectedService.title}" talebiniz kat hizmetleri ve resepsiyona iletildi.`, {
@@ -61,7 +73,6 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
 
       setIsSubmitting(false);
       setSelectedService(null);
-      setNotes('');
     }, 400);
   };
 
@@ -106,7 +117,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
       {/* Modal for In-Room Request Confirmation */}
       {selectedService && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-200 animate-in zoom-in-95 space-y-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-200 animate-in zoom-in-95 space-y-4 max-h-[88vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-amber-100 pb-3">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-amber-50 p-1.5 border border-amber-200 flex items-center justify-center">
@@ -123,7 +134,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
                   <p className="text-xs text-zinc-500">{hotel.name} - Oda {roomNumber}</p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => setSelectedService(null)}
                 className="text-zinc-400 hover:text-zinc-700 text-xl font-bold p-1"
               >
@@ -131,36 +142,18 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
               </button>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-zinc-700 block">
-                Özel İstek / Notunuz (İsteğe Bağlı):
-              </label>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Örn: 2 adet ekstra havlu lütfen veya saat 10:00'da"
-                className="w-full h-24 text-xs rounded-xl border border-amber-200 p-3 focus:outline-none focus:ring-2 focus:ring-amber-500/40 bg-amber-50/30"
-              />
-            </div>
-
-            <div className="flex items-center gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setSelectedService(null)}
-                className="flex-1 py-2.5 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 transition"
-              >
-                İptal
-              </button>
-              <button
-                type="button"
-                onClick={handleRequestSubmit}
-                disabled={isSubmitting}
-                className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-md shadow-amber-500/30 flex items-center justify-center gap-1.5 transition"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>{isSubmitting ? "Gönderiliyor..." : "Talebi İlet"}</span>
-              </button>
-            </div>
+            {(() => {
+              const config = getModuleConfig(selectedService.key);
+              if (!config) return null;
+              return (
+                <ServiceRequestForm
+                  config={config}
+                  onSubmit={handleRequestSubmit}
+                  onCancel={() => setSelectedService(null)}
+                  isSubmitting={isSubmitting}
+                />
+              );
+            })()}
           </div>
         </div>
       )}
