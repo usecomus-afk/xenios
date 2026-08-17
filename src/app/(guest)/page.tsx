@@ -135,7 +135,7 @@ export default function GuestPage() {
             />
 
             {/* Quick Banner for Curated Experiences */}
-            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-950 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="space-y-1 text-center sm:text-left">
                 <div className="flex items-center justify-center sm:justify-start gap-2">
                   <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-500 text-black font-bold uppercase tracking-wider">
@@ -159,30 +159,7 @@ export default function GuestPage() {
               </button>
             </div>
 
-            {/* Xenios Misafir Kalkanı & Adil Alışveriş Politikası Banner */}
-            <div className="bg-white rounded-3xl p-5 border border-red-200/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="space-y-1 text-center sm:text-left">
-                <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-red-100 text-red-800 font-bold uppercase tracking-wider">
-                    🛡️ Xenios Misafir Kalkanı
-                  </span>
-                  <span className="text-xs text-zinc-500 font-serif">⚖️ Xenios Adil Alışveriş Politikası</span>
-                </div>
-                <h4 className="text-sm font-bold text-zinc-900">
-                  Fahiş Fiyat, Dolandırıcılık veya Haksız Kazanç Mağduru musunuz?
-                </h4>
-                <p className="text-xs text-zinc-500 max-w-lg">
-                  Şüpheli taksi, restoran veya alışveriş fişinizi bildirin. İşletmeyle resmi temasa geçerek haksız farkı hesabınıza iade ettiriyoruz.
-                </p>
-              </div>
-
-              <Link
-                href="/complaints"
-                className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs shadow-md shadow-red-500/20 shrink-0 transition flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>Şikayet Bildir →</span>
-              </Link>
-            </div>
+            
           </div>
         )}
 
@@ -303,73 +280,6 @@ export default function GuestPage() {
 
             {/* Xenios Fair Shopping Policy & Misafir Kalkanı Component */}
             <FairShoppingPolicy />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Istanbulkart Official Card */}
-              <div className="bg-white rounded-3xl p-5 border border-red-200/80 shadow-sm space-y-3 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="w-12 h-12 rounded-2xl bg-red-500/10 text-red-600 flex items-center justify-center font-bold text-xl">
-                    💳
-                  </div>
-                  <h3 className="text-base font-bold text-zinc-900">{t.istanbulkartTitle}</h3>
-                  <p className="text-xs text-zinc-600 leading-relaxed">{t.istanbulkartDesc}</p>
-                </div>
-
-                <a
-                  href="https://www.istanbulkart.istanbul"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
-                >
-                  <span>{t.istanbulkartLink}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-
-              {/* MuzeKart Official Card */}
-              <div className="bg-white rounded-3xl p-5 border border-amber-200/80 shadow-sm space-y-3 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold text-xl">
-                    🏛️
-                  </div>
-                  <h3 className="text-base font-bold text-zinc-900">{t.muzekartTitle}</h3>
-                  <p className="text-xs text-zinc-600 leading-relaxed">{t.muzekartDesc}</p>
-                </div>
-
-                <a
-                  href="https://muze.gov.tr"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
-                >
-                  <span>{t.muzekartLink}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-
-            {/* Emergency & Useful Contacts */}
-            <div className="bg-white rounded-3xl p-5 border border-amber-200/60 shadow-sm space-y-3">
-              <h3 className="text-sm font-bold text-zinc-900">{t.emergencyTitle}</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
-                  <span className="text-zinc-500 block text-[10px]">Acil Çağrı Merkezi</span>
-                  <strong className="text-red-600 text-sm font-mono">112</strong>
-                </div>
-                <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
-                  <span className="text-zinc-500 block text-[10px]">Turizm Polisi</span>
-                  <strong className="text-blue-600 text-sm font-mono">+90 212 527 45 03</strong>
-                </div>
-                <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
-                  <span className="text-zinc-500 block text-[10px]">İBB Beyaz Masa</span>
-                  <strong className="text-zinc-800 text-sm font-mono">153</strong>
-                </div>
-                <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
-                  <span className="text-zinc-500 block text-[10px]">Resepsiyon Dahili</span>
-                  <strong className="text-amber-800 text-sm font-mono">{currentHotel.receptionExt}</strong>
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </main>

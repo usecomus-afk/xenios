@@ -7,14 +7,10 @@ import {
   Lock, 
   Mail, 
   Building2, 
-  Key, 
-  ShieldCheck, 
   ArrowRight, 
-  Sparkles,
   Phone,
   CheckCircle2,
-  LogOut,
-  ChevronRight
+  Globe
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -32,7 +28,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
   const router = useRouter();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [role, setRole] = useState<'guest' | 'hotel'>(defaultRole);
-  const [showGoogleAccounts, setShowGoogleAccounts] = useState(false);
+  const [showGooglePrompt, setShowGooglePrompt] = useState(false);
 
   // Form states
   const [email, setEmail] = useState('');
@@ -41,63 +37,42 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
   const [phone, setPhone] = useState('');
   const [hotelCode, setHotelCode] = useState('FATIH-HERITAGE-01');
 
-  // Sample Google Accounts to pick from or input custom
-  const demoGoogleAccounts = [
-    {
-      name: "Ahmet Yılmaz",
-      email: "ahmet.yilmaz@gmail.com",
-      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&q=80"
-    },
-    {
-      name: "Elena Rostova",
-      email: "elena.rostova@gmail.com",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80"
-    },
-    {
-      name: "Michael Davies",
-      email: "m.davies@gmail.com",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80"
-    }
-  ];
+  // Google email input
+  const [googleEmail, setGoogleEmail] = useState('');
+  const [googleName, setGoogleName] = useState('');
 
   if (!isOpen) return null;
 
-  const handleSelectGoogleAccount = (acc: { name: string; email: string; avatar: string }) => {
+  const handleRealGoogleAuth = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!googleEmail || !googleEmail.includes('@')) {
+      toast.error("Lütfen geçerli bir Google (@gmail.com) e-posta adresi giriniz.");
+      return;
+    }
+
+    const cleanName = googleName.trim() || googleEmail.split('@')[0].replace(/[._]/g, ' ');
+    const formattedName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+
     const user: XeniosUser = {
-      id: 'usr_' + Date.now(),
-      name: acc.name,
-      email: acc.email,
-      avatar: acc.avatar,
+      id: 'usr_g_' + Date.now(),
+      name: formattedName,
+      email: googleEmail.trim().toLowerCase(),
+      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(formattedName)}&backgroundColor=d97706`,
       role: role,
       provider: 'google',
       createdAt: new Date().toISOString()
     };
 
     XeniosStore.setUser(user);
-    setShowGoogleAccounts(false);
-    toast.success(`Google hesabı ile giriş yapıldı: ${acc.name}`);
-    
+    setShowGooglePrompt(false);
+    toast.success(`Google ile başarıyla giriş yapıldı: ${user.name} (${user.email})`);
+
     setTimeout(() => {
       onClose();
       if (role === 'hotel') {
         router.push('/dashboard');
       }
-    }, 600);
-  };
-
-  const handleCustomGoogleInput = (customEmail: string) => {
-    if (!customEmail || !customEmail.includes('@')) {
-      toast.error("Geçerli bir Google e-posta adresi giriniz.");
-      return;
-    }
-    const cleanName = customEmail.split('@')[0].replace(/[._]/g, ' ');
-    const formattedName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
-    
-    handleSelectGoogleAccount({
-      name: formattedName,
-      email: customEmail,
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80"
-    });
+    }, 500);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -107,15 +82,16 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
       return;
     }
 
-    const userName = name || (role === 'hotel' ? 'Otel Yöneticisi' : email.split('@')[0]);
+    const userName = name.trim() || (role === 'hotel' ? 'Otel Yöneticisi' : email.split('@')[0]);
     const user: XeniosUser = {
       id: 'usr_' + Date.now(),
       name: userName,
-      email: email,
+      email: email.trim().toLowerCase(),
       role: role,
       hotelCode: role === 'hotel' ? hotelCode : undefined,
       hotelName: role === 'hotel' ? 'Old City Heritage Hotel' : undefined,
       phone: phone || undefined,
+      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(userName)}&backgroundColor=b45309`,
       provider: 'email',
       createdAt: new Date().toISOString()
     };
@@ -128,17 +104,17 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
         setTimeout(() => {
           onClose();
           router.push('/dashboard');
-        }, 600);
+        }, 500);
       } else {
         toast.success(`Hoş geldiniz ${user.name}!`);
-        setTimeout(() => onClose(), 500);
+        setTimeout(() => onClose(), 400);
       }
     } else {
       toast.success("Hesabınız başarıyla oluşturuldu! Hoş geldiniz.");
       setTimeout(() => {
         onClose();
         if (role === 'hotel') router.push('/dashboard');
-      }, 600);
+      }, 500);
     }
   };
 
@@ -182,7 +158,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
         <div className="flex rounded-2xl bg-zinc-100 p-1 mb-4 border border-zinc-200">
           <button
             type="button"
-            onClick={() => { setMode('login'); setShowGoogleAccounts(false); }}
+            onClick={() => { setMode('login'); setShowGooglePrompt(false); }}
             className={`flex-1 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
               mode === 'login'
                 ? 'bg-white text-zinc-900 shadow-sm'
@@ -193,7 +169,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
           </button>
           <button
             type="button"
-            onClick={() => { setMode('register'); setShowGoogleAccounts(false); }}
+            onClick={() => { setMode('register'); setShowGooglePrompt(false); }}
             className={`flex-1 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
               mode === 'register'
                 ? 'bg-white text-zinc-900 shadow-sm'
@@ -241,11 +217,11 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
           </div>
         )}
 
-        {/* Google OAuth Account Selection Drawer / Button */}
-        {!showGoogleAccounts ? (
+        {/* Real Google Account Sign-In Flow */}
+        {!showGooglePrompt ? (
           <button
             type="button"
-            onClick={() => setShowGoogleAccounts(true)}
+            onClick={() => setShowGooglePrompt(true)}
             className="w-full py-2.5 px-4 bg-white hover:bg-zinc-50 border border-zinc-300 rounded-2xl text-xs font-bold text-zinc-800 flex items-center justify-center gap-2.5 shadow-xs transition mb-3.5 cursor-pointer"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -254,10 +230,10 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
             </svg>
-            <span>Google Hesabı ile {mode === 'login' ? 'Giriş Yap' : 'Kaydol'}</span>
+            <span>Google Hesabınız ile {mode === 'login' ? 'Giriş Yap' : 'Kaydol'}</span>
           </button>
         ) : (
-          <div className="bg-zinc-50 p-4 rounded-2xl border border-amber-300/80 mb-4 space-y-3 animate-in fade-in">
+          <form onSubmit={handleRealGoogleAuth} className="bg-zinc-50 p-4 rounded-2xl border border-amber-300/80 mb-4 space-y-3 animate-in fade-in">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -266,59 +242,50 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
                 </svg>
-                <strong className="text-xs text-zinc-900">Google ile Oturum Açın</strong>
+                <strong className="text-xs text-zinc-900">Google Hesabı Doğrulama</strong>
               </div>
               <button 
                 type="button" 
-                onClick={() => setShowGoogleAccounts(false)}
+                onClick={() => setShowGooglePrompt(false)}
                 className="text-[11px] text-zinc-500 hover:text-zinc-800"
               >
                 İptal
               </button>
             </div>
 
-            <div className="space-y-1.5">
-              {demoGoogleAccounts.map((acc, aIdx) => (
-                <div
-                  key={aIdx}
-                  onClick={() => handleSelectGoogleAccount(acc)}
-                  className="p-2.5 rounded-xl bg-white hover:bg-amber-50/70 border border-zinc-200 hover:border-amber-400 flex items-center justify-between transition cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <img src={acc.avatar} alt={acc.name} className="w-8 h-8 rounded-full object-cover border border-zinc-200" />
-                    <div>
-                      <strong className="text-xs text-zinc-900 block group-hover:text-amber-800">{acc.name}</strong>
-                      <span className="text-[10px] text-zinc-500 block">{acc.email}</span>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:translate-x-0.5 group-hover:text-amber-600 transition" />
-                </div>
-              ))}
-            </div>
+            <div className="space-y-2">
+              <div>
+                <label className="text-[10px] font-bold text-zinc-600 block mb-1">Google Adınız Soyadınız:</label>
+                <input
+                  type="text"
+                  required
+                  value={googleName}
+                  onChange={(e) => setGoogleName(e.target.value)}
+                  placeholder="Örn: Ahmet Yılmaz"
+                  className="w-full px-3 py-1.5 text-xs bg-white border border-zinc-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500"
+                />
+              </div>
 
-            {/* Custom Google Email Input */}
-            <div className="pt-2 border-t border-zinc-200">
-              <label className="text-[10px] font-bold text-zinc-600 block mb-1">veya Farklı bir Google Hesabı Girin:</label>
-              <div className="flex gap-1.5">
+              <div>
+                <label className="text-[10px] font-bold text-zinc-600 block mb-1">Google E-Posta Adresiniz:</label>
                 <input
                   type="email"
-                  id="customGoogleEmail"
-                  placeholder="adiniz@gmail.com"
-                  className="flex-1 px-2.5 py-1.5 text-xs bg-white border border-zinc-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  required
+                  value={googleEmail}
+                  onChange={(e) => setGoogleEmail(e.target.value)}
+                  placeholder="kullanici@gmail.com"
+                  className="w-full px-3 py-1.5 text-xs bg-white border border-zinc-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-500"
                 />
-                <button
-                  type="button"
-                  onClick={() => {
-                    const inputEl = document.getElementById('customGoogleEmail') as HTMLInputElement;
-                    if (inputEl) handleCustomGoogleInput(inputEl.value);
-                  }}
-                  className="px-3 py-1.5 bg-zinc-900 text-white rounded-xl text-xs font-bold hover:bg-black"
-                >
-                  Giriş
-                </button>
               </div>
+
+              <button
+                type="submit"
+                className="w-full py-2 bg-zinc-900 hover:bg-black text-white text-xs font-bold rounded-xl transition mt-1 shadow-sm cursor-pointer"
+              >
+                Google Hesabıyla Doğrula & Giriş Yap
+              </button>
             </div>
-          </div>
+          </form>
         )}
 
         <div className="relative flex items-center justify-center mb-3.5">
@@ -339,7 +306,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Örn: Ahmet Yılmaz"
+                    placeholder="Örn: Mehmet Özkan"
                     className="w-full pl-9 pr-3 py-2 text-xs bg-zinc-50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/40"
                   />
                 </div>

@@ -18,21 +18,14 @@ import {
   Shield,
   ArrowRight,
   Landmark,
-  Hospital,
-  PhoneCall,
-  MapPin,
-  HeartHandshake,
-  FileSpreadsheet,
-  BadgeAlert,
-  UserX,
-  MessageSquare
+  BadgeAlert
 } from 'lucide-react';
 import Link from 'next/link';
 
 export function FairShoppingPolicy() {
-  const [activeSection, setActiveSection] = useState<'policy' | 'shield'>('policy');
+  const [activeSection, setActiveSection] = useState<'shield' | 'policy'>('shield');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [openTrap, setOpenTrap] = useState<number | null>(null);
+  const [openTrap, setOpenTrap] = useState<number | null>(1);
 
   const faqs = [
     {
@@ -174,7 +167,7 @@ export function FairShoppingPolicy() {
             </div>
             <div>
               <strong className="text-sm font-bold text-zinc-900 block">Xenios Misafir Kalkanı</strong>
-              <span className="text-[11px] text-zinc-500 block">9 Yaygın Tuzak & Hukuki Haklarınız Rehberi</span>
+              <span className="text-[11px] text-zinc-500 block">9 Yaygın Tuzak, İstanbulkart & MüzeKart</span>
             </div>
           </button>
 
@@ -220,65 +213,179 @@ export function FairShoppingPolicy() {
         </div>
       </div>
 
-      {/* SECTION 1: XENIOS ADİL ALIŞVERİŞ POLİTİKASI (Tam Politika Metni) */}
+      {/* SECTION 1: XENIOS MİSAFİR KALKANI (9 Hayati Rehber + İstanbulkart & MüzeKart) */}
+      {activeSection === 'shield' && (
+        <div className="space-y-5">
+          
+          {/* ISTANBULKART & MUZEKART MODULLERI */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-white rounded-3xl p-5 border border-red-200/80 shadow-sm space-y-3 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="w-12 h-12 rounded-2xl bg-red-500/10 text-red-600 flex items-center justify-center font-bold text-xl">
+                  💳
+                </div>
+                <h3 className="text-base font-bold text-zinc-900">Resmi İstanbulkart & Ulaşım</h3>
+                <p className="text-xs text-zinc-600 leading-relaxed">
+                  Metro, tramvay, vapur, Marmaray ve otobüslerde geçerli tek resmi toplu taşıma kartı. Biletmatik cihazlarından veya online temin edebilirsiniz.
+                </p>
+              </div>
+
+              <a
+                href="https://www.istanbulkart.istanbul"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
+              >
+                <span>İstanbulkart Resmi Portalı</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            <div className="bg-white rounded-3xl p-5 border border-amber-200/80 shadow-sm space-y-3 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold text-xl">
+                  🏛️
+                </div>
+                <h3 className="text-base font-bold text-zinc-900">Resmi MüzeKart & Biletler</h3>
+                <p className="text-xs text-zinc-600 leading-relaxed">
+                  T.C. Kültür ve Turizm Bakanlığı'na bağlı 300'den fazla müze ve ören yerinde sıra beklemeden geçerli resmi giriş kartı.
+                </p>
+              </div>
+
+              <a
+                href="https://muze.gov.tr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
+              >
+                <span>MüzeKart Satın Al / İncele</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
+          {/* 9 Hayati Güvenlik & Tuzak Rehberi */}
+          <div className="space-y-3">
+            <h3 className="text-base font-bold font-serif text-zinc-900">
+              İstanbul'da Karşılaşılabilecek Yaygın Tuzaklar ve Yasal Haklarınız
+            </h3>
+
+            <div className="space-y-3">
+              {shieldTopics.map((item) => (
+                <div key={item.id} className="bg-white rounded-3xl border border-zinc-200/80 shadow-xs overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setOpenTrap(openTrap === item.id ? null : item.id)}
+                    className="w-full p-4 text-left font-bold text-xs sm:text-sm text-zinc-900 bg-zinc-50/80 hover:bg-amber-50/50 flex items-center justify-between transition cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center shrink-0">
+                        {item.id}
+                      </span>
+                      <span>{item.title}</span>
+                    </div>
+                    {openTrap === item.id ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
+                  </button>
+
+                  {openTrap === item.id && (
+                    <div className="p-5 space-y-3.5 text-xs text-zinc-700 bg-white border-t border-zinc-200 leading-relaxed">
+                      <div className="space-y-1">
+                        <strong className="text-red-700 block font-bold">⚠️ Karşılaşılan Sorun:</strong>
+                        <p>{item.problem}</p>
+                      </div>
+
+                      <div className="space-y-1">
+                        <strong className="text-amber-700 block font-bold">🛑 Olası Riskler:</strong>
+                        <p>{item.risk}</p>
+                      </div>
+
+                      <div className="space-y-1 bg-emerald-50/60 p-3 rounded-xl border border-emerald-200">
+                        <strong className="text-emerald-800 block font-bold">✅ Misafirin Yapması Gerekenler:</strong>
+                        <p className="text-emerald-950">{item.action}</p>
+                      </div>
+
+                      <div className="space-y-1 bg-zinc-50 p-3 rounded-xl border border-zinc-200">
+                        <strong className="text-zinc-800 block font-bold">📜 Türkiye'de Hukuk Nasıl İşler?:</strong>
+                        <p className="text-zinc-600">{item.law}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Emergency Contacts */}
+          <div className="bg-white rounded-3xl p-5 border border-amber-200/60 shadow-sm space-y-3">
+            <h3 className="text-sm font-bold text-zinc-900">Resmi Acil & Destek Hatları</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
+                <span className="text-zinc-500 block text-[10px]">Acil Çağrı Merkezi</span>
+                <strong className="text-red-600 text-sm font-mono">112</strong>
+              </div>
+              <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
+                <span className="text-zinc-500 block text-[10px]">Turizm Polisi</span>
+                <strong className="text-blue-600 text-sm font-mono">+90 212 527 45 03</strong>
+              </div>
+              <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
+                <span className="text-zinc-500 block text-[10px]">İBB Beyaz Masa</span>
+                <strong className="text-zinc-800 text-sm font-mono">153</strong>
+              </div>
+              <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
+                <span className="text-zinc-500 block text-[10px]">Zabıta İhbar</span>
+                <strong className="text-amber-800 text-sm font-mono">153</strong>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* SECTION 2: XENIOS ADİL ALIŞVERİŞ POLİTİKASI */}
       {activeSection === 'policy' && (
         <div className="space-y-6">
           
-          {/* Step 1 & 2: Kanıt Toplama & Şikayet Açma */}
           <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-sm space-y-4">
             <h3 className="text-base font-bold font-serif text-zinc-900 flex items-center gap-2">
               <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">1</span>
               <span>Şikayet Nasıl Yapabilirsin?</span>
             </h3>
 
-            <div className="space-y-2">
-              <strong className="text-xs font-bold text-zinc-800 block">Adım 1: Kanıt Topla</strong>
-              <p className="text-xs text-zinc-600">Xenios'a bildirmeden önce, yaşadığınız kötü deneyimin kanıtlarını mutlaka hazırlayın:</p>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left border-collapse border border-zinc-200 rounded-xl overflow-hidden">
-                  <thead>
-                    <tr className="bg-amber-50 text-zinc-800 font-bold border-b border-zinc-200">
-                      <th className="p-2.5">Kanıt Türü</th>
-                      <th className="p-2.5">Nedir?</th>
-                      <th className="p-2.5">Örnek</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-200 text-zinc-600">
-                    <tr>
-                      <td className="p-2.5 font-bold text-zinc-900">Fatura / Fiş</td>
-                      <td className="p-2.5">İşletmeden aldığın ödeme belgesi</td>
-                      <td className="p-2.5">Restoran fişi, tur makbuzu, ürün faturası</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2.5 font-bold text-zinc-900">Ekran Görüntüsü</td>
-                      <td className="p-2.5">Telefon, app veya web ekran görüntüsü</td>
-                      <td className="p-2.5">Yanlış fiyat, ödeme onayı, mesajlaşma</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2.5 font-bold text-zinc-900">Konum Bilgisi</td>
-                      <td className="p-2.5">İşletmenin harita konumu veya adresi</td>
-                      <td className="p-2.5">Google Maps linki, sokak adı</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2.5 font-bold text-zinc-900">Taksi Plakası</td>
-                      <td className="p-2.5">Taksi dolandırıcılığı yaşandıysa</td>
-                      <td className="p-2.5">Sarı plaka numarası (Örn: 34 TAA 01)</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="p-3.5 bg-[#fbf8f1] rounded-2xl border border-amber-200/70 space-y-1">
-              <strong className="text-xs font-bold text-zinc-900 block">Adım 2: Xenios'ta Şikayet Aç</strong>
-              <p className="text-xs text-zinc-600">
-                1. "Şikayet Et" butonuna tıklayın ➔ 2. Sorunu detaylı anlatın ➔ 3. Kanıtlarınızı sisteme yükleyin ➔ 4. Takip kodunuzu alın.
-              </p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left border-collapse border border-zinc-200 rounded-xl overflow-hidden">
+                <thead>
+                  <tr className="bg-amber-50 text-zinc-800 font-bold border-b border-zinc-200">
+                    <th className="p-2.5">Kanıt Türü</th>
+                    <th className="p-2.5">Nedir?</th>
+                    <th className="p-2.5">Örnek</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-200 text-zinc-600">
+                  <tr>
+                    <td className="p-2.5 font-bold text-zinc-900">Fatura / Fiş</td>
+                    <td className="p-2.5">İşletmeden aldığın ödeme belgesi</td>
+                    <td className="p-2.5">Restoran fişi, tur makbuzu, ürün faturası</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold text-zinc-900">Ekran Görüntüsü</td>
+                    <td className="p-2.5">Telefon, app veya web ekran görüntüsü</td>
+                    <td className="p-2.5">Yanlış fiyat, ödeme onayı, mesajlaşma</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold text-zinc-900">Konum Bilgisi</td>
+                    <td className="p-2.5">İşletmenin harita konumu veya adresi</td>
+                    <td className="p-2.5">Google Maps linki, sokak adı</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2.5 font-bold text-zinc-900">Taksi Plakası</td>
+                    <td className="p-2.5">Taksi dolandırıcılığı yaşandıysa</td>
+                    <td className="p-2.5">Sarı plaka numarası (Örn: 34 TAA 01)</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
-          {/* Step 3 to 6: Xenios Ne Yapacak? (7 Günlük Süreç & Kamuya Açıklanma) */}
           <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-sm space-y-4">
             <h3 className="text-base font-bold font-serif text-zinc-900 flex items-center gap-2">
               <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">2</span>
@@ -297,20 +404,6 @@ export function FairShoppingPolicy() {
               </div>
             </div>
 
-            {/* 7 Days Response Table */}
-            <div className="space-y-2">
-              <strong className="text-xs font-bold text-zinc-800 block">Adım 5: İşletmenin Cevap Vermesi (7 Gün)</strong>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900">
-                  <strong>✅ İşletme turisti telafi ederse:</strong> Fark iade edilir, durum başarıyla çözümlenir.
-                </div>
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-900">
-                  <strong>⚠️ İşletme reddeder veya susarsa:</strong> Uyarı sistemi başlar ve kamuya ifşa edilir.
-                </div>
-              </div>
-            </div>
-
-            {/* Public Advisory Sample */}
             <div className="p-4 rounded-2xl bg-zinc-900 text-white space-y-2 text-xs">
               <div className="flex items-center gap-2 text-amber-400 font-bold">
                 <BadgeAlert className="w-4 h-4" />
@@ -325,16 +418,11 @@ export function FairShoppingPolicy() {
             </div>
           </div>
 
-          {/* Repeat Complaints & External Institutional Reports */}
           <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-sm space-y-4">
             <h3 className="text-base font-bold font-serif text-zinc-900 flex items-center gap-2">
               <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">3</span>
               <span>Kurumsal Bildirimler (Resmi Devlet Kurumları)</span>
             </h3>
-
-            <p className="text-xs text-zinc-600 leading-relaxed">
-              Xenios yalnızca işletmeyi uyarmakla kalmaz. Tekrar eden veya ciddi kötü niyet taşıyan şikayetleri doğrudan yetkili kamu kurumlarına online ihbar kaydı olarak iletir:
-            </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl space-y-1">
@@ -342,7 +430,7 @@ export function FairShoppingPolicy() {
                   <Landmark className="w-4 h-4 text-red-600" />
                   <span>CİMER (Cumhurbaşkanlığı İletişim)</span>
                 </strong>
-                <p className="text-zinc-500">Turist dolandırıcılığı, sahte acenteler ve esnaf usulsüzlükleri Kültür & Turizm ve Ticaret Bakanlığı'na sevk edilir.</p>
+                <p className="text-zinc-500">Turist dolandırıcılığı, sahte acenteler ve esnaf usulsüzlükleri Bakanlıklara sevk edilir.</p>
               </div>
 
               <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl space-y-1">
@@ -350,28 +438,11 @@ export function FairShoppingPolicy() {
                   <Car className="w-4 h-4 text-amber-600" />
                   <span>İBB TUDES (Toplu Ulaşım Hizmetleri)</span>
                 </strong>
-                <p className="text-zinc-500">Taksi plakasıyla bildirilen fazla ücret, taksimetre açmama ve güzergah uzatma şikayetleri doğrudan cezai işleme alınır.</p>
-              </div>
-
-              <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl space-y-1">
-                <strong className="text-zinc-900 font-bold flex items-center gap-1.5">
-                  <Scale className="w-4 h-4 text-blue-600" />
-                  <span>Ticaret Bakanlığı (HFA Kurulu)</span>
-                </strong>
-                <p className="text-zinc-500">Fahiş fiyat uygulayan ve menü fiyatı basmayan restoran ve mağazalar Haksız Fiyat Değerlendirme Kurulu'na raporlanır.</p>
-              </div>
-
-              <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl space-y-1">
-                <strong className="text-zinc-900 font-bold flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>TÜRSAB (Seyahat Acentaları Birliği)</span>
-                </strong>
-                <p className="text-zinc-500">Tur operatörleri ve rehberlik hizmetlerindeki ihlaller derhal birlik disiplin kuruluna bildirilir.</p>
+                <p className="text-zinc-500">Taksi plakasıyla bildirilen fazla ücret ve taksimetre açmama şikayetleri doğrudan cezai işleme alınır.</p>
               </div>
             </div>
           </div>
 
-          {/* Sık Sorulan Sorular Accordion */}
           <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-sm space-y-4">
             <h3 className="text-base font-bold font-serif text-zinc-900 flex items-center gap-2">
               <HelpCircle className="w-5 h-5 text-amber-600" />
@@ -399,64 +470,6 @@ export function FairShoppingPolicy() {
             </div>
           </div>
 
-        </div>
-      )}
-
-      {/* SECTION 2: XENIOS MİSAFİR KALKANI (9 Hayati Rehber - PDF'ten) */}
-      {activeSection === 'shield' && (
-        <div className="space-y-4">
-          <div className="bg-white rounded-3xl p-5 border border-amber-200/80 shadow-sm">
-            <h3 className="text-base font-bold font-serif text-zinc-900">
-              İstanbul'da Karşılaşılabilecek Yaygın Tuzaklar ve Yasal Haklarınız
-            </h3>
-            <p className="text-xs text-zinc-500 mt-1">
-              Aşağıdaki rehberleri inceleyerek seyahatinizi güvenle geçirebilir ve olası tuzaklara karşı bilinçli hareket edebilirsiniz.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {shieldTopics.map((item) => (
-              <div key={item.id} className="bg-white rounded-3xl border border-zinc-200/80 shadow-xs overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setOpenTrap(openTrap === item.id ? null : item.id)}
-                  className="w-full p-4 text-left font-bold text-xs sm:text-sm text-zinc-900 bg-zinc-50/80 hover:bg-amber-50/50 flex items-center justify-between transition cursor-pointer"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center shrink-0">
-                      {item.id}
-                    </span>
-                    <span>{item.title}</span>
-                  </div>
-                  {openTrap === item.id ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
-                </button>
-
-                {openTrap === item.id && (
-                  <div className="p-5 space-y-3.5 text-xs text-zinc-700 bg-white border-t border-zinc-200 leading-relaxed">
-                    <div className="space-y-1">
-                      <strong className="text-red-700 block font-bold">⚠️ Karşılaşılan Sorun:</strong>
-                      <p>{item.problem}</p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <strong className="text-amber-700 block font-bold">🛑 Olası Riskler:</strong>
-                      <p>{item.risk}</p>
-                    </div>
-
-                    <div className="space-y-1 bg-emerald-50/60 p-3 rounded-xl border border-emerald-200">
-                      <strong className="text-emerald-800 block font-bold">✅ Misafirin Yapması Gerekenler:</strong>
-                      <p className="text-emerald-950">{item.action}</p>
-                    </div>
-
-                    <div className="space-y-1 bg-zinc-50 p-3 rounded-xl border border-zinc-200">
-                      <strong className="text-zinc-800 block font-bold">📜 Türkiye'de Hukuk Nasıl İşler?:</strong>
-                      <p className="text-zinc-600">{item.law}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
         </div>
       )}
 

@@ -15,7 +15,7 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
   const t = getT(lang);
 
   const tabs = [
-    { id: 'services', label: 'Oda Hizmetleri', iconType: 'lucide', icon: Home },
+    { id: 'services', label: 'Otel', iconType: 'lucide', icon: Home },
     { id: 'experiences', label: 'Deneyimler', iconType: 'lucide', icon: Compass },
     { id: 'categories', label: 'Kategoriler', iconType: 'lucide', icon: LayoutGrid },
     { id: 'ai', label: 'comusAI', iconType: 'image', imgSrc: '/icons/menu/aiGuide.png', highlight: true },

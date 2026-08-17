@@ -24,7 +24,8 @@ import {
   Maximize2,
   CheckCircle2,
   ChevronRight,
-  Shield
+  Shield,
+  ExternalLink
 } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
@@ -347,32 +348,41 @@ export function ExperienceDetailModal({
             {experience.location}, İstanbul
           </p>
 
-          {/* Stylized Google Maps Container */}
-          <div className="relative h-56 rounded-3xl overflow-hidden border border-zinc-200 shadow-inner bg-zinc-100">
-            <Image
-              src="/images/istanbul/il_1588xN.6201904451_eqr3.webp"
-              alt="Harita Konumu"
-              fill
-              className="object-cover opacity-80"
-            />
-            <div className="absolute inset-0 bg-black/20" />
-
-            {/* Map Pin Marker */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-              <div className="px-3 py-1.5 rounded-full bg-zinc-900 text-white text-[11px] font-bold shadow-xl flex items-center gap-1.5 animate-bounce">
-                <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                <span>Buluşma Noktası</span>
-              </div>
+          {/* Live Open Google Maps Container */}
+          <div className="space-y-2.5">
+            <div className="relative h-64 w-full rounded-3xl overflow-hidden border border-zinc-300 shadow-md bg-zinc-100">
+              <iframe
+                title="Google Maps Buluşma Noktası"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(experience.location + ', Istanbul, Turkey')}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              />
             </div>
 
-            {/* Transit Trigger Button over map */}
-            <button
-              onClick={() => onOpenTransit(experience)}
-              className="absolute bottom-3 right-3 px-3.5 py-2 rounded-xl bg-white/95 hover:bg-white text-zinc-900 text-xs font-bold shadow-md flex items-center gap-1.5 backdrop-blur-md transition cursor-pointer"
-            >
-              <Navigation className="w-3.5 h-3.5 text-amber-600" />
-              <span>Otelden Ulaşım Rehberi</span>
-            </button>
+            <div className="flex items-center justify-between gap-2 pt-1">
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(experience.location + ', Istanbul, Turkey')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-black text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition"
+              >
+                <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                <span>Google Haritalar'da Aç</span>
+                <ExternalLink className="w-3 h-3 text-zinc-400" />
+              </a>
+
+              <button
+                type="button"
+                onClick={() => onOpenTransit(experience)}
+                className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition cursor-pointer"
+              >
+                <Navigation className="w-3.5 h-3.5" />
+                <span>Otelden Ulaşım Rotası</span>
+              </button>
+            </div>
           </div>
         </div>
 
