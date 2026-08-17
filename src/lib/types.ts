@@ -172,6 +172,16 @@ export interface Complaint {
 }
 
 
+// Cockpit: Otel İçi Hizmet Modülleri Yönetimi (içerik/fiyat/aktiflik/görünürlük)
+export interface ModuleAdminSettings {
+  enabled: boolean;
+  hidden: boolean;
+  pricing?: Record<string, number>;
+  fieldOptions?: Record<string, string[]>;
+}
+
+export type ModuleAdminSettingsMap = Record<string, ModuleAdminSettings>;
+
 export interface XeniosUser {
   id: string;
   name: string;

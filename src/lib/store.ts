@@ -1,4 +1,4 @@
-import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience } from './types';
+import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap } from './types';
 import rawHotels from '@/data/hotels.json';
 import rawExperiences from '@/data/experiences.json';
 
@@ -12,8 +12,11 @@ const STORAGE_KEYS = {
   BOOKINGS: 'xenios_bookings',
   PROFILE: 'xenios_guest_profile',
   COMPLAINTS: 'xenios_tourist_complaints',
-  CURRENT_USER: 'xenios_auth_user'
+  CURRENT_USER: 'xenios_auth_user',
+  MODULE_SETTINGS: 'xenios_module_settings'
 };
+
+const DEFAULT_MODULE_SETTING: ModuleAdminSettings = { enabled: true, hidden: false };
 
 function safeGet(key: string, defaultVal: string = ''): string {
   if (typeof window === 'undefined') return defaultVal;
@@ -238,6 +241,29 @@ export const XeniosStore = {
         if (typeof window !== 'undefined') window.dispatchEvent(new Event('xenios_requests_updated'));
       } catch (e) {}
     }
+  },
+
+  // Cockpit: Otel İçi Hizmet Modülleri Yönetimi (aktif/pasif, gizleme, fiyat, içerik)
+  getModuleSettings(): ModuleAdminSettingsMap {
+    try {
+      const stored = safeGet(STORAGE_KEYS.MODULE_SETTINGS);
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return {};
+  },
+
+  getModuleSetting(key: string): ModuleAdminSettings {
+    const all = this.getModuleSettings();
+    return { ...DEFAULT_MODULE_SETTING, ...(all[key] ?? {}) };
+  },
+
+  setModuleSetting(key: string, settings: ModuleAdminSettings) {
+    const all = this.getModuleSettings();
+    all[key] = settings;
+    try {
+      safeSet(STORAGE_KEYS.MODULE_SETTINGS, JSON.stringify(all));
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('xenios_module_settings_updated'));
+    } catch (e) {}
   },
 
   // Bookings & Virtual POS

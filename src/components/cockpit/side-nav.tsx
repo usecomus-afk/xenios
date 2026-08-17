@@ -3,17 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BrandMark } from "@/components/brand-mark";
-import { 
-  LayoutDashboard, 
-  Building2, 
-  QrCode, 
-  Sparkles, 
-  BellRing, 
-  CreditCard, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Building2,
+  QrCode,
+  Sparkles,
+  BellRing,
+  CreditCard,
+  Settings,
   ArrowLeft,
   Compass,
-  Scale
+  Scale,
+  LayoutGrid
 } from "lucide-react";
 
 export function CockpitSideNav() {
@@ -23,6 +24,7 @@ export function CockpitSideNav() {
     { href: "/pilot", label: "Pilot & Kurucu Masası", icon: Sparkles, badge: "Pilot" },
     { href: "/dashboard", label: "Kokpit / Özet", icon: LayoutDashboard },
     { href: "/live-requests", label: "Canlı Oda Talepleri", icon: BellRing, badge: "Canlı" },
+    { href: "/module-settings", label: "Hizmet Modülleri Yönetimi", icon: LayoutGrid },
     { href: "/disputes", label: "Misafir Hakları & Hakem", icon: Scale, badge: "Hakem" },
     { href: "/hotels", label: "Anlaşmalı Oteller", icon: Building2 },
     { href: "/qr-generator", label: "Oda QR Üretici", icon: QrCode },

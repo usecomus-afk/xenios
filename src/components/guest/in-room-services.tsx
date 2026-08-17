@@ -1,12 +1,12 @@
 "use client";
 
-import { Language, Hotel } from '@/lib/types';
+import { Language, Hotel, ModuleAdminSettingsMap } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { XeniosStore } from '@/lib/store';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { getModuleConfig, deriveStatus, formatFieldValue } from '@/lib/service-modules';
+import { getModuleConfig, deriveStatus, formatFieldValue, resolvePricing } from '@/lib/service-modules';
 import { ServiceRequestForm } from './service-request-form';
 
 interface InRoomServicesProps {
@@ -19,6 +19,13 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
   const t = getT(lang);
   const [selectedService, setSelectedService] = useState<{ key: string; title: string; iconSrc: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [moduleSettings, setModuleSettings] = useState<ModuleAdminSettingsMap>(() => XeniosStore.getModuleSettings());
+
+  useEffect(() => {
+    const refresh = () => setModuleSettings(XeniosStore.getModuleSettings());
+    window.addEventListener('xenios_module_settings_updated', refresh);
+    return () => window.removeEventListener('xenios_module_settings_updated', refresh);
+  }, []);
 
   // 16 In-Room Services with custom illustrated PNG icons matching the PDF design
   const serviceItems = [
@@ -83,35 +90,53 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
         <p className="text-xs text-zinc-500">{t.servicesSubtitle}</p>
       </div>
 
-      {/* Grid of 16 Services (Mobile 2 cols, Desktop 4 cols) */}
+      {/* Grid of In-Room Services (Mobile 2 cols, Desktop 4 cols) — cockpit-hidden modules are filtered out */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {serviceItems.map((item) => {
-          return (
-            <button
-              key={item.key}
-              onClick={() => setSelectedService({ key: item.key, title: item.label, iconSrc: item.icon })}
-              className="xenios-tile rounded-3xl p-4 sm:p-5 flex flex-col items-center text-center justify-between gap-3 min-h-[145px] group cursor-pointer border border-amber-200/70 hover:border-amber-400/90 transition-all shadow-sm hover:shadow-md bg-white"
-            >
-              <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-[#fbf8f1] p-2 flex items-center justify-center group-hover:scale-105 transition-transform border border-amber-100/60 shadow-inner">
-                <Image
-                  src={item.icon}
-                  alt={item.label}
-                  width={76}
-                  height={76}
-                  className="object-contain w-full h-full drop-shadow-sm"
-                />
-              </div>
-              <div className="w-full">
-                <span className="text-xs sm:text-sm font-bold text-zinc-800 leading-tight block">
-                  {item.label}
-                </span>
-                <span className="text-[10px] text-zinc-400 line-clamp-1 mt-0.5">
-                  {item.desc}
-                </span>
-              </div>
-            </button>
-          );
-        })}
+        {serviceItems
+          .filter((item) => !(moduleSettings[item.key]?.hidden))
+          .map((item) => {
+            const isEnabled = moduleSettings[item.key]?.enabled ?? true;
+            return (
+              <button
+                key={item.key}
+                onClick={() => {
+                  if (!isEnabled) {
+                    toast.error(`"${item.label}" hizmeti şu anda kullanım dışı.`, { description: 'Lütfen resepsiyonu arayın veya daha sonra tekrar deneyin.' });
+                    return;
+                  }
+                  setSelectedService({ key: item.key, title: item.label, iconSrc: item.icon });
+                }}
+                className={`xenios-tile rounded-3xl p-4 sm:p-5 flex flex-col items-center text-center justify-between gap-3 min-h-[145px] group border transition-all shadow-sm bg-white relative ${
+                  isEnabled
+                    ? 'cursor-pointer border-amber-200/70 hover:border-amber-400/90 hover:shadow-md'
+                    : 'cursor-not-allowed border-zinc-200 opacity-50 grayscale'
+                }`}
+              >
+                {!isEnabled && (
+                  <span className="absolute top-2 right-2 text-[9px] px-1.5 py-0.5 rounded-full bg-zinc-800 text-white font-bold">
+                    Kullanım Dışı
+                  </span>
+                )}
+                <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-[#fbf8f1] p-2 flex items-center justify-center group-hover:scale-105 transition-transform border border-amber-100/60 shadow-inner">
+                  <Image
+                    src={item.icon}
+                    alt={item.label}
+                    width={76}
+                    height={76}
+                    className="object-contain w-full h-full drop-shadow-sm"
+                  />
+                </div>
+                <div className="w-full">
+                  <span className="text-xs sm:text-sm font-bold text-zinc-800 leading-tight block">
+                    {item.label}
+                  </span>
+                  <span className="text-[10px] text-zinc-400 line-clamp-1 mt-0.5">
+                    {item.desc}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
       </div>
 
       {/* Modal for In-Room Request Confirmation */}
@@ -145,12 +170,15 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
             {(() => {
               const config = getModuleConfig(selectedService.key);
               if (!config) return null;
+              const settings = moduleSettings[selectedService.key];
               return (
                 <ServiceRequestForm
                   config={config}
                   onSubmit={handleRequestSubmit}
                   onCancel={() => setSelectedService(null)}
                   isSubmitting={isSubmitting}
+                  pricing={resolvePricing(config, settings?.pricing)}
+                  fieldOptionOverrides={settings?.fieldOptions}
                 />
               );
             })()}

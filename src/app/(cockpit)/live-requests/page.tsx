@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { XeniosStore } from '@/lib/store';
-import { ServiceRequest, ServiceStatus } from '@/lib/types';
-import { SERVICE_MODULES, getModuleConfig, deriveStatus, nextStage, formatFieldValue } from '@/lib/service-modules';
+import { ServiceRequest, ServiceStatus, ModuleAdminSettingsMap } from '@/lib/types';
+import { SERVICE_MODULES, getModuleConfig, deriveStatus, nextStage, formatFieldValue, resolvePricing, deriveRequestStatus as displayStatus, isToday } from '@/lib/service-modules';
 import { BellRing, CheckCircle2, Clock, AlertTriangle, Building2, ArrowRight, LayoutGrid } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -14,31 +14,29 @@ const STATUS_LABEL: Record<ServiceStatus, string> = {
   cancelled: 'İptal / Reddedildi'
 };
 
-function isToday(iso: string) {
-  const d = new Date(iso);
-  const now = new Date();
-  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
-}
-
-function displayStatus(req: ServiceRequest): ServiceStatus {
-  const config = getModuleConfig(req.serviceKey);
-  if (config && req.stage) return deriveStatus(config, req.stage);
-  return req.status;
-}
-
 export default function LiveRequestsPage() {
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [filter, setFilter] = useState<'all' | ServiceStatus>('all');
   const [moduleFilter, setModuleFilter] = useState<string>('all');
+  const [moduleSettings, setModuleSettings] = useState<ModuleAdminSettingsMap>({});
 
   const refreshData = () => {
     setRequests(XeniosStore.getRequests());
+    setModuleSettings(XeniosStore.getModuleSettings());
   };
 
   useEffect(() => {
     refreshData();
+    // Deep-link from the Hizmet Modülleri Yönetimi page: /live-requests?module=breakfast
+    const preset = new URLSearchParams(window.location.search).get('module');
+    if (preset && SERVICE_MODULES[preset]) setModuleFilter(preset);
+
     window.addEventListener('xenios_requests_updated', refreshData);
-    return () => window.removeEventListener('xenios_requests_updated', refreshData);
+    window.addEventListener('xenios_module_settings_updated', refreshData);
+    return () => {
+      window.removeEventListener('xenios_requests_updated', refreshData);
+      window.removeEventListener('xenios_module_settings_updated', refreshData);
+    };
   }, []);
 
   const handleStatusChange = (id: string, status: ServiceRequest['status']) => {
@@ -227,7 +225,7 @@ export default function LiveRequestsPage() {
                     {detailFields.map((f) => {
                       const rawValue = req.details ? req.details[f.key] : undefined;
                       const value = f.type === 'display'
-                        ? (f.compute ? f.compute(req.details ?? {}) : '—')
+                        ? (f.compute ? f.compute(req.details ?? {}, resolvePricing(config, moduleSettings[req.serviceKey]?.pricing)) : '—')
                         : formatFieldValue(f, rawValue);
                       if (f.optional && (value === '—' || value === '')) return null;
                       return (

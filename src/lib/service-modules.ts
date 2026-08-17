@@ -1,4 +1,4 @@
-import { ServiceStatus } from './types';
+import { ServiceStatus, ServiceRequest } from './types';
 
 export type ServiceFieldType =
   | 'select'
@@ -22,8 +22,8 @@ export interface ServiceField {
   optional?: boolean;
   suffix?: string;
   toggleLabels?: [string, string]; // [on, off]
-  /** For type 'display': derives the shown value from the rest of the form. */
-  compute?: (details: Record<string, any>) => string;
+  /** For type 'display': derives the shown value from the rest of the form + effective pricing. */
+  compute?: (details: Record<string, any>, pricing: Record<string, number>) => string;
 }
 
 export interface ServiceStage {
@@ -35,11 +35,17 @@ export interface ServiceModuleConfig {
   key: string;
   title: string;
   department: string;
+  icon: string;
   stages: ServiceStage[];
   fields: ServiceField[];
   /** Rejected/failed terminal stages count as 'cancelled' rather than 'completed'. */
   negativeStageIds?: string[];
   urgentIf?: (details: Record<string, any>) => boolean;
+  /** Default numeric pricing knobs (cockpit-editable). Keys are either an exact option label
+   *  (per-item price) or a named parameter (e.g. ironFeePerItem, nightlyRate). */
+  pricingDefaults?: Record<string, number>;
+  /** Which select/multiselect field's option labels double as pricing keys, if any. */
+  pricedFieldKey?: string;
 }
 
 export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
@@ -47,6 +53,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'breakfast',
     title: 'Kahvaltı Talebi',
     department: 'Room Service (Mutfak KDS)',
+    icon: '/icons/menu/breakfast.png',
     stages: [
       { id: 'pending', label: 'Bekleme' },
       { id: 'preparing', label: 'Hazırlanıyor' },
@@ -60,19 +67,21 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
       { key: 'specialRequests', label: 'Özel İstekler', type: 'textarea', optional: true, placeholder: 'Örn: laktozsuz süt, bal yerine reçel...' },
       {
         key: 'totalPrice', label: 'Toplam Ücret', type: 'display',
-        compute: (d) => {
-          const perPerson: Record<string, number> = { 'Türk Kahvaltısı': 350, 'Kontinental Kahvaltı': 250, 'Vegan Kahvaltı': 300, 'Çocuk Menüsü': 150 };
-          const total = (perPerson[d.breakfastType] ?? 300) * (Number(d.guestCount) || 1);
-          return `${total} ₺`;
+        compute: (d, pricing) => {
+          const perPerson = pricing[d.breakfastType] ?? 300;
+          return `${perPerson * (Number(d.guestCount) || 1)} ₺`;
         }
       }
-    ]
+    ],
+    pricingDefaults: { 'Türk Kahvaltısı': 350, 'Kontinental Kahvaltı': 250, 'Vegan Kahvaltı': 300, 'Çocuk Menüsü': 150 },
+    pricedFieldKey: 'breakfastType'
   },
 
   dnd: {
     key: 'dnd',
     title: 'Rahatsız Etmeyin',
     department: 'Housekeeping Planlama',
+    icon: '/icons/menu/dnd.png',
     stages: [
       { id: 'active', label: 'Aktif' },
       { id: 'removed', label: 'Kaldırıldı' }
@@ -89,6 +98,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'cleaning',
     title: 'Oda Temizliği',
     department: 'Housekeeping',
+    icon: '/icons/menu/cleaning.png',
     stages: [
       { id: 'pending', label: 'Bekleme' },
       { id: 'in_progress', label: 'Devam Ediyor' },
@@ -112,6 +122,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'towels',
     title: 'Temiz Havlu',
     department: 'Housekeeping & Çamaşırhane Envanteri',
+    icon: '/icons/menu/towels.png',
     stages: [
       { id: 'stock_check', label: 'Stok Yeterli' },
       { id: 'preparing', label: 'Hazırlanıyor' },
@@ -130,6 +141,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'linens',
     title: 'Çarşaf & Nevresim',
     department: 'Çamaşırhane + Housekeeping',
+    icon: '/icons/menu/linens.png',
     stages: [
       { id: 'pending', label: 'Bekleme' },
       { id: 'laundry_room', label: 'Temizlik Odası' },
@@ -142,14 +154,22 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
       { key: 'changeType', label: 'Değişim Türü', type: 'select', options: ['Tam Takım (Çarşaf + Nevresim)', 'Sadece Nevresim', 'Sadece Alt Çarşaf'], default: 'Tam Takım (Çarşaf + Nevresim)' },
       { key: 'status', label: 'Durum (Teslim/Değiştirelim)', type: 'select', options: ['Odaya Teslim Edilsin', 'Odada Değiştirilsin (Housekeeping Girsin)'], default: 'Odada Değiştirilsin (Housekeeping Girsin)' },
       { key: 'deliveryTime', label: 'Teslimat Zamanı', type: 'select', options: ['Hemen', 'Bugün İçinde', 'Belirli Saatte'], default: 'Bugün İçinde' },
-      { key: 'fee', label: 'Ücret', type: 'display', compute: () => 'Ücretsiz (Standart Hizmet Kapsamında)' }
-    ]
+      {
+        key: 'fee', label: 'Ücret', type: 'display',
+        compute: (_d, pricing) => {
+          const fee = pricing.fee ?? 0;
+          return fee > 0 ? `${fee} ₺` : 'Ücretsiz (Standart Hizmet Kapsamında)';
+        }
+      }
+    ],
+    pricingDefaults: { fee: 0 }
   },
 
   pillows: {
     key: 'pillows',
     title: 'Ekstra Yastık',
     department: 'Housekeeping Envanteri',
+    icon: '/icons/menu/pillows.png',
     stages: [
       { id: 'stock', label: 'Stok' },
       { id: 'preparing', label: 'Hazırlanıyor' },
@@ -168,6 +188,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'toiletries',
     title: 'Banyo Bukleti',
     department: 'Mini Kit Envanteri',
+    icon: '/icons/menu/toiletries.png',
     stages: [
       { id: 'depot', label: 'Depo' },
       { id: 'room', label: 'Oda' },
@@ -185,6 +206,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'hygiene',
     title: 'Hijyen & Bakım Seti',
     department: 'Özel Kit Yönetimi',
+    icon: '/icons/menu/hygiene.png',
     stages: [
       { id: 'depot', label: 'Depo' },
       { id: 'room', label: 'Oda' },
@@ -201,6 +223,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'roomservice',
     title: 'Oda Servisi (Menü)',
     department: 'Mutfak (KDS) + Room Service',
+    icon: '/icons/menu/roomservice.png',
     stages: [
       { id: 'order_received', label: 'Sipariş Alındı' },
       { id: 'kitchen', label: 'Mutfakta' },
@@ -215,21 +238,23 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
       { key: 'specialNotes', label: 'Özel Notlar', type: 'textarea', optional: true },
       {
         key: 'totalPrice', label: 'Toplam Ücret', type: 'display',
-        compute: (d) => {
-          const priceMap: Record<string, number> = { 'Izgara Köfte Tabağı': 320, 'Sezar Salata': 220, 'Kulüp Sandviç': 240, 'Türk Kahvesi': 90, 'Taze Meyve Tabağı': 180, 'Su Şişesi (0.5L)': 40 };
+        compute: (d, pricing) => {
           const items: string[] = d.menuItems || [];
           const qty = Number(d.quantity) || 1;
-          const unitTotal = items.reduce((sum, i) => sum + (priceMap[i] || 150), 0);
+          const unitTotal = items.reduce((sum, i) => sum + (pricing[i] ?? 150), 0);
           return `${unitTotal * qty} ₺`;
         }
       }
-    ]
+    ],
+    pricingDefaults: { 'Izgara Köfte Tabağı': 320, 'Sezar Salata': 220, 'Kulüp Sandviç': 240, 'Türk Kahvesi': 90, 'Taze Meyve Tabağı': 180, 'Su Şişesi (0.5L)': 40 },
+    pricedFieldKey: 'menuItems'
   },
 
   minibar: {
     key: 'minibar',
     title: 'Mini Bar Dolumu',
     department: 'Mini Bar Envanteri',
+    icon: '/icons/menu/minibar.png',
     stages: [
       { id: 'requested', label: 'Talep' },
       { id: 'preparing', label: 'Hazırlanıyor' },
@@ -243,22 +268,24 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
       { key: 'deliveryTime', label: 'Teslimat Zamanı', type: 'select', options: ['Hemen', '30 Dakika İçinde', '1 Saat İçinde'], default: 'Hemen' },
       {
         key: 'fee', label: 'Ücret', type: 'display',
-        compute: (d) => {
-          const perItem: Record<string, number> = { 'Su (0.5L)': 30, 'Kola': 60, 'Meyve Suyu': 70, 'Bira': 120, 'Şarap (Kırmızı/Beyaz)': 450, 'Enerji İçeceği': 90 };
+        compute: (d, pricing) => {
           const items: string[] = d.drinkSelection || [];
           const qty = Number(d.quantity) || 1;
-          const brandMultiplier = d.brand === 'Premium' ? 1.5 : 1;
-          const unitTotal = items.reduce((sum, i) => sum + (perItem[i] ?? 50), 0) || 50;
+          const brandMultiplier = d.brand === 'Premium' ? (pricing.premiumMultiplierPercent ?? 150) / 100 : 1;
+          const unitTotal = items.reduce((sum, i) => sum + (pricing[i] ?? 50), 0) || 50;
           return `${Math.round(unitTotal * qty * brandMultiplier)} ₺ (Tahmini)`;
         }
       }
-    ]
+    ],
+    pricingDefaults: { 'Su (0.5L)': 30, 'Kola': 60, 'Meyve Suyu': 70, 'Bira': 120, 'Şarap (Kırmızı/Beyaz)': 450, 'Enerji İçeceği': 90, premiumMultiplierPercent: 150 },
+    pricedFieldKey: 'drinkSelection'
   },
 
   safe: {
     key: 'safe',
     title: 'Kasa & Güvenlik',
     department: 'Güvenlik & Teknik Servis',
+    icon: '/icons/menu/safe.png',
     stages: [
       { id: 'reported', label: 'Bildirilen' },
       { id: 'checked', label: 'Kontrol Edildi' },
@@ -276,6 +303,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'technical',
     title: 'Teknik Destek',
     department: 'Teknik Servis (Maintenance)',
+    icon: '/icons/menu/technical.png',
     stages: [
       { id: 'reported', label: 'Bildirilen' },
       { id: 'in_progress', label: 'Devam Ediyor' },
@@ -296,6 +324,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'laundry',
     title: 'Çamaşırhane & Ütü',
     department: 'Çamaşırhane Yönetimi',
+    icon: '/icons/menu/laundry.png',
     stages: [
       { id: 'picked_up', label: 'Alındı' },
       { id: 'washing', label: 'Yıkamada' },
@@ -312,16 +341,17 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
       { key: 'checkoutTime', label: 'Çıkış Saati', type: 'time', optional: true },
       {
         key: 'fee', label: 'Ücret', type: 'display',
-        compute: (d) => {
-          const base: Record<string, number> = { 'Express (4-6 Saat)': 60, 'Standart (24 Saat)': 35, 'Kuru Temizleme': 80 };
+        compute: (d, pricing) => {
           const items: string[] = d.itemType || [];
           const count = Math.max(items.length, 1);
-          const perItemPrice = base[d.serviceType] ?? 40;
-          const ironFee = d.ironingRequested ? 20 * count : 0;
+          const perItemPrice = pricing[d.serviceType] ?? 40;
+          const ironFee = d.ironingRequested ? (pricing.ironFeePerItem ?? 20) * count : 0;
           return `${perItemPrice * count + ironFee} ₺ (Tahmini)`;
         }
       }
     ],
+    pricingDefaults: { 'Express (4-6 Saat)': 60, 'Standart (24 Saat)': 35, 'Kuru Temizleme': 80, ironFeePerItem: 20 },
+    pricedFieldKey: 'serviceType',
     urgentIf: (d) => d.serviceType === 'Express (4-6 Saat)'
   },
 
@@ -329,6 +359,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'lateCheckout',
     title: 'Geç Çıkış Talebi',
     department: 'Ön Büro (Front Desk)',
+    icon: '/icons/menu/lateCheckout.png',
     stages: [
       { id: 'requested', label: 'İstek' },
       { id: 'checked', label: 'Kontrol Edildi' },
@@ -347,6 +378,7 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
     key: 'extendStay',
     title: 'Konaklama Uzatma',
     department: 'Gelir Yönetimi + Ön Büro',
+    icon: '/icons/menu/extendStay.png',
     stages: [
       { id: 'requested', label: 'İstek' },
       { id: 'system_check', label: 'Sistem Kontrolü' },
@@ -359,21 +391,23 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
       { key: 'roomPreference', label: 'Oda Durumu (Aynı/Farklı)', type: 'select', options: ['Aynı Odada Kalmak İstiyorum', 'Farklı Odaya Geçebilirim'], default: 'Aynı Odada Kalmak İstiyorum' },
       {
         key: 'feeEstimate', label: 'Ücret Hesaplaması', type: 'display',
-        compute: (d) => {
+        compute: (d, pricing) => {
           const nightsMap: Record<string, number> = { '1 Gece': 1, '2 Gece': 2, '3 Gece': 3, '1 Hafta': 7 };
           const nights = nightsMap[d.extensionUnit] ?? 1;
-          const rate = 3200;
+          const rate = pricing.nightlyRate ?? 3200;
           return `${(nights * rate).toLocaleString('tr-TR')} ₺ (Tahmini, ${nights} gece)`;
         }
       },
       { key: 'note', label: 'Not (Opsiyonel)', type: 'textarea', optional: true }
-    ]
+    ],
+    pricingDefaults: { nightlyRate: 3200 }
   },
 
   taxi: {
     key: 'taxi',
     title: 'Taksi Çağır',
     department: 'Concierge & Ulaşım',
+    icon: '/icons/menu/taksi.png',
     stages: [
       { id: 'requested', label: 'İstek' },
       { id: 'called', label: 'Çağrı Yapıldı' },
@@ -391,15 +425,19 @@ export const SERVICE_MODULES: Record<string, ServiceModuleConfig> = {
       { key: 'time', label: 'Zaman', type: 'select', options: ['Hemen', '15 Dakika Sonra', '30 Dakika Sonra', 'Planlı Saat'], default: 'Hemen' },
       {
         key: 'priceEstimate', label: 'Fiyat Tahmini', type: 'display',
-        compute: (d) => {
-          const multiplier: Record<string, number> = { 'Standart Sarı Taksi': 1, 'VIP Transfer (Binek)': 2.2, 'Minivan (Grup)': 1.6 };
-          const m = multiplier[d.vehicleType] ?? 1;
-          return `${Math.round(180 * m)} - ${Math.round(650 * m)} ₺ (Güzergaha Göre Tahmini)`;
+        compute: (d, pricing) => {
+          const pct = pricing[d.vehicleType] ?? 100;
+          const m = pct / 100;
+          const min = pricing.baseMin ?? 180;
+          const max = pricing.baseMax ?? 650;
+          return `${Math.round(min * m)} - ${Math.round(max * m)} ₺ (Güzergaha Göre Tahmini)`;
         }
       },
       { key: 'driverInfo', label: 'Sürücü Bilgisi', type: 'display', compute: () => 'Talep onaylandığında atanacak' },
       { key: 'liveTracking', label: 'Canlı Takip', type: 'display', compute: () => 'Sürücü atandığında aktif olacak' }
-    ]
+    ],
+    pricingDefaults: { 'Standart Sarı Taksi': 100, 'VIP Transfer (Binek)': 220, 'Minivan (Grup)': 160, baseMin: 180, baseMax: 650 },
+    pricedFieldKey: 'vehicleType'
   }
 };
 
@@ -450,4 +488,27 @@ export function formatFieldValue(field: ServiceField, value: any): string {
     return Array.isArray(value) && value.length ? value.join(', ') : '—';
   }
   return String(value);
+}
+
+/** Merges cockpit-managed pricing overrides on top of a module's shipped defaults. */
+export function resolvePricing(config: ServiceModuleConfig, overrides?: Record<string, number>): Record<string, number> {
+  return { ...(config.pricingDefaults ?? {}), ...(overrides ?? {}) };
+}
+
+/** Merges cockpit-managed content (option list) overrides for one field; falls back to shipped options. */
+export function resolveFieldOptions(field: ServiceField, overrides?: Record<string, string[]>): string[] {
+  return overrides?.[field.key] ?? field.options ?? [];
+}
+
+/** The request's live operational status: derived from its module workflow stage when available. */
+export function deriveRequestStatus(req: ServiceRequest): ServiceStatus {
+  const config = getModuleConfig(req.serviceKey);
+  if (config && req.stage) return deriveStatus(config, req.stage);
+  return req.status;
+}
+
+export function isToday(iso: string): boolean {
+  const d = new Date(iso);
+  const now = new Date();
+  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { ServiceField, ServiceModuleConfig, buildInitialDetails } from '@/lib/service-modules';
+import { ServiceField, ServiceModuleConfig, buildInitialDetails, resolveFieldOptions } from '@/lib/service-modules';
 import { AlertTriangle } from 'lucide-react';
 
 interface ServiceRequestFormProps {
@@ -9,16 +9,20 @@ interface ServiceRequestFormProps {
   onSubmit: (details: Record<string, any>) => void;
   onCancel: () => void;
   isSubmitting: boolean;
+  /** Cockpit-managed pricing overrides for this module (see service-modules.ts). */
+  pricing?: Record<string, number>;
+  /** Cockpit-managed content (option list) overrides, keyed by field key. */
+  fieldOptionOverrides?: Record<string, string[]>;
 }
 
-function FieldInput({ field, value, onChange }: { field: ServiceField; value: any; onChange: (v: any) => void }) {
+function FieldInput({ field, options, value, onChange }: { field: ServiceField; options: string[]; value: any; onChange: (v: any) => void }) {
   const baseClass = "w-full text-xs p-2.5 rounded-xl border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/40";
 
   switch (field.type) {
     case 'select':
       return (
         <select className={baseClass} value={value ?? ''} onChange={(e) => onChange(e.target.value)}>
-          {(field.options ?? []).map((opt) => (
+          {options.map((opt) => (
             <option key={opt} value={opt}>{opt}</option>
           ))}
         </select>
@@ -27,7 +31,7 @@ function FieldInput({ field, value, onChange }: { field: ServiceField; value: an
     case 'multiselect':
       return (
         <div className="flex flex-wrap gap-1.5">
-          {(field.options ?? []).map((opt) => {
+          {options.map((opt) => {
             const selected: string[] = Array.isArray(value) ? value : [];
             const active = selected.includes(opt);
             return (
@@ -124,7 +128,7 @@ function FieldInput({ field, value, onChange }: { field: ServiceField; value: an
   }
 }
 
-export function ServiceRequestForm({ config, onSubmit, onCancel, isSubmitting }: ServiceRequestFormProps) {
+export function ServiceRequestForm({ config, onSubmit, onCancel, isSubmitting, pricing = {}, fieldOptionOverrides }: ServiceRequestFormProps) {
   const [details, setDetails] = useState<Record<string, any>>(() => buildInitialDetails(config));
 
   const setField = (key: string, value: any) => setDetails((prev) => ({ ...prev, [key]: value }));
@@ -136,12 +140,13 @@ export function ServiceRequestForm({ config, onSubmit, onCancel, isSubmitting }:
           return (
             <div key={field.key} className="bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/70 flex items-center justify-between gap-2 text-xs">
               <span className="font-semibold text-zinc-600">{field.label}</span>
-              <span className="font-bold text-amber-800 text-right">{field.compute ? field.compute(details) : '—'}</span>
+              <span className="font-bold text-amber-800 text-right">{field.compute ? field.compute(details, pricing) : '—'}</span>
             </div>
           );
         }
 
         const isUrgentAlert = field.key === 'urgentHelp' && !!details[field.key];
+        const options = resolveFieldOptions(field, fieldOptionOverrides);
 
         return (
           <div key={field.key} className="space-y-1">
@@ -150,7 +155,7 @@ export function ServiceRequestForm({ config, onSubmit, onCancel, isSubmitting }:
               {field.optional && <span className="text-zinc-400 font-normal">(İsteğe Bağlı)</span>}
               {isUrgentAlert && <AlertTriangle className="w-3 h-3 text-red-500" />}
             </label>
-            <FieldInput field={field} value={details[field.key]} onChange={(v) => setField(field.key, v)} />
+            <FieldInput field={field} options={options} value={details[field.key]} onChange={(v) => setField(field.key, v)} />
           </div>
         );
       })}
