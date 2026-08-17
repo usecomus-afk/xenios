@@ -95,6 +95,8 @@ export interface Booking {
   confirmationCode: string;
 }
 
+export type TourPace = 'sakin' | 'dengeli' | 'yogun';
+
 export interface GuestProfile {
   name?: string;
   travelStyle?: 'solo' | 'couple' | 'family' | 'business';
@@ -102,6 +104,17 @@ export interface GuestProfile {
   dietaryRestrictions?: string[];
   budgetLevel?: 'economy' | 'moderate' | 'luxury';
   notes?: string;
+  // Kişisel rehberlik anketi (comusAI) — tamamı isteğe bağlı, misafir ne kadarını paylaşacağına kendi karar verir
+  healthNotes?: string;
+  allergies?: string[];
+  gastronomyPreferences?: string[];
+  shoppingInterests?: string[];
+  cityTourInterests?: string[];
+  tourPace?: TourPace;
+  businessNeeds?: string[];
+  // KVKK aydınlatma & açık rıza onayı — kişisel/sağlık verisi işlemek için zorunlu
+  kvkkConsent?: boolean;
+  consentTimestamp?: string;
 }
 
 export interface TransitCalculation {

@@ -288,7 +288,8 @@ export const XeniosStore = {
       travelStyle: 'couple',
       budgetLevel: 'luxury',
       interests: ['Boğaz Turları', 'Tarih', 'Gastronomi', 'Hamam'],
-      dietaryRestrictions: ['Helal', 'Deniz Ürünleri']
+      dietaryRestrictions: ['Helal', 'Deniz Ürünleri'],
+      kvkkConsent: false
     };
   },
 
@@ -296,6 +297,23 @@ export const XeniosStore = {
     try {
       safeSet(STORAGE_KEYS.PROFILE, JSON.stringify(profile));
     } catch (e) {}
+  },
+
+  // KVKK: misafirin dilediği zaman tüm kişisel/sağlık verilerini ve onayını silme hakkı
+  clearGuestProfile() {
+    const cleared: GuestProfile = { kvkkConsent: false };
+    try {
+      safeSet(STORAGE_KEYS.PROFILE, JSON.stringify(cleared));
+    } catch (e) {}
+    return cleared;
+  },
+
+  getAiIntroDismissed(): boolean {
+    return safeGet('xenios_ai_intro_dismissed') === '1';
+  },
+
+  setAiIntroDismissed(v: boolean) {
+    safeSet('xenios_ai_intro_dismissed', v ? '1' : '0');
   },
 
   // Tourist Complaints & Fraud Dispute Desk

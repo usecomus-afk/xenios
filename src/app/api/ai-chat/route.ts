@@ -17,20 +17,40 @@ export async function POST(req: Request) {
       });
     }
 
+    // Kişisel/sağlık verisi (KVKK kapsamında özel nitelikli veri) yalnızca misafir açık rıza
+    // verdiyse (kvkkConsent === true) modele iletilir; onay yoksa yalnızca genel tercihler kullanılır.
+    const hasConsent = !!profile?.kvkkConsent;
+
+    const personalizationBlock = hasConsent
+      ? `Misafirin Seyahat Tarzı: ${profile?.travelStyle || 'Genel'}.
+İlgi Alanları: ${(profile?.interests || []).join(', ') || 'Belirtilmedi'}.
+Bütçe Tercihi: ${profile?.budgetLevel || 'Lüks'}.
+Gezi Temposu: ${profile?.tourPace || 'Belirtilmedi'}.
+Sağlık Notları: ${profile?.healthNotes || 'Belirtilmedi'}.
+Alerjiler: ${(profile?.allergies || []).join(', ') || 'Belirtilmedi'}.
+Beslenme Tercihleri: ${(profile?.dietaryRestrictions || []).join(', ') || 'Belirtilmedi'}.
+Gastronomi Tercihleri: ${(profile?.gastronomyPreferences || []).join(', ') || 'Belirtilmedi'}.
+Alışveriş İlgi Alanları: ${(profile?.shoppingInterests || []).join(', ') || 'Belirtilmedi'}.
+Şehir Gezisi Tercihleri: ${(profile?.cityTourInterests || []).join(', ') || 'Belirtilmedi'}.
+İş Seyahati İhtiyaçları: ${(profile?.businessNeeds || []).join(', ') || 'Belirtilmedi'}.
+Ek Notlar: ${profile?.notes || 'Yok'}.`
+      : `Misafir henüz kişisel rehberlik anketini doldurmadı ve KVKK onayı vermedi; bu nedenle sağlık, alerji veya kişisel
+tercih verisi paylaşılmadı. Yalnızca genel, herkese uygun İstanbul önerileri sun ve dilerse "Beni Tanı" anketini
+doldurarak daha kişisel öneriler alabileceğini nazikçe hatırlat.`;
+
     // Call official Gemini API
     const systemPrompt = `Sen "comusAI" adında, İstanbul'daki seçkin oteller için çalışan lüks bir dijital concierge ve kişisel şehir rehberisin.
 Misafirin konakladığı otel: ${hotelName}, Semt: ${hotelDistrict}.
-Misafirin Seyahat Tarzı: ${profile?.travelStyle || 'Genel'}.
-İlgi Alanları: ${(profile?.interests || []).join(', ')}.
-Beslenme Tercihleri/Alerjiler: ${(profile?.dietaryRestrictions || []).join(', ')}.
-Bütçe Tercihi: ${profile?.budgetLevel || 'Lüks'}.
+${personalizationBlock}
 Yanıt Dili: ${language || 'tr'}.
 
 Kurallar:
 1. Samimi, son derece nazik, kibar ve elit bir Türkçe (veya seçilen dilde) konuş.
 2. Otelin konumunu (${hotelDistrict}) dikkate alarak gerçekçi mesafe ve ulaşım ipuçları ver.
 3. Kısa, nokta atışı ve çok faydalı önerilerde bulun.
-4. Çıktıyı Türkçe / seçilen dilde doğal bir sohbet metni olarak döndür.`;
+4. Sağlık notları veya alerjiler paylaşılmışsa (ör. deniz ürünü alerjisi, hareket kısıtlılığı), önerilerinde bunlara
+   uygun rota ve mekanlar seç; asla göz ardı etme.
+5. Çıktıyı Türkçe / seçilen dilde doğal bir sohbet metni olarak döndür.`;
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
