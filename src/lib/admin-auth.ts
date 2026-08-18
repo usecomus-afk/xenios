@@ -1,11 +1,18 @@
 /**
- * Lightweight, client-side gate for the /admin listing & bookings console.
- *
- * Xenios has no backend/database — every page in this app reads and writes
- * localStorage directly. This access code is therefore a deterrent against
- * casual/accidental access to listing & pricing controls, not a real
- * security boundary (anyone with browser devtools can read it). Set
- * NEXT_PUBLIC_ADMIN_ACCESS_CODE in the deployment environment to change it
- * from the default.
+ * Client helper for the /admin login gate. The actual email/password check
+ * happens server-side in src/app/api/admin-login/route.ts, against the
+ * ADMIN_EMAIL / ADMIN_PASSWORD environment variables — those values are
+ * never sent to the browser, unlike a NEXT_PUBLIC_ constant would be.
  */
-export const ADMIN_ACCESS_CODE = process.env.NEXT_PUBLIC_ADMIN_ACCESS_CODE || 'XENIOS-ADMIN-2026';
+export async function adminLogin(email: string, password: string): Promise<{ success: boolean; email?: string; error?: string }> {
+  try {
+    const res = await fetch('/api/admin-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    return await res.json();
+  } catch {
+    return { success: false, error: 'Sunucuya bağlanılamadı. Lütfen tekrar deneyin.' };
+  }
+}

@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { XeniosStore } from '@/lib/store';
-import { ADMIN_ACCESS_CODE } from '@/lib/admin-auth';
+import { adminLogin } from '@/lib/admin-auth';
 import { Experience, Booking, XeniosUser, BookingStatus } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
-  Lock, LogOut, ShieldCheck, KeyRound, Mail, Plus, Search, Edit3, Trash2, Save, X,
+  Lock, LogOut, ShieldCheck, Mail, KeyRound, Plus, Search, Edit3, Trash2, Save, X,
   Power, EyeOff, CreditCard, CheckCircle2, ExternalLink, Package, Ticket
 } from 'lucide-react';
 
@@ -31,19 +31,24 @@ const BOOKING_STATUS_LABEL: Record<BookingStatus, string> = {
 
 function AdminLoginGate({ onLogin }: { onLogin: (user: XeniosUser) => void }) {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (code.trim() !== ADMIN_ACCESS_CODE) {
-      toast.error('Erişim kodu hatalı. Lütfen tekrar deneyin.');
+    setIsSubmitting(true);
+    const result = await adminLogin(email, password);
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      toast.error(result.error || 'Giriş başarısız.');
       return;
     }
+
     const user: XeniosUser = {
       id: 'usr_admin_' + Date.now(),
-      name: name.trim() || 'Xenios Yöneticisi',
-      email: email.trim().toLowerCase() || 'admin@xenios.com',
+      name: 'Xenios Yöneticisi',
+      email: result.email || email.trim().toLowerCase(),
       role: 'admin',
       provider: 'email',
       createdAt: new Date().toISOString()
@@ -61,46 +66,38 @@ function AdminLoginGate({ onLogin }: { onLogin: (user: XeniosUser) => void }) {
             <Lock className="w-6 h-6 text-amber-400" />
           </div>
           <h1 className="text-base font-bold font-serif text-white">İlan & Rezervasyon Yönetimi</h1>
-          <p className="text-xs text-zinc-400">Bu bölüm sadece yetkili yöneticiler içindir. Devam etmek için erişim kodunuzu girin.</p>
+          <p className="text-xs text-zinc-400">Bu bölüm sadece yetkili yöneticiler içindir. Devam etmek için e-posta ve şifrenizi girin.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="text-[11px] font-bold text-zinc-400 block mb-1">Ad Soyad (Opsiyonel)</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Yönetici adı"
-              className="w-full px-3 py-2.5 text-xs bg-[#0f1116] border border-[#2c313d] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40"
-            />
-          </div>
-          <div>
             <label className="text-[11px] font-bold text-zinc-400 block mb-1 flex items-center gap-1"><Mail className="w-3 h-3" /> E-Posta</label>
             <input
               type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="yonetici@xenios.com"
+              placeholder="yonetici@usecomus.com"
               className="w-full px-3 py-2.5 text-xs bg-[#0f1116] border border-[#2c313d] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             />
           </div>
           <div>
-            <label className="text-[11px] font-bold text-zinc-400 block mb-1 flex items-center gap-1"><KeyRound className="w-3 h-3" /> Yönetici Erişim Kodu</label>
+            <label className="text-[11px] font-bold text-zinc-400 block mb-1 flex items-center gap-1"><KeyRound className="w-3 h-3" /> Şifre</label>
             <input
               type="password"
               required
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••"
               className="w-full px-3 py-2.5 text-xs bg-[#0f1116] border border-[#2c313d] rounded-xl text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-1.5"
+            disabled={isSubmitting}
+            className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-black font-bold text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-1.5"
           >
-            <ShieldCheck className="w-4 h-4" /> Yönetici Girişi Yap
+            <ShieldCheck className="w-4 h-4" /> {isSubmitting ? 'Kontrol Ediliyor...' : 'Yönetici Girişi Yap'}
           </button>
         </form>
       </div>
