@@ -89,7 +89,7 @@ export function HotelHeader({
   };
 
   return (
-    <header className="bg-gradient-to-b from-amber-500/10 via-amber-100/20 to-transparent pt-3 pb-3 px-3.5 sm:px-4 border-b border-amber-200/50 w-full overflow-hidden">
+    <header className="bg-gradient-to-b from-amber-500/10 via-amber-100/20 to-transparent pt-3 pb-3 px-3.5 sm:px-4 border-b border-amber-200/50 w-full relative z-40 overflow-visible">
       <div className="max-w-4xl mx-auto space-y-2.5">
         {/* Top Bar: Brand Logo + Compact Unified Action Pill (Bell, Lang, User) */}
         <div className="flex items-center justify-between gap-2">
@@ -98,7 +98,7 @@ export function HotelHeader({
           </div>
           
           {/* Unified Compact Action Pill to ensure 100% symmetric margins */}
-          <div className="flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-full border border-amber-200/90 shadow-xs shrink-0">
+          <div className="flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-full border border-amber-200/90 shadow-xs shrink-0 relative z-50">
             {/* 1. PWA Notification Bell */}
             <button
               type="button"
@@ -137,44 +137,50 @@ export function HotelHeader({
                   )}
                 </button>
 
-                {/* User Dropdown */}
+                {/* User Dropdown with Click-Outside Backdrop */}
                 {showUserDropdown && (
-                  <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl p-3 shadow-xl border border-amber-200 z-50 space-y-2 animate-in fade-in">
-                    <div className="border-b border-zinc-100 pb-2">
-                      <strong className="text-xs text-zinc-900 block truncate">{user.name}</strong>
-                      <span className="text-[10px] text-zinc-500 block truncate">{user.email}</span>
-                      <span className="text-[9px] px-2 py-0.5 bg-amber-100 text-amber-800 font-semibold rounded-md mt-1 inline-block">
-                        {user.role === 'pilot' ? '✨ Pilot & Kurucu' : user.role === 'hotel' ? 'Otel Yöneticisi' : 'Misafir Hesabı'}
-                      </span>
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40 bg-transparent" 
+                      onClick={() => setShowUserDropdown(false)} 
+                    />
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl p-3.5 shadow-2xl border-2 border-amber-300 z-50 space-y-2 animate-in fade-in zoom-in-95 text-zinc-900">
+                      <div className="border-b border-zinc-100 pb-2">
+                        <strong className="text-xs text-zinc-900 block truncate">{user.name}</strong>
+                        <span className="text-[10px] text-zinc-500 block truncate">{user.email}</span>
+                        <span className="text-[9px] px-2 py-0.5 bg-amber-100 text-amber-800 font-semibold rounded-md mt-1 inline-block">
+                          {user.role === 'pilot' ? '✨ Pilot & Kurucu' : user.role === 'hotel' ? 'Otel Yöneticisi' : 'Misafir Hesabı'}
+                        </span>
+                      </div>
+
+                      {user.role === 'pilot' && (
+                        <a
+                          href="/pilot"
+                          className="block px-2 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl text-xs font-bold text-center hover:brightness-105 transition shadow-sm"
+                        >
+                          Pilot Masası ➔
+                        </a>
+                      )}
+
+                      {user.role === 'hotel' && (
+                        <a
+                          href="/hotel-portal"
+                          className="block px-2 py-1.5 bg-amber-500 text-zinc-950 font-bold rounded-xl text-xs text-center hover:bg-amber-600 transition shadow-xs"
+                        >
+                          Otel Yönetim Paneli ➔
+                        </a>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full py-1.5 px-2 text-left text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl flex items-center gap-1.5 transition cursor-pointer"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>Çıkış Yap</span>
+                      </button>
                     </div>
-
-                    {user.role === 'pilot' && (
-                      <a
-                        href="/pilot"
-                        className="block px-2 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl text-xs font-bold text-center hover:brightness-105 transition shadow-sm"
-                      >
-                        Pilot Masası ➔
-                      </a>
-                    )}
-
-                    {user.role === 'hotel' && (
-                      <a
-                        href="/dashboard"
-                        className="block px-2 py-1.5 bg-zinc-900 text-amber-400 rounded-xl text-xs font-bold text-center hover:bg-black transition"
-                      >
-                        Kokpit Paneli ➔
-                      </a>
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="w-full py-1.5 px-2 text-left text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl flex items-center gap-1.5 transition cursor-pointer"
-                    >
-                      <LogOut className="w-3.5 h-3.5" />
-                      <span>Çıkış Yap</span>
-                    </button>
-                  </div>
+                  </>
                 )}
               </div>
             ) : (

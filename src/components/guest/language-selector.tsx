@@ -27,26 +27,29 @@ export function LanguageSelector({ currentLang, onSelect }: { currentLang: Langu
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1.5 w-36 bg-white rounded-2xl shadow-xl border border-amber-100 p-1 z-50 animate-in fade-in zoom-in-95">
-          {langs.map(l => (
-            <button
-              key={l.code}
-              onClick={() => {
-                onSelect(l.code);
-                setIsOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition ${
-                currentLang === l.code ? 'bg-amber-100/70 font-bold text-amber-900' : 'text-zinc-700 hover:bg-amber-50/50'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span>{l.flag}</span>
-                <span>{l.label}</span>
-              </div>
-              {currentLang === l.code && <span className="text-amber-700 text-xs">✓</span>}
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsOpen(false)} />
+          <div className="absolute right-0 mt-1.5 w-36 bg-white rounded-2xl shadow-2xl border border-amber-200 p-1 z-50 animate-in fade-in zoom-in-95">
+            {langs.map(l => (
+              <button
+                key={l.code}
+                onClick={() => {
+                  onSelect(l.code);
+                  setIsOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition ${
+                  currentLang === l.code ? 'bg-amber-100/70 font-bold text-amber-900' : 'text-zinc-700 hover:bg-amber-50/50'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span>{l.flag}</span>
+                  <span>{l.label}</span>
+                </div>
+                {currentLang === l.code && <span className="text-amber-700 text-xs font-bold">✓</span>}
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
