@@ -62,7 +62,43 @@ export function FairShoppingPolicy() {
     {
       id: 1,
       title: "Sokak Tuzakları & Ayakkabı Boyacısı Hilesi",
-      problem: "Yanınıza arkadaşça yaklaşıp 'özel bir bar' teklif edenler, fırçasını bilerek düşüren ayakkabı boyacıları veya sahte Osmanlı antikası satıcıları.",
+      problem: (
+        <div className="space-y-4">
+          <p>Yanınıza arkadaşça yaklaşıp <strong>'özel bir bar'</strong> teklif edenler, fırçasını bilerek düşüren ayakkabı boyacıları veya sahte Osmanlı antikası satıcıları.</p>
+
+          <div className="space-y-2">
+            <strong className="block text-zinc-900">Ayakkabı Boyacısı Hilesi Nasıl İşler?</strong>
+            <p>Bu hile, kurbanın <strong>yardımseverlik</strong> ve ardından hissettirilen <strong>borçluluk</strong> duygusunu kullanan, adım adım kurgulanmış bir senaryodur:</p>
+          </div>
+
+          <div className="space-y-2.5">
+            <p><strong>1. Fırça Düşürme:</strong> Boyacı, önünüzde yürürken çantasından fırçasını "kazara" düşürür.</p>
+            <p><strong>2. Yolcunun Uyarısı:</strong> Siz iyi niyetle onu uyarır ya da fırçayı işaret edersiniz.</p>
+            <p><strong>3. Aşırı Minnettar Davranma:</strong> Boyacı, size aşırı derecede teşekkür ederek minnettarlığını abartılı bir şekilde gösterir.</p>
+            <p><strong>4. Israrcı İkram:</strong> Karşılığında ayakkabınızı ücretsiz boyamak için ısrar eder, "hayır" cevabını kabul etmez.</p>
+            <p><strong>5. Para Talebi:</strong> İşlem bittikten sonra aniden fahiş bir ücret talep eder.</p>
+            <p><strong>6. Baskı Kurma:</strong> Ödemeyi reddederseniz kalabalık toplayarak, bağırarak veya utandırarak sizi ödemeye zorlar.</p>
+          </div>
+
+          <div className="space-y-2.5">
+            <strong className="block text-zinc-900">Karşılaşabileceğiniz Diğer Yaygın Sokak Tuzakları</strong>
+            <p><strong>Arkadaşlık Bilekliği Tuzağı:</strong> Bileğinize izniniz olmadan bir ip bağlayıp "hediye" der, sonra ücret ister.</p>
+            <p><strong>Gül/Çiçek Hilesi:</strong> Elinize veya eşinizin eline bir gül tutuşturup ardından para talep eder.</p>
+            <p><strong>Anket veya İmza Kampanyası:</strong> "Sağır-dilsiz derneği" gibi sahte bir kurum adına imza toplayıp bağış zorlar.</p>
+            <p><strong>Sahte Parfüm ve Kaçak Ürün Satıcıları:</strong> Sokakta "orijinal" diye marka taklidi parfüm veya ürün satarlar.</p>
+            <p><strong>Mendil Satan veya Tartı Kullanan Çocuklar:</strong> Dikkatinizi dağıtıp cebinizden değerli eşya çalmaya çalışabilirler.</p>
+          </div>
+
+          <div className="space-y-2.5">
+            <strong className="block text-zinc-900">Sokak Tuzaklarından Korunma Yolları</strong>
+            <p><strong>1.</strong> Sokakta size bir şey "düşen", "hediye edilen" veya "ikram edilen" kimseye karşı temkinli olun.</p>
+            <p><strong>2.</strong> Yabancıların bedenen size dokunmasına (bileğe ip bağlama, elinize bir şey tutuşturma) izin vermeyin.</p>
+            <p><strong>3.</strong> Israrcı ikramları kibarca ama net bir şekilde reddedin, kararlılıkla yürümeye devam edin.</p>
+            <p><strong>4.</strong> Kalabalık ve baskı hissettiğinizde tartışmaya girmeyin, en yakın güvenlikli/kalabalık alana (mağaza, otel girişi) yönelin.</p>
+            <p><strong>5.</strong> Şüpheli bir durumda doğrudan Turizm Polisi'ni arayın; parayı vermeden önce durumu netleştirin.</p>
+          </div>
+        </div>
+      ),
       risk: "Gece kulüplerinde tartışmak fiziksel saldırıya veya fahiş hesap gaspına dönüşebilir. Sahte antika satın almak havalimanında tarihi eser kaçakçılığı şüphesiyle gözaltına yol açabilir.",
       action: "Fırça düşerse yürümeye devam edin. Yabancılardan gelen bar davetlerini kabul etmeyin. Dolandırıldıysanız tartışmayın, fiş alın ve doğrudan Turizm Polisine gidin.",
       law: "TCK madde 157-158 dolandırıcılık suçunu düzenler. Sahte tarihi eser satmak dolandırıcılık, gerçeğini izinsiz satmak kaçakçılıktır."
@@ -225,7 +261,7 @@ export function FairShoppingPolicy() {
                     <div className="p-5 space-y-3.5 text-xs text-zinc-700 bg-white border-t border-zinc-200 leading-relaxed">
                       <div className="space-y-1">
                         <strong className="text-red-700 block font-bold">⚠️ Karşılaşılan Sorun:</strong>
-                        <p>{item.problem}</p>
+                        <div>{item.problem}</div>
                       </div>
 
                       <div className="space-y-1">
