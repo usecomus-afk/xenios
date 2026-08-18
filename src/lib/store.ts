@@ -164,40 +164,8 @@ export const XeniosStore = {
       if (stored) return JSON.parse(stored);
     } catch (e) {}
 
-    return [
-      {
-        id: 'req-1',
-        hotelId: 'hotel-1',
-        hotelName: 'Hotel Sultanahmet',
-        roomNumber: '204',
-        serviceKey: 'towels',
-        serviceTitle: 'Temiz Havlu Talebi',
-        notes: '2 adet banyo havlusu rica ediyoruz.',
-        status: 'in_progress',
-        stage: 'preparing',
-        department: 'Housekeeping & Çamaşırhane Envanteri',
-        priority: 'standart',
-        details: { towelType: 'Banyo Havlusu', quantity: 2, deliveryTime: '30 Dakika İçinde', oldTowelPickup: true },
-        createdAt: new Date(Date.now() - 15 * 60000).toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: 'req-2',
-        hotelId: 'hotel-1',
-        hotelName: 'Hotel Sultanahmet',
-        roomNumber: '102',
-        serviceKey: 'breakfast',
-        serviceTitle: 'Odaya Kahvaltı Talebi',
-        notes: 'Saat 08:30 için 2 kişilik Türk kahvaltısı',
-        status: 'pending',
-        stage: 'pending',
-        department: 'Room Service (Mutfak KDS)',
-        priority: 'standart',
-        details: { breakfastType: 'Türk Kahvaltısı', guestCount: 2, time: '08:30', specialRequests: '' },
-        createdAt: new Date(Date.now() - 35 * 60000).toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ];
+    // No demo/seed requests — the cockpit must only ever show real guest-submitted requests.
+    return [];
   },
 
   addRequest(req: Omit<ServiceRequest, 'id' | 'createdAt' | 'updatedAt'>): ServiceRequest {

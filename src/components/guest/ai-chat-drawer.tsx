@@ -116,7 +116,6 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
             <div>
               <div className="flex items-center gap-1.5">
                 <h3 className="text-sm font-bold font-serif text-zinc-900">comusAI Concierge</h3>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Google Gemini</span>
               </div>
               <p className="text-[11px] text-zinc-500">{hotel.name} • Oda {roomNumber}</p>
             </div>
@@ -225,7 +224,7 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
               {isLoading && (
                 <div className="flex items-center gap-2 text-xs text-amber-800 bg-amber-50 p-2.5 rounded-2xl w-fit animate-pulse border border-amber-200">
                   <Sparkles className="w-3.5 h-3.5 animate-spin" />
-                  <span>Gemini comusAI sizin için yanıt hazırlıyor...</span>
+                  <span>comusAI sizin için yanıt hazırlıyor...</span>
                 </div>
               )}
 
