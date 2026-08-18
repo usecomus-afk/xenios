@@ -8,19 +8,52 @@ import { formatPrice } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   Lock, LogOut, ShieldCheck, Mail, KeyRound, Plus, Search, Edit3, Trash2, Save, X,
-  Power, EyeOff, CreditCard, CheckCircle2, ExternalLink, Package, Ticket
+  Power, EyeOff, CreditCard, CheckCircle2, ExternalLink, Package, Ticket, MapPin, Star, ImageOff
 } from 'lucide-react';
 
 type NewExpDraft = {
-  title: string; category: string; provider: string; location: string; phone: string;
+  title: string; category: string; categoryTag: string; provider: string; location: string; phone: string;
   website: string; agentNote: string; price: number; currency: string; duration: string; image?: string;
+  lat: number; lng: number; scoreStr: string;
 };
 
 const EMPTY_DRAFT: NewExpDraft = {
-  title: '', category: 'Boğaz Turları & Yat', provider: '', location: 'Sultanahmet, Fatih',
+  title: '', category: 'Boğaz Turları & Yat', categoryTag: 'Boğaz & Deniz', provider: '', location: 'Sultanahmet, Fatih',
   phone: '+90 532 000 00 00', website: 'https://', agentNote: '', price: 1500, currency: '₺',
-  duration: '2.5 Saat', image: '/images/istanbul/il_1588xN.6201904451_eqr3.webp'
+  duration: '2.5 Saat', image: '/images/istanbul/il_1588xN.6201904451_eqr3.webp',
+  lat: 41.0082, lng: 28.9784, scoreStr: '5.0'
 };
+
+function experienceToDraft(exp: Experience): NewExpDraft {
+  return {
+    title: exp.title, category: exp.category, categoryTag: exp.categoryTag || exp.category,
+    provider: exp.provider, location: exp.location, phone: exp.phone, website: exp.website,
+    agentNote: exp.agentNote, price: exp.price, currency: exp.currency, duration: exp.duration,
+    image: exp.image, lat: exp.coords?.lat ?? 41.0082, lng: exp.coords?.lng ?? 28.9784,
+    scoreStr: exp.scoreStr || '5.0'
+  };
+}
+
+function draftToExperiencePatch(draft: NewExpDraft): Partial<Experience> {
+  const ratingNum = parseFloat(draft.scoreStr) || 5;
+  return {
+    title: draft.title.trim(),
+    category: draft.category,
+    categoryTag: draft.categoryTag || draft.category,
+    provider: draft.provider.trim(),
+    location: draft.location,
+    phone: draft.phone,
+    website: draft.website,
+    agentNote: draft.agentNote,
+    price: Number(draft.price) || 0,
+    currency: draft.currency,
+    duration: draft.duration,
+    image: draft.image,
+    coords: { lat: Number(draft.lat) || 41.0082, lng: Number(draft.lng) || 28.9784 },
+    scoreStr: draft.scoreStr || '5.0',
+    rating: ratingNum
+  };
+}
 
 const BOOKING_STATUS_LABEL: Record<BookingStatus, string> = {
   payment_success: 'Ödeme Alındı',
@@ -115,7 +148,8 @@ export default function AdminPage() {
   const [search, setSearch] = useState('');
   const [bookingFilter, setBookingFilter] = useState<'all' | BookingStatus>('all');
 
-  const [editingExp, setEditingExp] = useState<Experience | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState<NewExpDraft>(EMPTY_DRAFT);
   const [isNewOpen, setIsNewOpen] = useState(false);
   const [draft, setDraft] = useState<NewExpDraft>(EMPTY_DRAFT);
 
@@ -178,12 +212,21 @@ export default function AdminPage() {
     refresh();
   };
 
+  const openEdit = (exp: Experience) => {
+    setEditingId(exp.id);
+    setEditDraft(experienceToDraft(exp));
+  };
+
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingExp) return;
-    XeniosStore.updateExperience(editingExp.id, editingExp);
-    toast.success(`"${editingExp.title}" güncellendi ve canlıya alındı.`);
-    setEditingExp(null);
+    if (!editingId) return;
+    if (!editDraft.title.trim() || !editDraft.provider.trim()) {
+      toast.error('Lütfen ilan başlığı ve işletme adını girin.');
+      return;
+    }
+    XeniosStore.updateExperience(editingId, draftToExperiencePatch(editDraft));
+    toast.success(`"${editDraft.title}" güncellendi ve canlıya alındı.`);
+    setEditingId(null);
     refresh();
   };
 
@@ -195,24 +238,11 @@ export default function AdminPage() {
     }
     const created: Experience = {
       id: 'exp-admin-' + Date.now(),
-      title: draft.title.trim(),
-      category: draft.category,
-      provider: draft.provider.trim(),
-      location: draft.location,
-      phone: draft.phone,
-      website: draft.website,
+      ...draftToExperiencePatch(draft),
       agentNote: draft.agentNote || 'TÜRSAB onaylı kurumsal acente ilanı.',
-      scoreStr: '5.0',
-      price: Number(draft.price) || 0,
-      currency: draft.currency,
-      duration: draft.duration,
-      rating: 5,
-      coords: { lat: 41.0082, lng: 28.9784 },
-      categoryTag: draft.category,
       iconName: 'sparkles',
-      image: draft.image,
       status: 'active'
-    };
+    } as Experience;
     XeniosStore.addExperience(created);
     toast.success(`"${created.title}" kataloğa eklendi ve anında canlıya alındı.`);
     setIsNewOpen(false);
@@ -350,7 +380,7 @@ export default function AdminPage() {
 
                   <div className="pt-3 border-t border-[#2c313d] flex items-center gap-2">
                     <button
-                      onClick={() => setEditingExp(exp)}
+                      onClick={() => openEdit(exp)}
                       className="flex-1 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 font-bold text-xs rounded-xl border border-amber-500/30 transition flex items-center justify-center gap-1.5"
                     >
                       <Edit3 className="w-3.5 h-3.5" /> Düzenle
@@ -467,13 +497,13 @@ export default function AdminPage() {
       )}
 
       {/* EDIT MODAL */}
-      {editingExp && (
+      {editingId && (
         <ExperienceFormModal
           title="İlan & Fiyat Düzenleme"
           submitLabel="Değişiklikleri Canlıya Al"
-          values={editingExp}
-          onChange={(next) => setEditingExp({ ...editingExp, ...next })}
-          onCancel={() => setEditingExp(null)}
+          values={editDraft}
+          onChange={(next) => setEditDraft(next)}
+          onCancel={() => setEditingId(null)}
           onSubmit={handleSaveEdit}
         />
       )}
@@ -481,17 +511,18 @@ export default function AdminPage() {
   );
 }
 
-interface ExperienceFormModalProps<T extends NewExpDraft> {
+interface ExperienceFormModalProps {
   title: string;
   submitLabel: string;
-  values: T;
-  onChange: (next: T) => void;
+  values: NewExpDraft;
+  onChange: (next: NewExpDraft) => void;
   onCancel: () => void;
   onSubmit: (e: React.FormEvent) => void;
 }
 
-function ExperienceFormModal<T extends NewExpDraft>({ title, submitLabel, values, onChange, onCancel, onSubmit }: ExperienceFormModalProps<T>) {
+function ExperienceFormModal({ title, submitLabel, values, onChange, onCancel, onSubmit }: ExperienceFormModalProps) {
   const set = (patch: Partial<NewExpDraft>) => onChange({ ...values, ...patch });
+  const [imageError, setImageError] = useState(false);
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
@@ -521,6 +552,24 @@ function ExperienceFormModal<T extends NewExpDraft>({ title, submitLabel, values
               <input
                 type="text" value={values.category}
                 onChange={(e) => set({ category: e.target.value })}
+                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Kategori Etiketi (Misafir Arayüzünde)</label>
+              <input
+                type="text" value={values.categoryTag}
+                onChange={(e) => set({ categoryTag: e.target.value })}
+                placeholder="Örn: Boğaz & Deniz"
+                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] font-bold text-zinc-300 block mb-1 flex items-center gap-1"><Star className="w-3 h-3 text-amber-400" /> Puan</label>
+              <input
+                type="text" value={values.scoreStr}
+                onChange={(e) => set({ scoreStr: e.target.value })}
+                placeholder="Örn: 4.8/5"
                 className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
               />
             </div>
@@ -575,21 +624,65 @@ function ExperienceFormModal<T extends NewExpDraft>({ title, submitLabel, values
                 className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
               />
             </div>
-            <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Buluşma Noktası / Konum</label>
+            <div className="sm:col-span-2">
+              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Buluşma Noktası / Konum (Metin)</label>
               <input
                 type="text" value={values.location}
                 onChange={(e) => set({ location: e.target.value })}
                 className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
               />
             </div>
-            <div className="sm:col-span-2">
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Görsel URL</label>
-              <input
-                type="text" value={values.image ?? ''}
-                onChange={(e) => set({ image: e.target.value })}
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-mono text-[11px]"
-              />
+            <div className="sm:col-span-2 space-y-1.5">
+              <label className="text-[11px] font-bold text-zinc-300 flex items-center gap-1"><MapPin className="w-3 h-3 text-amber-400" /> Harita Koordinatları (Ulaşım Rotası & Mesafe Hesabı İçin)</label>
+              <p className="text-[10px] text-zinc-500">
+                Google Haritalar'da konuma sağ tıklayıp koordinatları kopyalayabilirsiniz.{' '}
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((values.location || values.title) + ', Istanbul, Turkey')}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="text-amber-400 hover:underline"
+                >
+                  "{values.location || values.title || 'konum'}" için Haritada Ara →
+                </a>
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="number" step="0.0001" value={values.lat}
+                  onChange={(e) => set({ lat: Number(e.target.value) })}
+                  placeholder="Enlem (lat)"
+                  className="flex-1 px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-mono"
+                />
+                <input
+                  type="number" step="0.0001" value={values.lng}
+                  onChange={(e) => set({ lng: Number(e.target.value) })}
+                  placeholder="Boylam (lng)"
+                  className="flex-1 px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-mono"
+                />
+              </div>
+            </div>
+            <div className="sm:col-span-2 space-y-1.5">
+              <label className="text-[11px] font-bold text-zinc-300 block">Görsel URL</label>
+              <div className="flex items-center gap-3">
+                <div className="w-20 h-20 rounded-xl border border-[#2c313d] bg-[#0f1116] shrink-0 overflow-hidden flex items-center justify-center">
+                  {values.image && !imageError ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={values.image}
+                      alt="Önizleme"
+                      className="w-full h-full object-cover"
+                      onError={() => setImageError(true)}
+                      onLoad={() => setImageError(false)}
+                    />
+                  ) : (
+                    <ImageOff className="w-5 h-5 text-zinc-600" />
+                  )}
+                </div>
+                <input
+                  type="text" value={values.image ?? ''}
+                  onChange={(e) => { setImageError(false); set({ image: e.target.value }); }}
+                  placeholder="/images/experiences/... veya https://..."
+                  className="flex-1 px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-mono text-[11px]"
+                />
+              </div>
             </div>
             <div className="sm:col-span-2">
               <label className="text-[11px] font-bold text-zinc-300 block mb-1">Açıklama / Rehber Notu</label>
