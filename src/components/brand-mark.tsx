@@ -21,6 +21,7 @@ export function BrandMark({ size = 44, showText = true, theme = 'sand' }: BrandM
           alt="Xenios Istanbul" 
           width={size} 
           height={size}
+          unoptimized
           className="object-cover w-full h-full rounded-xl"
           priority
         />

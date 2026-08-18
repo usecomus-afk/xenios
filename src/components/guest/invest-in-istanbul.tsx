@@ -111,37 +111,31 @@ export function InvestInIstanbul({ hotel, roomNumber }: InvestInIstanbulProps) {
 
   return (
     <section className="space-y-6 pb-12 animate-in fade-in">
-      {/* Hero / Intro Banner */}
-      <div className="bg-gradient-to-br from-zinc-950 via-zinc-900 to-amber-950 rounded-3xl p-6 sm:p-8 text-white space-y-4 relative overflow-hidden shadow-xl border border-amber-500/20">
-        <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold uppercase tracking-wider border border-amber-400/30">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Xenios Invest in Istanbul
-          </span>
-          <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-300 text-[10px] font-semibold">
-            20 Doğrulanmış Portföy
-          </span>
-        </div>
+      {/* Hero / Intro Banner (Light Luxury Theme) */}
+      <div className="bg-gradient-to-br from-amber-500/10 via-amber-100/30 to-amber-50/60 rounded-3xl p-6 sm:p-8 text-zinc-900 space-y-3.5 border border-amber-200/80 shadow-xs relative overflow-hidden">
+        <span className="text-[11px] font-bold text-amber-800 tracking-widest uppercase block">
+          Xenios Invest in Istanbul
+        </span>
         
-        <div className="space-y-2">
-          <h2 className="text-2xl sm:text-3xl font-bold font-serif leading-tight">
+        <div className="space-y-1.5">
+          <h2 className="text-2xl sm:text-3xl font-bold font-serif leading-tight text-zinc-900">
             İstanbul'da Yatırım & Seçkin Gayrimenkuller
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-300 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-zinc-600 max-w-2xl leading-relaxed">
             İstanbul ziyaretiniz sırasında şehrin en seçkin yatırım fırsatlarını keşfedin. Türkiye'nin lider uluslararası gayrimenkul şirketlerinin doğrulanmış ilanları ile vatandaşlık, yüksek döviz kira getirisi ve boğaz yaşamı portföyü.
           </p>
         </div>
 
         {/* Feature Badges */}
-        <div className="flex flex-wrap gap-2 pt-2 text-[11px] text-amber-200/90 font-medium">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-white/10">
-            <Shield className="w-3.5 h-3.5 text-amber-400" /> Türk Vatandaşlığı ($400K+)
+        <div className="flex flex-wrap gap-2 pt-1 text-[11px] text-zinc-700 font-medium">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-amber-200/80 shadow-2xs">
+            <Shield className="w-3.5 h-3.5 text-amber-600" /> <span>Türk Vatandaşlığı ($400K+)</span>
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-white/10">
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> Yüksek Dolar Bazlı ROI
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-amber-200/80 shadow-2xs">
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-600" /> <span>Yüksek Dolar Bazlı ROI</span>
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-white/10">
-            <Car className="w-3.5 h-3.5 text-amber-400" /> Otelden Ücretsiz VIP Keşif Turu
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-amber-200/80 shadow-2xs">
+            <Car className="w-3.5 h-3.5 text-amber-600" /> <span>Otelden Ücretsiz VIP Keşif Turu</span>
           </div>
         </div>
       </div>
