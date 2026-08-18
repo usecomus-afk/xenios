@@ -242,7 +242,7 @@ export default function PilotDashboardPage() {
               <Sparkles className="w-3.5 h-3.5" />
               <span>Pilot & Kurucu Yönetim Merkezi</span>
             </span>
-            <span className="text-xs text-amber-400/80 font-mono">
+            <span className="text-xs text-amber-800 font-mono">
               Yetkili: anilaslan@usecomus.com
             </span>
           </div>
@@ -265,7 +265,7 @@ export default function PilotDashboardPage() {
 
           <button
             onClick={() => setIsNewHotelModalOpen(true)}
-            className="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-amber-400 font-bold text-xs rounded-2xl border border-amber-500/30 shadow-lg transition flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 bg-amber-100/60 hover:bg-zinc-700 text-amber-800 font-bold text-xs rounded-2xl border border-amber-500/30 shadow-lg transition flex items-center gap-1.5 cursor-pointer"
           >
             <Building2 className="w-4 h-4" />
             <span>Yeni Otel Tanımla</span>
@@ -274,7 +274,7 @@ export default function PilotDashboardPage() {
       </div>
 
       {/* Navigation Sub-Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-zinc-800">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-amber-200/80">
         {[
           { id: 'experiences', label: 'İşletme İlanları & Fiyatlar', icon: Compass, count: experiences.length },
           { id: 'hotels', label: 'Anlaşmalı Oteller', icon: Building2, count: hotels.length },
@@ -290,14 +290,14 @@ export default function PilotDashboardPage() {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap cursor-pointer border ${
                 isActive
-                  ? 'bg-amber-500/15 text-amber-400 border-amber-500/40 shadow-sm'
-                  : 'bg-zinc-900/60 text-zinc-500 border-zinc-800 hover:bg-zinc-800/80 hover:text-zinc-800'
+                  ? 'bg-amber-100/80 text-amber-800 border-amber-500/40 shadow-sm'
+                  : 'bg-white text-zinc-500 border-amber-200/80 hover:bg-amber-50/60 hover:text-zinc-800'
               }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
               <span>{tab.label}</span>
               <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                isActive ? 'bg-amber-500 text-black' : 'bg-zinc-800 text-zinc-500'
+                isActive ? 'bg-amber-500 text-black' : 'bg-amber-100/60 text-zinc-500'
               }`}>
                 {tab.count}
               </span>
@@ -310,7 +310,7 @@ export default function PilotDashboardPage() {
       {activeTab === 'experiences' && (
         <div className="space-y-4">
           {/* Filter & Search Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-zinc-900/80 p-4 rounded-3xl border border-zinc-800">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-3xl border border-amber-200/80">
             <div className="relative w-full sm:w-80">
               <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3" />
               <input
@@ -318,7 +318,7 @@ export default function PilotDashboardPage() {
                 value={searchExp}
                 onChange={(e) => setSearchExp(e.target.value)}
                 placeholder="İlan adı, acente veya konum ara..."
-                className="w-full pl-10 pr-4 py-2 text-xs bg-zinc-950 border border-zinc-800 rounded-2xl focus:outline-none focus:border-amber-500 text-zinc-800"
+                className="w-full pl-10 pr-4 py-2 text-xs bg-[#f8f6f0] border border-amber-200/80 rounded-2xl focus:outline-none focus:border-amber-500 text-zinc-800"
               />
             </div>
 
@@ -330,7 +330,7 @@ export default function PilotDashboardPage() {
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                     selectedCategory === cat
                       ? 'bg-amber-500 text-black'
-                      : 'bg-zinc-950 text-zinc-500 hover:text-zinc-800 border border-zinc-800'
+                      : 'bg-[#f8f6f0] text-zinc-500 hover:text-zinc-800 border border-amber-200/80'
                   }`}
                 >
                   {cat === 'ALL' ? 'Tümü' : cat}
@@ -344,11 +344,11 @@ export default function PilotDashboardPage() {
             {filteredExperiences.map((exp) => (
               <div
                 key={exp.id}
-                className="bg-zinc-900/90 rounded-3xl p-4 border border-zinc-800 hover:border-amber-500/50 transition space-y-3 flex flex-col justify-between group shadow-lg"
+                className="bg-white/90 rounded-3xl p-4 border border-amber-200/80 hover:border-amber-500/50 transition space-y-3 flex flex-col justify-between group shadow-lg"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 font-bold border border-amber-500/30">
+                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-100/80 text-amber-800 font-bold border border-amber-500/30">
                       {exp.category}
                     </span>
                     <strong className="text-sm font-mono text-emerald-400 font-bold">
@@ -376,10 +376,10 @@ export default function PilotDashboardPage() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between gap-2">
+                <div className="pt-3 border-t border-amber-200 flex items-center justify-between gap-2">
                   <button
                     onClick={() => setEditingExp(exp)}
-                    className="flex-1 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 font-bold text-xs rounded-xl border border-amber-500/30 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="flex-1 py-2 bg-amber-100/60 hover:bg-amber-200/60 text-amber-800 font-bold text-xs rounded-xl border border-amber-500/30 transition flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
                     <span>Düzenle & Fiyat</span>
@@ -401,7 +401,7 @@ export default function PilotDashboardPage() {
       {/* TAB 2: CONTRACTED PARTNER HOTELS CRUD */}
       {activeTab === 'hotels' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between bg-zinc-900/80 p-4 rounded-3xl border border-zinc-800">
+          <div className="flex items-center justify-between bg-white p-4 rounded-3xl border border-amber-200/80">
             <div>
               <h2 className="text-sm font-bold text-zinc-900">Sözleşmeli Partner Oteller</h2>
               <p className="text-xs text-zinc-500">Tek tek anlaşma yapılan aktif tesisler ve oda envanterleri.</p>
@@ -419,7 +419,7 @@ export default function PilotDashboardPage() {
             {hotels.map((hotel) => (
               <div
                 key={hotel.id}
-                className="bg-zinc-900 rounded-3xl p-5 border border-zinc-800 hover:border-amber-500/40 transition space-y-4"
+                className="bg-white rounded-3xl p-5 border border-amber-200/80 hover:border-amber-500/40 transition space-y-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -434,7 +434,7 @@ export default function PilotDashboardPage() {
                   </div>
 
                   <div className="text-right">
-                    <span className="text-xs font-mono font-bold text-amber-400 block">
+                    <span className="text-xs font-mono font-bold text-amber-800 block">
                       {hotel.rooms.length} Aktif Oda
                     </span>
                     <span className="text-[10px] text-zinc-500">QR Kodları Üretildi</span>
@@ -443,29 +443,29 @@ export default function PilotDashboardPage() {
 
                 {/* Wi-Fi & Schedule details */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                  <div className="p-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-0.5">
+                  <div className="p-2.5 rounded-2xl bg-[#f8f6f0] border border-amber-200/80 space-y-0.5">
                     <span className="text-[10px] text-zinc-500 block">Wi-Fi Ağı & Şifre</span>
                     <strong className="text-zinc-800 block truncate font-mono text-[11px]">{hotel.rooms[0]?.wifiSsid || 'Hotel_Guest'}</strong>
-                    <code className="text-amber-400 text-[10px]">{hotel.rooms[0]?.wifiPass || 'Xenios2026!'}</code>
+                    <code className="text-amber-800 text-[10px]">{hotel.rooms[0]?.wifiPass || 'Xenios2026!'}</code>
                   </div>
 
-                  <div className="p-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-0.5">
+                  <div className="p-2.5 rounded-2xl bg-[#f8f6f0] border border-amber-200/80 space-y-0.5">
                     <span className="text-[10px] text-zinc-500 block">Kahvaltı Saatleri</span>
                     <strong className="text-zinc-800 block text-xs">{hotel.breakfastHours}</strong>
                   </div>
 
-                  <div className="p-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-0.5">
+                  <div className="p-2.5 rounded-2xl bg-[#f8f6f0] border border-amber-200/80 space-y-0.5">
                     <span className="text-[10px] text-zinc-500 block">Çıkış Saati / Ext</span>
                     <strong className="text-zinc-800 block text-xs">{hotel.checkoutTime} (Ext: {hotel.receptionExt})</strong>
                   </div>
                 </div>
 
                 {/* Action buttons */}
-                <div className="pt-2 border-t border-zinc-800 flex items-center justify-between gap-2">
+                <div className="pt-2 border-t border-amber-200/80 flex items-center justify-between gap-2">
                   <a
                     href={`/stay/${hotel.id}/${hotel.rooms[0]?.number || '101'}`}
                     target="_blank"
-                    className="text-xs font-bold text-amber-400 hover:underline flex items-center gap-1"
+                    className="text-xs font-bold text-amber-800 hover:underline flex items-center gap-1"
                   >
                     <span>Misafir Görünümünü Aç</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -488,33 +488,33 @@ export default function PilotDashboardPage() {
       {activeTab === 'inroom-analytics' && (
         <div className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <div className="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam Misafir Etkileşimi</span>
-              <strong className="text-2xl font-mono text-amber-400 font-bold block">1,428</strong>
+              <strong className="text-2xl font-mono text-amber-800 font-bold block">1,428</strong>
               <span className="text-[10px] text-emerald-400">↑ %18 Bu Hafta</span>
             </div>
 
-            <div className="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Günlük Ortalama İstek</span>
               <strong className="text-2xl font-mono text-zinc-900 font-bold block">46 Talep</strong>
               <span className="text-[10px] text-zinc-500">Pik saatler: 08:30 & 21:00</span>
             </div>
 
-            <div className="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Ortalama Teslim Süresi</span>
               <strong className="text-2xl font-mono text-emerald-400 font-bold block">8.4 Dk</strong>
               <span className="text-[10px] text-zinc-500">Hedef: &lt; 15 Dk</span>
             </div>
 
-            <div className="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Misafir Memnuniyet Oranı</span>
-              <strong className="text-2xl font-mono text-amber-400 font-bold block">%98.6</strong>
+              <strong className="text-2xl font-mono text-amber-800 font-bold block">%98.6</strong>
               <span className="text-[10px] text-emerald-400">5 Üzerinden 4.93</span>
             </div>
           </div>
 
           {/* Service breakdown list */}
-          <div className="bg-zinc-900 rounded-3xl p-6 border border-zinc-800 space-y-4">
+          <div className="bg-white rounded-3xl p-6 border border-amber-200/80 space-y-4">
             <h3 className="text-sm font-bold text-zinc-900">En Çok Kullanılan Otel İçi Hizmetler</h3>
             
             <div className="space-y-3 text-xs">
@@ -531,7 +531,7 @@ export default function PilotDashboardPage() {
                     <span className="font-bold">{item.name}</span>
                     <span className="font-mono text-zinc-500">{item.count} İstek (%{item.pct})</span>
                   </div>
-                  <div className="h-2 w-full bg-zinc-950 rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-[#f8f6f0] rounded-full overflow-hidden">
                     <div className={`h-full ${item.color}`} style={{ width: `${item.pct}%` }} />
                   </div>
                 </div>
@@ -545,32 +545,32 @@ export default function PilotDashboardPage() {
       {activeTab === 'ai-analytics' && (
         <div className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam AI Sohbet Oturumu</span>
-              <strong className="text-3xl font-mono text-amber-400 font-bold block">842</strong>
+              <strong className="text-3xl font-mono text-amber-800 font-bold block">842</strong>
               <span className="text-[10px] text-zinc-500">Turistler 6 dilde aktif soruyor</span>
             </div>
 
-            <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Ortalama AI Yanıt Hızı</span>
               <strong className="text-3xl font-mono text-emerald-400 font-bold block">1.1 Sn</strong>
               <span className="text-[10px] text-zinc-500">Gemini 2.5 Flash Hızlı API</span>
             </div>
 
-            <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Turist AI Memnuniyeti</span>
-              <strong className="text-3xl font-mono text-amber-400 font-bold block">%98.4</strong>
+              <strong className="text-3xl font-mono text-amber-800 font-bold block">%98.4</strong>
               <span className="text-[10px] text-emerald-400">Pozitif geri bildirim</span>
             </div>
           </div>
 
           {/* Most asked topics */}
-          <div className="bg-zinc-900 rounded-3xl p-6 border border-zinc-800 space-y-4">
+          <div className="bg-white rounded-3xl p-6 border border-amber-200/80 space-y-4">
             <h3 className="text-sm font-bold text-zinc-900">Turistlerin comusAI'ya En Çok Sorduğu Konular</h3>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5">
-                <div className="flex items-center justify-between text-amber-400 font-bold">
+              <div className="p-4 rounded-2xl bg-[#f8f6f0] border border-amber-200/80 space-y-1.5">
+                <div className="flex items-center justify-between text-amber-800 font-bold">
                   <span>1. Boğaz Turları & Akşam Yemeği</span>
                   <span className="font-mono">%34</span>
                 </div>
@@ -579,8 +579,8 @@ export default function PilotDashboardPage() {
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5">
-                <div className="flex items-center justify-between text-amber-400 font-bold">
+              <div className="p-4 rounded-2xl bg-[#f8f6f0] border border-amber-200/80 space-y-1.5">
+                <div className="flex items-center justify-between text-amber-800 font-bold">
                   <span>2. Döviz Bürosu & Güvenli Para Bozdurma</span>
                   <span className="font-mono">%21</span>
                 </div>
@@ -589,8 +589,8 @@ export default function PilotDashboardPage() {
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5">
-                <div className="flex items-center justify-between text-amber-400 font-bold">
+              <div className="p-4 rounded-2xl bg-[#f8f6f0] border border-amber-200/80 space-y-1.5">
+                <div className="flex items-center justify-between text-amber-800 font-bold">
                   <span>3. Müzeler, Ayasofya & Yürüyüş Rotaları</span>
                   <span className="font-mono">%19</span>
                 </div>
@@ -599,8 +599,8 @@ export default function PilotDashboardPage() {
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5">
-                <div className="flex items-center justify-between text-amber-400 font-bold">
+              <div className="p-4 rounded-2xl bg-[#f8f6f0] border border-amber-200/80 space-y-1.5">
+                <div className="flex items-center justify-between text-amber-800 font-bold">
                   <span>4. Taksi Güvenliği & Dolandırıcılık Kalkanı</span>
                   <span className="font-mono">%15</span>
                 </div>
@@ -617,19 +617,19 @@ export default function PilotDashboardPage() {
       {activeTab === 'finance' && (
         <div className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam Sanal POS Hacmi</span>
               <strong className="text-3xl font-mono text-emerald-400 font-bold block">184,200 ₺</strong>
               <span className="text-[10px] text-zinc-500">256-Bit SSL 3D Secure</span>
             </div>
 
-            <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Platform Komisyonu (%15)</span>
-              <strong className="text-3xl font-mono text-amber-400 font-bold block">27,630 ₺</strong>
+              <strong className="text-3xl font-mono text-amber-800 font-bold block">27,630 ₺</strong>
               <span className="text-[10px] text-emerald-400">Xenios Net Kazancı</span>
             </div>
 
-            <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
+            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Acentelere Aktarılan</span>
               <strong className="text-3xl font-mono text-zinc-900 font-bold block">156,570 ₺</strong>
               <span className="text-[10px] text-zinc-500">Otomatik Hakediş Dağıtımı</span>
@@ -641,15 +641,15 @@ export default function PilotDashboardPage() {
       {/* EDIT EXPERIENCE MODAL */}
       {editingExp && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-zinc-900 rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
               <div className="flex items-center gap-2">
-                <Edit3 className="w-5 h-5 text-amber-400" />
+                <Edit3 className="w-5 h-5 text-amber-800" />
                 <h2 className="text-base font-bold font-serif text-zinc-900">İlan & Fiyat Düzenleme Masası</h2>
               </div>
               <button
                 onClick={() => setEditingExp(null)}
-                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-amber-100/60 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -664,7 +664,7 @@ export default function PilotDashboardPage() {
                     required
                     value={editingExp.title}
                     onChange={(e) => setEditingExp({ ...editingExp, title: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
                   />
                 </div>
 
@@ -674,7 +674,7 @@ export default function PilotDashboardPage() {
                     type="text"
                     value={editingExp.category}
                     onChange={(e) => setEditingExp({ ...editingExp, category: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -685,7 +685,7 @@ export default function PilotDashboardPage() {
                     required
                     value={editingExp.provider}
                     onChange={(e) => setEditingExp({ ...editingExp, provider: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -695,7 +695,7 @@ export default function PilotDashboardPage() {
                     type="text"
                     value={editingExp.phone}
                     onChange={(e) => setEditingExp({ ...editingExp, phone: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
                   />
                 </div>
 
@@ -707,12 +707,12 @@ export default function PilotDashboardPage() {
                       required
                       value={editingExp.price}
                       onChange={(e) => setEditingExp({ ...editingExp, price: Number(e.target.value) })}
-                      className="flex-1 px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-emerald-400 font-bold font-mono"
+                      className="flex-1 px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-emerald-400 font-bold font-mono"
                     />
                     <select
                       value={editingExp.currency}
                       onChange={(e) => setEditingExp({ ...editingExp, currency: e.target.value })}
-                      className="w-20 px-2 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-zinc-900 font-bold"
+                      className="w-20 px-2 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl text-zinc-900 font-bold"
                     >
                       <option value="₺">₺ (TL)</option>
                       <option value="€">€ (EUR)</option>
@@ -727,7 +727,7 @@ export default function PilotDashboardPage() {
                     type="text"
                     value={editingExp.duration}
                     onChange={(e) => setEditingExp({ ...editingExp, duration: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -737,7 +737,7 @@ export default function PilotDashboardPage() {
                     type="text"
                     value={editingExp.location}
                     onChange={(e) => setEditingExp({ ...editingExp, location: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -747,16 +747,16 @@ export default function PilotDashboardPage() {
                     rows={3}
                     value={editingExp.agentNote}
                     onChange={(e) => setEditingExp({ ...editingExp, agentNote: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-800"
+                    className="w-full px-3.5 py-2.5 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-800"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-zinc-800 flex justify-end gap-2">
+              <div className="pt-3 border-t border-amber-200/80 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setEditingExp(null)}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-700 font-bold"
+                  className="px-4 py-2 rounded-xl bg-amber-100/60 hover:bg-zinc-700 text-zinc-700 font-bold"
                 >
                   İptal
                 </button>
@@ -776,15 +776,15 @@ export default function PilotDashboardPage() {
       {/* CREATE NEW EXPERIENCE MODAL */}
       {isNewExpModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-zinc-900 rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
               <div className="flex items-center gap-2">
-                <Plus className="w-5 h-5 text-amber-400" />
+                <Plus className="w-5 h-5 text-amber-800" />
                 <h2 className="text-base font-bold font-serif text-zinc-900">Yeni Gerçek İşletme İlanı Ekle</h2>
               </div>
               <button
                 onClick={() => setIsNewExpModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-amber-100/60 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -800,7 +800,7 @@ export default function PilotDashboardPage() {
                     value={newExp.title}
                     onChange={(e) => setNewExp({ ...newExp, title: e.target.value })}
                     placeholder="Örn: Tarihi Yarımada Özel Rehberli VIP Tur"
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
                   />
                 </div>
 
@@ -809,7 +809,7 @@ export default function PilotDashboardPage() {
                   <select
                     value={newExp.category}
                     onChange={(e) => setNewExp({ ...newExp, category: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-zinc-900 font-bold"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl text-zinc-900 font-bold"
                   >
                     <option value="Boğaz Turları & Yat">Boğaz Turları & Yat</option>
                     <option value="Fotoğraf & Kostüm">Fotoğraf & Kostüm</option>
@@ -829,7 +829,7 @@ export default function PilotDashboardPage() {
                     value={newExp.provider}
                     onChange={(e) => setNewExp({ ...newExp, provider: e.target.value })}
                     placeholder="Örn: Bosphorus Cruise Travel (TÜRSAB 14230)"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -840,7 +840,7 @@ export default function PilotDashboardPage() {
                     value={newExp.phone}
                     onChange={(e) => setNewExp({ ...newExp, phone: e.target.value })}
                     placeholder="+90 532 123 45 67"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
                   />
                 </div>
 
@@ -852,12 +852,12 @@ export default function PilotDashboardPage() {
                       required
                       value={newExp.price}
                       onChange={(e) => setNewExp({ ...newExp, price: Number(e.target.value) })}
-                      className="flex-1 px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-emerald-400 font-bold font-mono"
+                      className="flex-1 px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-emerald-400 font-bold font-mono"
                     />
                     <select
                       value={newExp.currency}
                       onChange={(e) => setNewExp({ ...newExp, currency: e.target.value })}
-                      className="w-20 px-2 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-zinc-900 font-bold"
+                      className="w-20 px-2 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl text-zinc-900 font-bold"
                     >
                       <option value="₺">₺ (TL)</option>
                       <option value="€">€ (EUR)</option>
@@ -873,7 +873,7 @@ export default function PilotDashboardPage() {
                     value={newExp.duration}
                     onChange={(e) => setNewExp({ ...newExp, duration: e.target.value })}
                     placeholder="2.5 Saat"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -884,7 +884,7 @@ export default function PilotDashboardPage() {
                     value={newExp.location}
                     onChange={(e) => setNewExp({ ...newExp, location: e.target.value })}
                     placeholder="Eminönü İskelesi, Fatih"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -895,16 +895,16 @@ export default function PilotDashboardPage() {
                     value={newExp.agentNote}
                     onChange={(e) => setNewExp({ ...newExp, agentNote: e.target.value })}
                     placeholder="İlan detayları, misafir ayrıcalıkları ve rezervasyon bilgileri..."
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-800"
+                    className="w-full px-3.5 py-2.5 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-800"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-zinc-800 flex justify-end gap-2">
+              <div className="pt-3 border-t border-amber-200/80 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsNewExpModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-700 font-bold"
+                  className="px-4 py-2 rounded-xl bg-amber-100/60 hover:bg-zinc-700 text-zinc-700 font-bold"
                 >
                   İptal
                 </button>
@@ -924,15 +924,15 @@ export default function PilotDashboardPage() {
       {/* CREATE NEW HOTEL MODAL */}
       {isNewHotelModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-zinc-900 rounded-3xl max-w-xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
               <div className="flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-amber-400" />
+                <Building2 className="w-5 h-5 text-amber-800" />
                 <h2 className="text-base font-bold font-serif text-zinc-900">Yeni Anlaşmalı Otel Tanımla</h2>
               </div>
               <button
                 onClick={() => setIsNewHotelModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-amber-100/60 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -948,7 +948,7 @@ export default function PilotDashboardPage() {
                     value={newHotelName}
                     onChange={(e) => setNewHotelName(e.target.value)}
                     placeholder="Örn: Sultanahmet Palace Boutique Hotel"
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
                   />
                 </div>
 
@@ -959,7 +959,7 @@ export default function PilotDashboardPage() {
                     value={newHotelDistrict}
                     onChange={(e) => setNewHotelDistrict(e.target.value)}
                     placeholder="Sultanahmet / Fatih"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -970,7 +970,7 @@ export default function PilotDashboardPage() {
                     value={newHotelType}
                     onChange={(e) => setNewHotelType(e.target.value)}
                     placeholder="Butik Otel & Konak"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -981,7 +981,7 @@ export default function PilotDashboardPage() {
                     value={newHotelAddress}
                     onChange={(e) => setNewHotelAddress(e.target.value)}
                     placeholder="Divanyolu Cad. No:14 Sultanahmet, İstanbul"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -994,7 +994,7 @@ export default function PilotDashboardPage() {
                     required
                     value={newHotelRoomCount}
                     onChange={(e) => setNewHotelRoomCount(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-amber-400 font-bold font-mono"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-amber-800 font-bold font-mono"
                   />
                 </div>
 
@@ -1005,7 +1005,7 @@ export default function PilotDashboardPage() {
                     value={newHotelReceptionExt}
                     onChange={(e) => setNewHotelReceptionExt(e.target.value)}
                     placeholder="9"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
                   />
                 </div>
 
@@ -1015,7 +1015,7 @@ export default function PilotDashboardPage() {
                     type="text"
                     value={newHotelWifiSsid}
                     onChange={(e) => setNewHotelWifiSsid(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -1025,7 +1025,7 @@ export default function PilotDashboardPage() {
                     type="text"
                     value={newHotelWifiPass}
                     onChange={(e) => setNewHotelWifiPass(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
                   />
                 </div>
 
@@ -1036,7 +1036,7 @@ export default function PilotDashboardPage() {
                     value={newHotelBreakfast}
                     onChange={(e) => setNewHotelBreakfast(e.target.value)}
                     placeholder="07:30 - 10:30"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
@@ -1047,16 +1047,16 @@ export default function PilotDashboardPage() {
                     value={newHotelCheckout}
                     onChange={(e) => setNewHotelCheckout(e.target.value)}
                     placeholder="11:30"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
+                    className="w-full px-3 py-2 bg-[#f8f6f0] border border-amber-300 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-zinc-800 flex justify-end gap-2">
+              <div className="pt-3 border-t border-amber-200/80 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsNewHotelModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-700 font-bold"
+                  className="px-4 py-2 rounded-xl bg-amber-100/60 hover:bg-zinc-700 text-zinc-700 font-bold"
                 >
                   İptal
                 </button>

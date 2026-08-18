@@ -101,6 +101,60 @@ export const XeniosStore = {
     return this.getHotels().find(h => h.id === id) || this.getHotels()[0];
   },
 
+  addRoomToHotel(hotelId: string, room: Room) {
+    const hotels = this.getHotels();
+    const h = hotels.find(item => item.id === hotelId);
+    if (h) {
+      if (!h.rooms) h.rooms = [];
+      // Prevent duplicate room numbers
+      if (!h.rooms.some(r => r.number === room.number)) {
+        h.rooms.push(room);
+        this.saveHotels(hotels);
+      }
+    }
+  },
+
+  updateRoomInHotel(hotelId: string, roomNumber: string, updated: Partial<Room>) {
+    const hotels = this.getHotels();
+    const h = hotels.find(item => item.id === hotelId);
+    if (h && h.rooms) {
+      h.rooms = h.rooms.map(r => r.number === roomNumber ? { ...r, ...updated } : r);
+      this.saveHotels(hotels);
+    }
+  },
+
+  deleteRoomFromHotel(hotelId: string, roomNumber: string) {
+    const hotels = this.getHotels();
+    const h = hotels.find(item => item.id === hotelId);
+    if (h && h.rooms) {
+      h.rooms = h.rooms.filter(r => r.number !== roomNumber);
+      this.saveHotels(hotels);
+    }
+  },
+
+  // Master Admin & Hotel Portal Session Auth
+  isMasterAdminLoggedIn(): boolean {
+    return safeGet('xenios_master_admin_session') === '1';
+  },
+
+  setMasterAdminLoggedIn(logged: boolean) {
+    safeSet('xenios_master_admin_session', logged ? '1' : '0');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_master_admin_auth'));
+    }
+  },
+
+  isHotelPortalLoggedIn(): boolean {
+    return safeGet('xenios_hotel_portal_session') === '1';
+  },
+
+  setHotelPortalLoggedIn(logged: boolean) {
+    safeSet('xenios_hotel_portal_session', logged ? '1' : '0');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_hotel_portal_auth'));
+    }
+  },
+
   getExperiences(): Experience[] {
     try {
       const stored = safeGet('xenios_custom_experiences');
@@ -118,6 +172,20 @@ export const XeniosStore = {
 
   updateExperience(id: string, updated: Partial<Experience>) {
     const list = this.getExperiences().map(e => e.id === id ? { ...e, ...updated } : e);
+    this.saveExperiences(list);
+  },
+
+  updateExperienceQuota(id: string, availableSlots: number, capacity?: number) {
+    const list = this.getExperiences().map(e => {
+      if (e.id === id) {
+        return {
+          ...e,
+          availableSlots: Math.max(0, availableSlots),
+          capacity: capacity !== undefined ? capacity : (e.capacity || 20)
+        };
+      }
+      return e;
+    });
     this.saveExperiences(list);
   },
 

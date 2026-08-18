@@ -71,7 +71,7 @@ export default function HotelPortalDashboard() {
             <span className="text-xs text-zinc-600 font-medium">{currentHotel.district}, İstanbul</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold font-serif text-zinc-900 mt-1.5">
-            {currentHotel.name} Operasyon Kokpiti
+            {currentHotel.name} Otel Yönetim Paneli
           </h1>
           <p className="text-xs text-zinc-600 mt-1 max-w-2xl leading-relaxed">
             Oda envanteri, kat hizmetleri canlı talepleri, oda içi hizmet menüsü ve OTA/iCal kanalları kontrol paneli.

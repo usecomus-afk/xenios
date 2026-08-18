@@ -54,6 +54,10 @@ export interface Experience {
   priceLevel?: string;
   specialties?: string[];
   reviewsCount?: string;
+  providerEmail?: string;
+  capacity?: number;
+  availableSlots?: number;
+  quotaNote?: string;
 }
 
 export type ServiceStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';

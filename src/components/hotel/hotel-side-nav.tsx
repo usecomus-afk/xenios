@@ -59,7 +59,7 @@ export function HotelSideNav({ isOpen, onClose }: HotelSideNavProps) {
   };
 
   const navItems = [
-    { href: "/hotel-portal", label: "Otel Kokpiti / Özet", icon: LayoutDashboard },
+    { href: "/hotel-portal", label: "Otel Yönetim Paneli", icon: LayoutDashboard },
     { href: "/hotel-portal/requests", label: "Canlı Oda Talepleri", icon: BellRing, badge: pendingReqCount > 0 ? `${pendingReqCount} Canlı` : undefined },
     { href: "/hotel-portal/services", label: "Otel İçi Hizmetler & Menü", icon: LayoutGrid },
     { href: "/hotel-portal/rooms", label: "Oda Durumları & Envanter", icon: DoorOpen },
