@@ -1,5 +1,8 @@
 "use client";
 
+import { PwaNotificationModal } from "../pwa-notification-modal";
+import { PwaNotificationManager } from "@/lib/pwa-notifications";
+
 import { Hotel, Language, XeniosUser } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { LanguageSelector } from './language-selector';
@@ -50,6 +53,14 @@ export function HotelHeader({
   const [user, setUser] = useState<XeniosUser | null>(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showHotelModal, setShowHotelModal] = useState(false);
+  const [showPwaModal, setShowPwaModal] = useState(false);
+  const [pwaPerm, setPwaPerm] = useState<NotificationPermission>('default');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setPwaPerm(PwaNotificationManager.getPermission());
+    }
+  }, []);
 
   useEffect(() => {
     setUser(XeniosStore.getUser());
@@ -156,6 +167,17 @@ export function HotelHeader({
               </button>
             )}
 
+            <button
+              type="button"
+              onClick={() => setShowPwaModal(true)}
+              className="p-2 bg-white hover:bg-amber-50 text-zinc-700 hover:text-zinc-900 border border-amber-300 rounded-full shadow-xs transition cursor-pointer relative"
+              title="PWA Bildirim Ayarları"
+            >
+              <BellRing className="w-3.5 h-3.5 text-amber-700" />
+              {pwaPerm === 'granted' && (
+                <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-0.5 right-0.5 ring-2 ring-white" />
+              )}
+            </button>
             <LanguageSelector currentLang={lang} onSelect={onLanguageChange} />
           </div>
         </div>

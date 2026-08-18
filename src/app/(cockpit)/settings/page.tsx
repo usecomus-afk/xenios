@@ -1,5 +1,7 @@
 "use client";
 
+import { PwaNotificationModal } from "@/components/pwa-notification-modal";
+
 import { useState } from 'react';
 import { 
   Building2, 
@@ -23,6 +25,7 @@ import { toast } from 'sonner';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<'general' | 'ical' | 'rooms' | 'notifications' | 'pos'>('general');
+  const [isPwaModalOpen, setIsPwaModalOpen] = useState(false);
 
   // General Settings
   const [hotelName, setHotelName] = useState('Old City Heritage Hotel Istanbul');
