@@ -143,26 +143,22 @@ export default function GuestComplaintsPage() {
       <main className="max-w-4xl mx-auto p-4 space-y-6">
         
         {/* Mission Statement Hero Banner */}
-        <div className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 text-white p-6 rounded-3xl shadow-xl border border-amber-500/30 space-y-3 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-amber-500/15 via-amber-100/40 to-amber-50/70 p-6 rounded-3xl border border-amber-300 shadow-sm space-y-3 relative overflow-hidden text-zinc-900">
           <div className="flex items-start justify-between gap-4">
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-amber-400 font-serif font-bold">İstanbul'un Misafirleri Başımızın Tacıdır</span>
+                <span className="text-xs text-amber-900 font-serif font-bold">İstanbul'un Misafirleri Başımızın Tacıdır</span>
               </div>
 
-              <h1 className="text-xl md:text-2xl font-bold font-serif text-white leading-snug">
-                Haksız Fiyat, Dolandırıcılık ve Mağduriyet Hakem Masası
-              </h1>
-
-              <p className="text-xs text-zinc-300 leading-relaxed max-w-2xl">
+              <p className="text-xs text-zinc-600 leading-relaxed max-w-2xl">
                 İstanbul'da karşılaştığınız şüpheli, fahiş fiyatlı veya aldatıcı alışverişleri platformumuza bildirin. 
                 Xenios olarak işletmeyle resmi iletişime geçerek hatanın telafisini ve haksız tahsil edilen farkın 
-                <strong> doğrudan hesabınıza iadesini</strong> talep ediyoruz. 
+                <strong className="text-zinc-900"> doğrudan hesabınıza iadesini</strong> talep ediyoruz. 
                 İyi niyet göstermeyen ve 30 gün içinde telafi etmeyen işletmeleri sonraki misafirleri korumak için 
-                <strong> Uyarı Panosu'nda</strong> paylaşıyoruz.
+                <strong className="text-zinc-900"> Uyarı Panosu'nda</strong> paylaşıyoruz.
               </p>
             </div>
-            <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md p-2 border border-white/20 shrink-0 hidden sm:flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-amber-100/80 p-2 border border-amber-300/80 shrink-0 hidden sm:flex items-center justify-center">
               <Image src="/icons/bad-experience.png" alt="Mağduriyet İnceleme" width={48} height={48} unoptimized className="object-contain" />
             </div>
           </div>
