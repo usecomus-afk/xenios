@@ -117,7 +117,7 @@ export default function GuestPage() {
   const activePendingRequests = requests.filter(r => r.status !== 'completed');
 
   return (
-    <div className="min-h-screen bg-[#f8f6f0] pb-28 text-zinc-900">
+    <div className="min-h-screen bg-[#f8f6f0] pb-28 text-zinc-900 overflow-x-hidden w-full">
       {/* Hotel Header & Credentials */}
       <HotelHeader
         hotel={currentHotel}
@@ -130,7 +130,7 @@ export default function GuestPage() {
       />
 
       {/* Main Content Area */}
-      <main className="max-w-4xl mx-auto px-4 mt-4 space-y-6">
+      <main className="max-w-4xl mx-auto px-3.5 sm:px-4 mt-3 sm:mt-4 space-y-5 sm:space-y-6 w-full">
         
         {/* TAB 1: In-Room Services (Otel İçi Hizmetler) */}
         {activeTab === 'services' && (

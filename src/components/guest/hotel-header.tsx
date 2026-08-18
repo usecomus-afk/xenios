@@ -90,30 +90,52 @@ export function HotelHeader({
   };
 
   return (
-    <header className="bg-gradient-to-b from-amber-500/10 via-amber-100/20 to-transparent pt-3 pb-3 px-4 border-b border-amber-200/50">
+    <header className="bg-gradient-to-b from-amber-500/10 via-amber-100/20 to-transparent pt-3 pb-3 px-3.5 sm:px-4 border-b border-amber-200/50 w-full overflow-hidden">
       <div className="max-w-4xl mx-auto space-y-2.5">
-        {/* Top Bar: Brand Logo + User Profile Session / Login + Lang Selector */}
-        <div className="flex items-center justify-between">
-          <BrandMark size={36} showText={true} />
+        {/* Top Bar: Brand Logo + Compact Unified Action Pill (Bell, Lang, User) */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="shrink-0">
+            <BrandMark size={32} showText={true} theme="light" />
+          </div>
           
-          <div className="flex items-center gap-2 relative">
-            {/* User Session Profile Badge / Login Button */}
+          {/* Unified Compact Action Pill to ensure 100% symmetric margins */}
+          <div className="flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-full border border-amber-200/90 shadow-xs shrink-0">
+            {/* 1. PWA Notification Bell */}
+            <button
+              type="button"
+              onClick={() => setShowPwaModal(true)}
+              className="w-7 h-7 rounded-full hover:bg-amber-50 text-zinc-700 hover:text-zinc-900 transition flex items-center justify-center relative cursor-pointer"
+              title="PWA Bildirim Ayarları"
+            >
+              <BellRing className="w-3.5 h-3.5 text-amber-800" />
+              {pwaPerm === 'granted' && (
+                <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-0.5 right-0.5 ring-1.5 ring-white" />
+              )}
+            </button>
+
+            {/* Subtle Divider */}
+            <span className="w-px h-3.5 bg-amber-200/80" />
+
+            {/* 2. Language Selector */}
+            <LanguageSelector currentLang={lang} onSelect={onLanguageChange} />
+
+            {/* Subtle Divider */}
+            <span className="w-px h-3.5 bg-amber-200/80" />
+
+            {/* 3. User Session Profile Badge / Login Button */}
             {user ? (
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
-                  className="flex items-center gap-2 pl-1.5 pr-2.5 py-1 bg-white hover:bg-amber-50 border border-amber-300 rounded-full shadow-xs transition cursor-pointer text-xs"
+                  className="w-7 h-7 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-bold flex items-center justify-center text-[10px] shadow-2xs transition cursor-pointer overflow-hidden"
+                  title={user.name}
                 >
                   {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-6 h-6 rounded-full object-cover border border-amber-400" />
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-6 h-6 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-[10px]">
-                      {user.name.charAt(0)}
-                    </div>
+                    <span>{user.name.charAt(0).toUpperCase()}</span>
                   )}
-                  <span className="font-bold text-zinc-800 max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
-                  <ChevronDown className="w-3 h-3 text-zinc-500" />
                 </button>
 
                 {/* User Dropdown */}
@@ -160,25 +182,12 @@ export function HotelHeader({
               <button
                 type="button"
                 onClick={onOpenAuth}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-black text-amber-400 rounded-full text-xs font-bold shadow-sm tracking-wide transition cursor-pointer"
+                className="w-7 h-7 rounded-full bg-zinc-900 hover:bg-black text-amber-400 flex items-center justify-center text-xs shadow-2xs transition cursor-pointer"
+                title="Giriş Yap"
               >
                 <User className="w-3.5 h-3.5" />
-                <span>Giriş Yap</span>
               </button>
             )}
-
-            <button
-              type="button"
-              onClick={() => setShowPwaModal(true)}
-              className="p-2 bg-white hover:bg-amber-50 text-zinc-700 hover:text-zinc-900 border border-amber-300 rounded-full shadow-xs transition cursor-pointer relative"
-              title="PWA Bildirim Ayarları"
-            >
-              <BellRing className="w-3.5 h-3.5 text-amber-700" />
-              {pwaPerm === 'granted' && (
-                <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-0.5 right-0.5 ring-2 ring-white" />
-              )}
-            </button>
-            <LanguageSelector currentLang={lang} onSelect={onLanguageChange} />
           </div>
         </div>
 

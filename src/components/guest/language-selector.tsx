@@ -20,7 +20,7 @@ export function LanguageSelector({ currentLang, onSelect }: { currentLang: Langu
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/90 shadow-sm border border-amber-200/80 text-xs font-semibold text-zinc-800 hover:bg-amber-50 transition"
+        className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-bold text-zinc-800 hover:bg-amber-50 transition cursor-pointer"
       >
         <span>{langs.find(l => l.code === currentLang)?.flag || '🇹🇷'}</span>
         <span>{currentLang.toUpperCase()}</span>
