@@ -25,7 +25,7 @@ export function CockpitSideNav() {
     { href: "/pilot", label: "Pilot & Kurucu Masası", icon: Sparkles, badge: "Pilot" },
     { href: "/dashboard", label: "Kokpit / Özet", icon: LayoutDashboard },
     { href: "/live-requests", label: "Canlı Oda Talepleri", icon: BellRing, badge: "Canlı" },
-    { href: "/module-settings", label: "Hizmet Modülleri Yönetimi", icon: LayoutGrid },
+    { href: "/module-settings", label: "Otel İçi Hizmetler & Menü", icon: LayoutGrid },
     { href: "/admin", label: "İlan & Rezervasyon Yönetimi", icon: Lock, badge: "Admin" },
     { href: "/disputes", label: "Misafir Hakları & Hakem", icon: Scale, badge: "Hakem" },
     { href: "/hotels", label: "Anlaşmalı Oteller", icon: Building2 },

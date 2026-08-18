@@ -1,4 +1,4 @@
-import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap, PropertyListing, InvestmentLead } from './types';
+import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap, PropertyListing, InvestmentLead, InRoomServiceItem } from './types';
 import rawHotels from '@/data/hotels.json';
 import rawExperiences from '@/data/experiences.json';
 import rawProperties from '@/data/properties.json';
@@ -15,6 +15,7 @@ const STORAGE_KEYS = {
   COMPLAINTS: 'xenios_tourist_complaints',
   CURRENT_USER: 'xenios_auth_user',
   MODULE_SETTINGS: 'xenios_module_settings',
+  IN_ROOM_SERVICES: 'xenios_in_room_services_v2',
   PROPERTIES: 'xenios_custom_properties',
   INVESTMENT_LEADS: 'xenios_investment_leads'
 };
@@ -300,6 +301,100 @@ export const XeniosStore = {
     try {
       safeSet(STORAGE_KEYS.MODULE_SETTINGS, JSON.stringify(all));
       if (typeof window !== 'undefined') window.dispatchEvent(new Event('xenios_module_settings_updated'));
+    } catch (e) {}
+  },
+
+  // Otel İçi Hizmetler (In-Room Services) Tam Yönetimi (Ekle, Düzenle, Sil, Sırala)
+  getInRoomServices(): InRoomServiceItem[] {
+    const defaultServices: InRoomServiceItem[] = [
+      { id: 'breakfast', key: 'breakfast', label: 'Kahvaltı Talebi', desc: 'Odaya sıcak kahvaltı servisi', icon: '/icons/menu/breakfast.png', department: 'Room Service (Mutfak KDS)', enabled: true, hidden: false, order: 1 },
+      { id: 'dnd', key: 'dnd', label: 'Rahatsız Etmeyin', desc: 'Rahatsız edilmek istemiyorum', icon: '/icons/menu/dnd.png', department: 'Housekeeping', enabled: true, hidden: false, order: 2 },
+      { id: 'cleaning', key: 'cleaning', label: 'Oda Temizliği', desc: 'Oda temizliği ve havalandırma', icon: '/icons/menu/cleaning.png', department: 'Housekeeping', enabled: true, hidden: false, order: 3 },
+      { id: 'towels', key: 'towels', label: 'Temiz Havlu', desc: 'Banyo & el havluları değişimi', icon: '/icons/menu/towels.png', department: 'Housekeeping', enabled: true, hidden: false, order: 4 },
+      { id: 'linens', key: 'linens', label: 'Çarşaf & Nevresim', desc: 'Çarşaf ve nevresim takımı', icon: '/icons/menu/linens.png', department: 'Housekeeping', enabled: true, hidden: false, order: 5 },
+      { id: 'pillows', key: 'pillows', label: 'Ekstra Yastık', desc: 'Ortopedik / ekstra yastık', icon: '/icons/menu/pillows.png', department: 'Housekeeping', enabled: true, hidden: false, order: 6 },
+      { id: 'toiletries', key: 'toiletries', label: 'Banyo Bukleti', desc: 'Şampuan, duş jeli, sabun', icon: '/icons/menu/toiletries.png', department: 'Housekeeping', enabled: true, hidden: false, order: 7 },
+      { id: 'hygiene', key: 'hygiene', label: 'Hijyen & Bakım Seti', desc: 'Diş & tıraş seti, terlik', icon: '/icons/menu/hygiene.png', department: 'Housekeeping', enabled: true, hidden: false, order: 8 },
+      { id: 'roomservice', key: 'roomservice', label: 'Oda Servisi', desc: 'Yiyecek & içecek menüsü', icon: '/icons/menu/roomservice.png', department: 'Room Service (Mutfak KDS)', enabled: true, hidden: false, order: 9 },
+      { id: 'minibar', key: 'minibar', label: 'Mini Bar Dolumu', desc: 'Mini bar dolumu ve su', icon: '/icons/menu/minibar.png', department: 'Housekeeping', enabled: true, hidden: false, order: 10 },
+      { id: 'safe', key: 'safe', label: 'Kasa & Güvenlik', desc: 'Kasa kullanımı & güvenlik', icon: '/icons/menu/safe.png', department: 'Resepsiyon & Güvenlik', enabled: true, hidden: false, order: 11 },
+      { id: 'technical', key: 'technical', label: 'Teknik Destek', desc: 'Klima, TV, priz ve aydınlatma', icon: '/icons/menu/technical.png', department: 'Teknik Servis', enabled: true, hidden: false, order: 12 },
+      { id: 'laundry', key: 'laundry', label: 'Çamaşırhane & Ütü', desc: 'Kuru temizleme ve ütü', icon: '/icons/menu/laundry.png', department: 'Housekeeping (Çamaşırhane)', enabled: true, hidden: false, order: 13 },
+      { id: 'lateCheckout', key: 'lateCheckout', label: 'Geç Çıkış Talebi', desc: "Saat 14:00'e kadar geç çıkış", icon: '/icons/menu/lateCheckout.png', department: 'Resepsiyon / Ön Büro', enabled: true, hidden: false, order: 14 },
+      { id: 'extendStay', key: 'extendStay', label: 'Konaklama Uzatma', desc: 'Konaklama süresini uzat', icon: '/icons/menu/extendStay.png', department: 'Resepsiyon / Rezervasyon', enabled: true, hidden: false, order: 15 },
+      { id: 'taxi', key: 'taxi', label: 'Taksi Çağır', desc: 'Otel kapısına sarı taksi', icon: '/icons/menu/taksi.png', department: 'Concierge / Bellboy', enabled: true, hidden: false, order: 16 }
+    ];
+
+    let items: InRoomServiceItem[] = defaultServices;
+    try {
+      const stored = safeGet(STORAGE_KEYS.IN_ROOM_SERVICES);
+      if (stored) {
+        items = JSON.parse(stored);
+      }
+    } catch (e) {}
+
+    // Merge moduleSettings for enabled/hidden
+    const moduleSettings = this.getModuleSettings();
+    return items.map(item => {
+      const ms = moduleSettings[item.key];
+      return {
+        ...item,
+        enabled: ms?.enabled !== undefined ? ms.enabled : item.enabled,
+        hidden: ms?.hidden !== undefined ? ms.hidden : item.hidden
+      };
+    }).sort((a, b) => (a.order || 99) - (b.order || 99));
+  },
+
+  saveInRoomService(item: InRoomServiceItem) {
+    const list = this.getInRoomServices();
+    const idx = list.findIndex(s => s.id === item.id || s.key === item.key);
+    if (idx >= 0) {
+      list[idx] = { ...list[idx], ...item };
+    } else {
+      list.push({ ...item, isCustom: true, order: list.length + 1 });
+    }
+
+    try {
+      safeSet(STORAGE_KEYS.IN_ROOM_SERVICES, JSON.stringify(list));
+      // Also update moduleSettings for fast boolean queries
+      this.setModuleSetting(item.key, {
+        enabled: item.enabled,
+        hidden: item.hidden,
+        pricing: item.pricingDefaults,
+        fieldOptions: item.fieldOptions
+      });
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('xenios_in_room_services_updated'));
+    } catch (e) {}
+  },
+
+  deleteInRoomService(idOrKey: string) {
+    let list = this.getInRoomServices();
+    const item = list.find(s => s.id === idOrKey || s.key === idOrKey);
+    if (item?.isCustom) {
+      list = list.filter(s => s.id !== idOrKey && s.key !== idOrKey);
+    } else if (item) {
+      // For default items, mark hidden
+      item.hidden = true;
+    }
+    try {
+      safeSet(STORAGE_KEYS.IN_ROOM_SERVICES, JSON.stringify(list));
+      if (item) {
+        this.setModuleSetting(item.key, { enabled: item.enabled, hidden: true });
+      }
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('xenios_in_room_services_updated'));
+    } catch (e) {}
+  },
+
+  resetInRoomServicesToDefault() {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEYS.IN_ROOM_SERVICES);
+        localStorage.removeItem(STORAGE_KEYS.MODULE_SETTINGS);
+      }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('xenios_in_room_services_updated'));
+        window.dispatchEvent(new Event('xenios_module_settings_updated'));
+      }
     } catch (e) {}
   },
 

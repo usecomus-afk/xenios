@@ -197,6 +197,33 @@ export default function CockpitDashboard() {
         </div>
       </div>
 
+      {/* Otel İçi Hizmetler Yönetimi Hızlı Erişim */}
+      <div className="p-5 rounded-3xl bg-gradient-to-r from-amber-500/10 via-[#171a22] to-[#12141a] border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+            <Layers className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold text-white">Otel İçi Hizmetler & Menü Yönetimi</h3>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold">
+                Canlı Aktif
+              </span>
+            </div>
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Misafir odası QR menüsündeki tüm hizmetleri ekleyin, düzenleyin, fiyatlandırın veya gizleyin.
+            </p>
+          </div>
+        </div>
+
+        <Link
+          href="/module-settings"
+          className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs flex items-center justify-center gap-1.5 transition shrink-0 shadow-md shadow-amber-500/20"
+        >
+          <span>Hizmetleri Yönet →</span>
+        </Link>
+      </div>
+
       {/* Live In-Room Requests Section */}
       <div className="p-6 rounded-3xl bg-[#171a22] border border-[#2c313d] space-y-4">
         <div className="flex items-center justify-between">

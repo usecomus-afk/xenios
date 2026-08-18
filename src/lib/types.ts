@@ -232,7 +232,25 @@ export interface Complaint {
 }
 
 
-// Cockpit: Otel İçi Hizmet Modülleri Yönetimi (içerik/fiyat/aktiflik/görünürlük)
+// Cockpit: Otel İçi Hizmet Modülleri Yönetimi (içerik/fiyat/aktiflik/görünürlük/özel hizmetler)
+export interface InRoomServiceItem {
+  id: string; // unique key e.g. 'breakfast', 'custom-123'
+  key: string;
+  label: string;
+  desc: string;
+  icon: string;
+  department: string;
+  enabled: boolean;
+  hidden: boolean;
+  isCustom?: boolean;
+  price?: number;
+  currency?: string;
+  pricingDefaults?: Record<string, number>;
+  fieldOptions?: Record<string, string[]>;
+  options?: string[];
+  order?: number;
+}
+
 export interface ModuleAdminSettings {
   enabled: boolean;
   hidden: boolean;
