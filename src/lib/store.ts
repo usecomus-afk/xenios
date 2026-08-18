@@ -1,6 +1,7 @@
-import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap } from './types';
+import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap, PropertyListing, InvestmentLead } from './types';
 import rawHotels from '@/data/hotels.json';
 import rawExperiences from '@/data/experiences.json';
+import rawProperties from '@/data/properties.json';
 
 const hotelsData: Hotel[] = rawHotels as Hotel[];
 
@@ -13,7 +14,9 @@ const STORAGE_KEYS = {
   PROFILE: 'xenios_guest_profile',
   COMPLAINTS: 'xenios_tourist_complaints',
   CURRENT_USER: 'xenios_auth_user',
-  MODULE_SETTINGS: 'xenios_module_settings'
+  MODULE_SETTINGS: 'xenios_module_settings',
+  PROPERTIES: 'xenios_custom_properties',
+  INVESTMENT_LEADS: 'xenios_investment_leads'
 };
 
 const DEFAULT_MODULE_SETTING: ModuleAdminSettings = { enabled: true, hidden: false };
@@ -129,6 +132,67 @@ export const XeniosStore = {
 
   getExperienceById(id: string) {
     return this.getExperiences().find((e: any) => e.id === id);
+  },
+
+  // Invest & Live in Istanbul — Emlak Vitrini
+  getPropertyListings(): PropertyListing[] {
+    try {
+      const stored = safeGet(STORAGE_KEYS.PROPERTIES);
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return rawProperties as PropertyListing[];
+  },
+
+  savePropertyListings(properties: PropertyListing[]) {
+    safeSet(STORAGE_KEYS.PROPERTIES, JSON.stringify(properties));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_properties_updated'));
+    }
+  },
+
+  addPropertyListing(property: PropertyListing) {
+    const list = this.getPropertyListings();
+    list.unshift(property);
+    this.savePropertyListings(list);
+  },
+
+  updatePropertyListing(id: string, updated: Partial<PropertyListing>) {
+    const list = this.getPropertyListings().map(p => p.id === id ? { ...p, ...updated } : p);
+    this.savePropertyListings(list);
+  },
+
+  deletePropertyListing(id: string) {
+    const list = this.getPropertyListings().filter(p => p.id !== id);
+    this.savePropertyListings(list);
+  },
+
+  // Sessizce toplanan nitelikli veri: görüntülenen mülk tiplerinden basit persona tahmini
+  trackPropertyView(property: PropertyListing) {
+    const profile = this.getGuestProfile();
+    const viewed = [...(profile.investPropertyTypesViewed ?? []), property.propertyType].slice(-20);
+    const scores = { ...(profile.investPersonaScores ?? {}) };
+    property.personas.forEach((p) => { scores[p] = (scores[p] ?? 0) + 1; });
+    const personaGuess = (Object.entries(scores).sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0]) as GuestProfile['investPersonaGuess'];
+    this.setGuestProfile({ ...profile, investPropertyTypesViewed: viewed, investPersonaScores: scores, investPersonaGuess: personaGuess });
+  },
+
+  getInvestmentLeads(): InvestmentLead[] {
+    try {
+      const stored = safeGet(STORAGE_KEYS.INVESTMENT_LEADS);
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return [];
+  },
+
+  addInvestmentLead(lead: Omit<InvestmentLead, 'id' | 'createdAt'>): InvestmentLead {
+    const list = this.getInvestmentLeads();
+    const newLead: InvestmentLead = { ...lead, id: 'lead-' + Date.now(), createdAt: new Date().toISOString() };
+    list.unshift(newLead);
+    try {
+      safeSet(STORAGE_KEYS.INVESTMENT_LEADS, JSON.stringify(list));
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('xenios_investment_leads_updated'));
+    } catch (e) {}
+    return newLead;
   },
 
   // Active Session

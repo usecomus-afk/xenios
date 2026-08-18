@@ -14,6 +14,7 @@ import { VirtualPosModal } from '@/components/guest/virtual-pos-modal';
 import { AiChatDrawer } from '@/components/guest/ai-chat-drawer';
 import { AuthModal } from '@/components/auth-modal';
 import { FairShoppingPolicy } from '@/components/guest/fair-shopping-policy';
+import { InvestInIstanbul } from '@/components/guest/invest-in-istanbul';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -45,7 +46,7 @@ export default function GuestPage() {
   const [activeHotelId, setActiveHotelId] = useState(XeniosStore.getActiveHotelId());
   const [activeRoomNumber, setActiveRoomNumber] = useState(XeniosStore.getActiveRoomId());
   const [lang, setLang] = useState<Language>('tr');
-  const [activeTab, setActiveTab] = useState<'services' | 'experiences' | 'categories' | 'ai' | 'practical'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'experiences' | 'categories' | 'ai' | 'practical' | 'invest'>('services');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -310,6 +311,11 @@ export default function GuestPage() {
             {/* Xenios Fair Shopping Policy & Misafir Kalkanı Component */}
             <FairShoppingPolicy />
           </div>
+        )}
+
+        {/* TAB 5: Invest & Live in Istanbul */}
+        {activeTab === 'invest' && (
+          <InvestInIstanbul hotel={currentHotel} roomNumber={activeRoomNumber} />
         )}
       </main>
 

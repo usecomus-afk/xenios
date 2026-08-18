@@ -101,6 +101,9 @@ export interface Booking {
 
 export type TourPace = 'sakin' | 'dengeli' | 'yogun';
 
+// Invest & Live in Istanbul — yatırımcı/yaşam profilleri
+export type InvestorPersona = 'citizenship' | 'short_term_rental' | 'luxury_lifestyle';
+
 export interface GuestProfile {
   name?: string;
   travelStyle?: 'solo' | 'couple' | 'family' | 'business';
@@ -119,6 +122,49 @@ export interface GuestProfile {
   // KVKK aydınlatma & açık rıza onayı — kişisel/sağlık verisi işlemek için zorunlu
   kvkkConsent?: boolean;
   consentTimestamp?: string;
+  // Invest & Live in Istanbul — sessizce toplanan nitelikli veri (comusAI akıllı profilleme)
+  investPropertyTypesViewed?: string[];
+  investPersonaScores?: Partial<Record<InvestorPersona, number>>;
+  investPersonaGuess?: InvestorPersona;
+  investBudgetRange?: string;
+}
+
+export type PropertyStatus = 'active' | 'suspended';
+
+export interface PropertyListing {
+  id: string;
+  title: string;
+  district: string;
+  propertyType: string;
+  personas: InvestorPersona[];
+  priceUSD: number;
+  bedrooms: number;
+  areaM2: number;
+  description: string;
+  highlights: string[];
+  developer: string;
+  contactPhone: string;
+  contactWebsite: string;
+  image: string;
+  coords: { lat: number; lng: number };
+  citizenshipEligible: boolean;
+  roiEstimate?: string;
+  /** Admin-controlled listing status. Missing/undefined is treated as 'active' for older records. */
+  status?: PropertyStatus;
+}
+
+export interface InvestmentLead {
+  id: string;
+  propertyId: string;
+  propertyTitle: string;
+  hotelId: string;
+  hotelName: string;
+  roomNumber: string;
+  guestName: string;
+  guestContact: string;
+  note?: string;
+  personaGuess?: InvestorPersona;
+  createdAt: string;
 }
 
 export interface TransitCalculation {

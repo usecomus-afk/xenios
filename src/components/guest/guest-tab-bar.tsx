@@ -2,12 +2,12 @@
 
 import { Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
-import { Home, Compass, LayoutGrid } from 'lucide-react';
+import { Home, Compass, LayoutGrid, Building2 } from 'lucide-react';
 import Image from 'next/image';
 
 interface GuestTabBarProps {
-  activeTab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical';
-  onTabChange: (tab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical') => void;
+  activeTab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical' | 'invest';
+  onTabChange: (tab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical' | 'invest') => void;
   lang: Language;
 }
 
@@ -19,7 +19,8 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
     { id: 'experiences', label: 'Deneyimler', iconType: 'lucide', icon: Compass },
     { id: 'categories', label: 'Kategoriler', iconType: 'lucide', icon: LayoutGrid },
     { id: 'ai', label: 'comusAI', iconType: 'image', imgSrc: '/icons/menu/aiGuide.png', highlight: true },
-    { id: 'practical', label: 'Rehber & Haklar', iconType: 'image', imgSrc: '/icons/menu/practical.png' }
+    { id: 'practical', label: 'Rehber & Haklar', iconType: 'image', imgSrc: '/icons/menu/practical.png' },
+    { id: 'invest', label: 'Invest', iconType: 'lucide', icon: Building2 }
   ];
 
   return (

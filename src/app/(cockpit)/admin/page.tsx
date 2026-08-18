@@ -3,12 +3,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { XeniosStore } from '@/lib/store';
 import { adminLogin } from '@/lib/admin-auth';
+import { PropertyAdminPanel } from '@/components/cockpit/property-admin-panel';
 import { Experience, Booking, XeniosUser, BookingStatus } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   Lock, LogOut, ShieldCheck, Mail, KeyRound, Plus, Search, Edit3, Trash2, Save, X,
-  Power, EyeOff, CreditCard, CheckCircle2, ExternalLink, Package, Ticket, MapPin, Star, ImageOff
+  Power, EyeOff, CreditCard, CheckCircle2, ExternalLink, Package, Ticket, MapPin, Star, ImageOff, Building2
 } from 'lucide-react';
 
 type NewExpDraft = {
@@ -141,7 +142,7 @@ function AdminLoginGate({ onLogin }: { onLogin: (user: XeniosUser) => void }) {
 export default function AdminPage() {
   const [user, setUser] = useState<XeniosUser | null>(null);
   const [checkedAuth, setCheckedAuth] = useState(false);
-  const [tab, setTab] = useState<'listings' | 'bookings'>('listings');
+  const [tab, setTab] = useState<'listings' | 'bookings' | 'properties'>('listings');
 
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -322,7 +323,15 @@ export default function AdminPage() {
         >
           <Package className="w-3.5 h-3.5" /> Satın Almalar & Rezervasyonlar
         </button>
+        <button
+          onClick={() => setTab('properties')}
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${tab === 'properties' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-zinc-200'}`}
+        >
+          <Building2 className="w-3.5 h-3.5" /> Emlak Vitrini & Talepler
+        </button>
       </div>
+
+      {tab === 'properties' && <PropertyAdminPanel />}
 
       {tab === 'listings' && (
         <div className="space-y-4">
