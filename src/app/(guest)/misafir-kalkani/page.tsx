@@ -16,6 +16,7 @@ import {
   Scale
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { BrandMark } from '@/components/brand-mark';
 
 export default function MisafirKalkaniPage() {
@@ -107,8 +108,10 @@ export default function MisafirKalkaniPage() {
             <BrandMark size={34} showText={true} />
           </div>
 
-          <div className="flex items-center gap-1.5 bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-300/60 text-xs font-bold text-amber-900">
-            <Shield className="w-3.5 h-3.5 text-amber-700" />
+          <div className="flex items-center gap-2 bg-red-500/10 px-3 py-1.5 rounded-full border border-red-300/60 text-xs font-bold text-red-900">
+            <div className="w-4 h-4 relative shrink-0">
+              <Image src="/icons/xenios-misafir-kalkani.png" alt="Kalkan" fill className="object-contain" />
+            </div>
             <span>Xenios Misafir Kalkanı</span>
           </div>
         </div>
@@ -117,26 +120,39 @@ export default function MisafirKalkaniPage() {
       <main className="max-w-4xl mx-auto p-4 space-y-6">
         
         {/* Top Header */}
-        <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 text-white p-6 rounded-3xl shadow-lg space-y-2">
+        <div className="bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 text-white p-6 rounded-3xl shadow-lg space-y-2 relative overflow-hidden">
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full bg-white text-amber-900 font-bold text-[10px] uppercase tracking-wider">
               Turist Güvenlik Rehberi
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif">
-            Xenios Misafir Kalkanı & İstanbul Seyahat Rehberi
-          </h1>
-          <p className="text-xs text-white/90 leading-relaxed max-w-2xl">
-            İstanbul'da güvenli seyahat etmeniz için 9 yaygın sokak tuzağı, yasal sağlık haklarınız, resmi İstanbulkart & MüzeKart biletleri ve acil durum rehberleri.
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <h1 className="text-xl sm:text-2xl font-bold font-serif">
+                Xenios Misafir Kalkanı & İstanbul Seyahat Rehberi
+              </h1>
+              <p className="text-xs text-white/90 leading-relaxed max-w-2xl">
+                İstanbul'da güvenli seyahat etmeniz için 9 yaygın sokak tuzağı, yasal sağlık haklarınız, resmi İstanbulkart & MüzeKart biletleri ve acil durum rehberleri.
+              </p>
+            </div>
+            <div className="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-md p-2 border border-white/20 shrink-0 hidden sm:flex items-center justify-center">
+              <Image src="/icons/xenios-misafir-kalkani.png" alt="Kalkan" width={48} height={48} className="object-contain" />
+            </div>
+          </div>
         </div>
 
         {/* ISTANBULKART & MUZEKART MODULLERI (Same Page) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-white rounded-3xl p-5 border border-red-200/80 shadow-sm space-y-3 flex flex-col justify-between">
             <div className="space-y-2">
-              <div className="w-12 h-12 rounded-2xl bg-red-500/10 text-red-600 flex items-center justify-center font-bold text-xl">
-                💳
+              <div className="h-16 w-24 rounded-xl bg-red-500/5 p-1 border border-red-200 flex items-center justify-center overflow-hidden">
+                <Image 
+                  src="/icons/istanbulkart.png" 
+                  alt="Resmi İstanbulkart & Ulaşım" 
+                  width={80} 
+                  height={52} 
+                  className="object-contain drop-shadow-xs" 
+                />
               </div>
               <h3 className="text-base font-bold text-zinc-900">Resmi İstanbulkart & Ulaşım</h3>
               <p className="text-xs text-zinc-600 leading-relaxed">
@@ -157,8 +173,14 @@ export default function MisafirKalkaniPage() {
 
           <div className="bg-white rounded-3xl p-5 border border-amber-200/80 shadow-sm space-y-3 flex flex-col justify-between">
             <div className="space-y-2">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold text-xl">
-                🏛️
+              <div className="h-16 w-24 rounded-xl bg-amber-500/5 p-1 border border-amber-200 flex items-center justify-center overflow-hidden">
+                <Image 
+                  src="/icons/muzekart.png" 
+                  alt="Resmi MüzeKart & Biletler" 
+                  width={80} 
+                  height={52} 
+                  className="object-contain drop-shadow-xs" 
+                />
               </div>
               <h3 className="text-base font-bold text-zinc-900">Resmi MüzeKart & Biletler</h3>
               <p className="text-xs text-zinc-600 leading-relaxed">
@@ -231,7 +253,12 @@ export default function MisafirKalkaniPage() {
 
         {/* Emergency Contacts */}
         <div className="bg-white rounded-3xl p-5 border border-amber-200/60 shadow-sm space-y-3">
-          <h3 className="text-sm font-bold text-zinc-900">Resmi Acil & Destek Hatları</h3>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center p-1 border border-red-200">
+              <Image src="/icons/sos-emergency.png" alt="SOS Acil" width={20} height={20} className="object-contain" />
+            </div>
+            <h3 className="text-sm font-bold text-zinc-900">Resmi Acil & Destek Hatları</h3>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
             <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
               <span className="text-zinc-500 block text-[10px]">Acil Çağrı Merkezi</span>

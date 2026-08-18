@@ -4,6 +4,7 @@ import { Experience, Hotel, Language } from '@/lib/types';
 import { calculateTransitOptions } from '@/lib/transit';
 import { getT } from '@/lib/i18n';
 import { MapPin, Navigation, Car, Sparkles, Train, ExternalLink, X, Compass } from 'lucide-react';
+import Image from 'next/image';
 
 interface TransitModalProps {
   experience: Experience;
@@ -80,9 +81,15 @@ export function TransitModal({ experience, hotel, lang, onClose }: TransitModalP
           {/* 2. VIP Transfer */}
           <div className="p-3.5 rounded-2xl bg-zinc-900 text-white space-y-1.5 shadow-md">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-amber-500 text-black flex items-center justify-center font-bold">
-                  🚐
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 p-1 flex items-center justify-center shrink-0">
+                  <Image 
+                    src="/icons/categories/ozel-vip-transfer.png" 
+                    alt="VIP Transfer" 
+                    width={28} 
+                    height={28} 
+                    className="object-contain" 
+                  />
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-amber-400">{t.vipOption}</h4>
@@ -100,9 +107,15 @@ export function TransitModal({ experience, hotel, lang, onClose }: TransitModalP
           {/* 3. Public Transit (İETT / Tram / Metro) */}
           <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/80 space-y-2">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold">
-                  <Train className="w-4 h-4" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-600/15 border border-blue-300 p-1 flex items-center justify-center shrink-0">
+                  <Image 
+                    src="/icons/istanbulkart.png" 
+                    alt="İstanbulkart" 
+                    width={32} 
+                    height={22} 
+                    className="object-contain" 
+                  />
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-zinc-900">{t.transitOption}</h4>

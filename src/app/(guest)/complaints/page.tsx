@@ -29,6 +29,7 @@ import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { BrandMark } from '@/components/brand-mark';
 import { FairShoppingPolicy } from '@/components/guest/fair-shopping-policy';
+import Image from 'next/image';
 
 export default function GuestComplaintsPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
@@ -129,8 +130,10 @@ export default function GuestComplaintsPage() {
             <BrandMark size={34} showText={true} />
           </div>
 
-          <div className="flex items-center gap-1.5 bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-300/60 text-xs font-bold text-amber-900">
-            <Scale className="w-3.5 h-3.5 text-amber-700" />
+          <div className="flex items-center gap-2 bg-red-500/10 px-3 py-1.5 rounded-full border border-red-300/60 text-xs font-bold text-red-900">
+            <div className="w-4 h-4 relative shrink-0">
+              <Image src="/icons/xenios-adil-alisveris.png" alt="Adil Alışveriş" fill className="object-contain" />
+            </div>
             <span>Xenios Adil Alışveriş Politikası</span>
           </div>
         </div>
@@ -140,25 +143,32 @@ export default function GuestComplaintsPage() {
       <main className="max-w-4xl mx-auto p-4 space-y-6">
         
         {/* Mission Statement Hero Banner */}
-        <div className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 text-white p-6 rounded-3xl shadow-xl border border-amber-500/30 space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-black font-bold text-[10px] uppercase tracking-wider">
-              Xenios Güvencesi
-            </span>
-            <span className="text-xs text-amber-400 font-serif">İstanbul'un Misafirleri Başımızın Tacıdır</span>
+        <div className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 text-white p-6 rounded-3xl shadow-xl border border-amber-500/30 space-y-3 relative overflow-hidden">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-black font-bold text-[10px] uppercase tracking-wider">
+                  Xenios Güvencesi
+                </span>
+                <span className="text-xs text-amber-400 font-serif">İstanbul'un Misafirleri Başımızın Tacıdır</span>
+              </div>
+
+              <h1 className="text-xl md:text-2xl font-bold font-serif text-white leading-snug">
+                Haksız Fiyat, Dolandırıcılık ve Mağduriyet Hakem Masası
+              </h1>
+
+              <p className="text-xs text-zinc-300 leading-relaxed max-w-2xl">
+                İstanbul'da karşılaştığınız şüpheli, fahiş fiyatlı veya aldatıcı alışverişleri platformumuza bildirin. 
+                Xenios olarak işletmeyle resmi iletişime geçerek hatanın telafisini ve haksız tahsil edilen farkın 
+                <strong> doğrudan hesabınıza iadesini</strong> talep ediyoruz. 
+                İyi niyet göstermeyen ve 30 gün içinde telafi etmeyen işletmeleri sonraki misafirleri korumak için 
+                <strong> Uyarı Panosu'nda</strong> paylaşıyoruz.
+              </p>
+            </div>
+            <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md p-2 border border-white/20 shrink-0 hidden sm:flex items-center justify-center">
+              <Image src="/icons/bad-experience.png" alt="Mağduriyet İnceleme" width={48} height={48} className="object-contain" />
+            </div>
           </div>
-
-          <h1 className="text-xl md:text-2xl font-bold font-serif text-white leading-snug">
-            Haksız Fiyat, Dolandırıcılık ve Mağduriyet Hakem Masası
-          </h1>
-
-          <p className="text-xs text-zinc-300 leading-relaxed max-w-2xl">
-            İstanbul'da karşılaştığınız şüpheli, fahiş fiyatlı veya aldatıcı alışverişleri platformumuza bildirin. 
-            Xenios olarak işletmeyle resmi iletişime geçerek hatanın telafisini ve haksız tahsil edilen farkın 
-            <strong> doğrudan hesabınıza iadesini</strong> talep ediyoruz. 
-            İyi niyet göstermeyen ve 30 gün içinde telafi etmeyen işletmeleri sonraki misafirleri korumak için 
-            <strong> Uyarı Panosu'nda</strong> paylaşıyoruz.
-          </p>
         </div>
 
         {/* Navigation Tabs */}

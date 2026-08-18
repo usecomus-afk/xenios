@@ -21,6 +21,7 @@ import {
   BadgeAlert
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function FairShoppingPolicy() {
   const [activeSection, setActiveSection] = useState<'shield' | 'policy'>('shield');
@@ -162,8 +163,14 @@ export function FairShoppingPolicy() {
                 : 'bg-[#fbf8f1] border-amber-200/70 hover:border-amber-300'
             }`}
           >
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-800 flex items-center justify-center shrink-0">
-              <Shield className="w-6 h-6 text-amber-700" />
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 p-1.5 flex items-center justify-center shrink-0 border border-red-200/60 shadow-xs">
+              <Image 
+                src="/icons/xenios-misafir-kalkani.png" 
+                alt="Xenios Misafir Kalkanı" 
+                width={36} 
+                height={36} 
+                className="object-contain" 
+              />
             </div>
             <div>
               <strong className="text-sm font-bold text-zinc-900 block">Xenios Misafir Kalkanı</strong>
@@ -180,8 +187,14 @@ export function FairShoppingPolicy() {
                 : 'bg-[#fbf8f1] border-amber-200/70 hover:border-amber-300'
             }`}
           >
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-800 flex items-center justify-center shrink-0">
-              <Scale className="w-6 h-6 text-amber-700" />
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 p-1.5 flex items-center justify-center shrink-0 border border-red-200/60 shadow-xs">
+              <Image 
+                src="/icons/xenios-adil-alisveris.png" 
+                alt="Xenios Adil Alışveriş Politikası" 
+                width={36} 
+                height={36} 
+                className="object-contain" 
+              />
             </div>
             <div>
               <strong className="text-sm font-bold text-zinc-900 block">Xenios Adil Alışveriş Politikası</strong>
@@ -193,8 +206,14 @@ export function FairShoppingPolicy() {
         {/* Empathy & Quick Complaint Submission Action Box */}
         <div className="bg-gradient-to-b from-amber-50 to-orange-50/60 p-5 rounded-2xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-12 h-12 rounded-full bg-orange-500/20 text-orange-700 text-2xl flex items-center justify-center shrink-0 shadow-inner">
-              🙁
+            <div className="w-14 h-14 rounded-2xl bg-red-500/10 p-1.5 flex items-center justify-center shrink-0 border border-red-200/80 shadow-xs">
+              <Image 
+                src="/icons/bad-experience.png" 
+                alt="Yaşadığınız kötü deneyim için üzgünüz" 
+                width={48} 
+                height={48} 
+                className="object-contain" 
+              />
             </div>
             <div>
               <h4 className="text-sm font-bold text-zinc-900">Yaşadığınız kötü deneyim için üzgünüz</h4>
@@ -221,8 +240,14 @@ export function FairShoppingPolicy() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-white rounded-3xl p-5 border border-red-200/80 shadow-sm space-y-3 flex flex-col justify-between">
               <div className="space-y-2">
-                <div className="w-12 h-12 rounded-2xl bg-red-500/10 text-red-600 flex items-center justify-center font-bold text-xl">
-                  💳
+                <div className="h-16 w-24 rounded-xl bg-red-500/5 p-1 border border-red-200 flex items-center justify-center overflow-hidden">
+                  <Image 
+                    src="/icons/istanbulkart.png" 
+                    alt="Resmi İstanbulkart & Ulaşım" 
+                    width={80} 
+                    height={52} 
+                    className="object-contain drop-shadow-xs" 
+                  />
                 </div>
                 <h3 className="text-base font-bold text-zinc-900">Resmi İstanbulkart & Ulaşım</h3>
                 <p className="text-xs text-zinc-600 leading-relaxed">
@@ -243,8 +268,14 @@ export function FairShoppingPolicy() {
 
             <div className="bg-white rounded-3xl p-5 border border-amber-200/80 shadow-sm space-y-3 flex flex-col justify-between">
               <div className="space-y-2">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold text-xl">
-                  🏛️
+                <div className="h-16 w-24 rounded-xl bg-amber-500/5 p-1 border border-amber-200 flex items-center justify-center overflow-hidden">
+                  <Image 
+                    src="/icons/muzekart.png" 
+                    alt="Resmi MüzeKart & Biletler" 
+                    width={80} 
+                    height={52} 
+                    className="object-contain drop-shadow-xs" 
+                  />
                 </div>
                 <h3 className="text-base font-bold text-zinc-900">Resmi MüzeKart & Biletler</h3>
                 <p className="text-xs text-zinc-600 leading-relaxed">
@@ -317,7 +348,12 @@ export function FairShoppingPolicy() {
 
           {/* Emergency Contacts */}
           <div className="bg-white rounded-3xl p-5 border border-amber-200/60 shadow-sm space-y-3">
-            <h3 className="text-sm font-bold text-zinc-900">Resmi Acil & Destek Hatları</h3>
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center p-1 border border-red-200">
+                <Image src="/icons/sos-emergency.png" alt="SOS Acil" width={20} height={20} className="object-contain" />
+              </div>
+              <h3 className="text-sm font-bold text-zinc-900">Resmi Acil & Destek Hatları</h3>
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
               <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
                 <span className="text-zinc-500 block text-[10px]">Acil Çağrı Merkezi</span>

@@ -15,6 +15,7 @@ import { AiChatDrawer } from '@/components/guest/ai-chat-drawer';
 import { AuthModal } from '@/components/auth-modal';
 import { FairShoppingPolicy } from '@/components/guest/fair-shopping-policy';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Search, 
   Sparkles, 
@@ -142,28 +143,45 @@ export default function GuestPage() {
               <div className="absolute -top-12 -right-12 w-44 h-44 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
-                <div className="space-y-2 text-left">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-3 py-1 rounded-full text-[10px] bg-amber-500 text-white font-extrabold uppercase tracking-widest shadow-xs">
-                      İstanbul Deneyimleri Kataloğu
-                    </span>
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-red-500/10 p-2 flex items-center justify-center shrink-0 border border-red-200 shadow-xs hidden sm:flex">
+                    <Image 
+                      src="/icons/katalogu-kesfet.png" 
+                      alt="Kataloğu Keşfet" 
+                      width={44} 
+                      height={44} 
+                      className="object-contain" 
+                    />
                   </div>
+                  <div className="space-y-2 text-left">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-3 py-1 rounded-full text-[10px] bg-amber-500 text-white font-extrabold uppercase tracking-widest shadow-xs">
+                        İstanbul Deneyimleri Kataloğu
+                      </span>
+                    </div>
 
-                  <h3 className="text-base sm:text-lg font-bold font-serif text-zinc-900 leading-snug">
-                    Boğaz Turları, Tarihi Hamamlar & VIP Şehir Deneyimleri
-                  </h3>
+                    <h3 className="text-base sm:text-lg font-bold font-serif text-zinc-900 leading-snug">
+                      Boğaz Turları, Tarihi Hamamlar & VIP Şehir Deneyimleri
+                    </h3>
 
-                  <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed max-w-xl font-medium">
-                    İstanbul'un 52 seçkin ve doğrulanmış işletme ilanını inceleyin; otelinizden ayrılmadan güvenle yerinizi ayırtın.
-                  </p>
+                    <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed max-w-xl font-medium">
+                      İstanbul'un 52 seçkin ve doğrulanmış işletme ilanını inceleyin; otelinizden ayrılmadan güvenle yerinizi ayırtın.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="shrink-0 pt-2 sm:pt-0">
                   <button
                     onClick={() => setActiveTab('experiences')}
-                    className="w-full sm:w-auto px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs sm:text-sm shadow-md shadow-amber-500/25 transition transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs sm:text-sm shadow-md shadow-amber-500/25 transition transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer"
                   >
-                    <Compass className="w-4 h-4" />
+                    <Image 
+                      src="/icons/katalogu-kesfet.png" 
+                      alt="Katalog" 
+                      width={20} 
+                      height={20} 
+                      className="object-contain brightness-0 invert" 
+                    />
                     <span>Kataloğu Keşfet (52 İlan) →</span>
                   </button>
                 </div>
