@@ -13,6 +13,7 @@ interface ExperienceCardProps {
   onSelect: (exp: Experience) => void;
   onOpenTransit: (exp: Experience) => void;
   onOpenCheckout: (exp: Experience) => void;
+  onOpenRestaurantReserve?: (exp: Experience) => void;
 }
 
 export function ExperienceCard({ 
@@ -21,7 +22,8 @@ export function ExperienceCard({
   lang, 
   onSelect,
   onOpenTransit, 
-  onOpenCheckout 
+  onOpenCheckout,
+  onOpenRestaurantReserve
 }: ExperienceCardProps) {
   const t = getT(lang);
   const imageSrc = experience.image || `/images/experiences/${experience.id}.jpg`;
@@ -159,18 +161,22 @@ export function ExperienceCard({
 
         {isRestaurant ? (
           <>
-            {/* Phone Call / Reservation Button */}
-            {experience.phone && (
-              <a
-                href={`tel:${experience.phone}`}
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
-                title="Restoranı Ara & Rezervasyon Yap"
-              >
-                <Phone className="w-3.5 h-3.5" />
-                <span>Ara / Rezervasyon</span>
-              </a>
-            )}
+            {/* Table Reservation Button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onOpenRestaurantReserve) {
+                  onOpenRestaurantReserve(experience);
+                } else {
+                  onSelect(experience);
+                }
+              }}
+              className="flex-1 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
+            >
+              <Utensils className="w-3.5 h-3.5" />
+              <span>Masa Rezerve Et</span>
+            </button>
 
             {/* Website / Menu Button */}
             {experience.website && (

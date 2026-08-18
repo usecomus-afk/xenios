@@ -18,7 +18,7 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
     { id: 'services', label: 'Otel', iconType: 'lucide', icon: Home },
     { id: 'experiences', label: 'Deneyimler', iconType: 'lucide', icon: Compass },
     { id: 'categories', label: 'Kategoriler', iconType: 'lucide', icon: LayoutGrid },
-    { id: 'ai', label: 'comusAI', iconType: 'image', imgSrc: '/icons/menu/aiGuide.png', highlight: true },
+    { id: 'ai', label: 'comusAI', iconType: 'image', imgSrc: '/icons/menu/aiGuide.png' },
     { id: 'practical', label: 'Rehber & Haklar', iconType: 'image', imgSrc: '/icons/menu/practical.png' },
     { id: 'invest', label: 'Invest', iconType: 'lucide', icon: Building2 }
   ];
@@ -40,11 +40,9 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
               }`}
             >
               <div className={`p-1.5 rounded-xl transition ${
-                tab.highlight 
-                  ? 'bg-amber-500 text-white shadow-md shadow-amber-500/30 scale-110' 
-                  : isActive 
-                    ? 'bg-amber-100 text-amber-800' 
-                    : ''
+                isActive 
+                  ? 'bg-amber-100 text-amber-800' 
+                  : ''
               }`}>
                 {tab.iconType === 'image' && tab.imgSrc ? (
                   <div className="w-5 h-5 relative flex items-center justify-center">

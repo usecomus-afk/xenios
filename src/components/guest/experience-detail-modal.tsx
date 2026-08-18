@@ -39,6 +39,7 @@ interface ExperienceDetailModalProps {
   onClose: () => void;
   onOpenTransit: (exp: Experience) => void;
   onOpenCheckout: (exp: Experience) => void;
+  onOpenRestaurantReserve?: (exp: Experience) => void;
 }
 
 export function ExperienceDetailModal({
@@ -47,7 +48,8 @@ export function ExperienceDetailModal({
   lang,
   onClose,
   onOpenTransit,
-  onOpenCheckout
+  onOpenCheckout,
+  onOpenRestaurantReserve
 }: ExperienceDetailModalProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<number>(0);
@@ -492,22 +494,25 @@ export function ExperienceDetailModal({
           <div className="flex items-center gap-2">
             {isRestaurant ? (
               <>
-                {experience.phone && (
-                  <a
-                    href={`tel:${experience.phone}`}
-                    className="px-4 sm:px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-emerald-600/25 flex items-center gap-2 transition transform active:scale-95 cursor-pointer"
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span>Ara / Rezervasyon</span>
-                  </a>
-                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenRestaurantReserve) {
+                      onOpenRestaurantReserve(experience);
+                    }
+                  }}
+                  className="px-5 sm:px-7 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-amber-500/25 flex items-center gap-2 transition transform active:scale-95 cursor-pointer"
+                >
+                  <Utensils className="w-4 h-4" />
+                  <span>Masa Rezerve Et</span>
+                </button>
                 <button
                   type="button"
                   onClick={() => onOpenTransit(experience)}
-                  className="px-3.5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-bold shadow-lg shadow-amber-500/25 flex items-center gap-1.5 transition cursor-pointer"
+                  className="px-3.5 py-3 rounded-2xl bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs sm:text-sm font-bold border border-zinc-200 flex items-center gap-1.5 transition cursor-pointer"
                   title="Yol Tarifi"
                 >
-                  <Navigation className="w-4 h-4" />
+                  <Navigation className="w-4 h-4 text-amber-700" />
                 </button>
               </>
             ) : (

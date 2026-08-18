@@ -29,6 +29,7 @@ export function InvestInIstanbul({ hotel, roomNumber }: InvestInIstanbulProps) {
   const [properties, setProperties] = useState<PropertyListing[]>([]);
   const [personaFilter, setPersonaFilter] = useState<'all' | InvestorPersona>('all');
   const [search, setSearch] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [selected, setSelected] = useState<PropertyListing | null>(null);
   
   // VIP Keşif Turu Modal State
@@ -145,46 +146,71 @@ export function InvestInIstanbul({ hotel, roomNumber }: InvestInIstanbulProps) {
         </div>
       </div>
 
-      {/* Filter Tabs & Search Bar */}
-      <div className="space-y-3">
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => setPersonaFilter('all')}
-            className={`px-4 py-2 rounded-2xl text-xs font-bold border transition cursor-pointer ${
-              personaFilter === 'all' 
-                ? 'bg-amber-500 border-amber-500 text-white shadow-md shadow-amber-500/25' 
-                : 'bg-white border-amber-200/80 text-zinc-700 hover:border-amber-400'
-            }`}
-          >
-            Tüm İlanlar (20)
-          </button>
-          {(Object.entries(PERSONA_META) as [InvestorPersona, typeof PERSONA_META[InvestorPersona]][]).map(([key, meta]) => (
-            <button
-              key={key}
-              onClick={() => setPersonaFilter(key)}
-              title={meta.desc}
-              className={`px-4 py-2 rounded-2xl text-xs font-bold border transition cursor-pointer flex items-center gap-1.5 ${
-                personaFilter === key 
-                  ? 'bg-amber-500 border-amber-500 text-white shadow-md shadow-amber-500/25' 
-                  : 'bg-white border-amber-200/80 text-zinc-700 hover:border-amber-400'
-              }`}
-            >
-              <span>{meta.emoji}</span>
-              <span>{meta.label}</span>
-            </button>
-          ))}
-        </div>
-
+      {/* Interactive Search Bar & Dynamic Persona Options on Click */}
+      <div className="relative">
         <div className="relative">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
           <input
             type="text"
             value={search}
+            onFocus={() => setIsSearchFocused(true)}
+            onClick={() => setIsSearchFocused(true)}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="İlan adı, semt (Cihangir, Bebek, Levent...), aracı şirket veya özellik ara..."
-            className="w-full pl-10 pr-4 py-2.5 text-xs bg-white rounded-2xl border border-amber-200/80 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-zinc-900 shadow-xs"
+            className="w-full pl-10 pr-10 py-3 text-xs bg-white rounded-2xl border border-amber-200/80 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-zinc-900 shadow-sm"
           />
+          {(search || personaFilter !== 'all') && (
+            <button
+              onClick={() => { setSearch(''); setPersonaFilter('all'); }}
+              className="absolute right-3.5 top-3 text-zinc-400 hover:text-zinc-600 text-xs p-1 rounded-full cursor-pointer"
+              title="Aramayı ve Filtreyi Sıfırla"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
+
+        {/* Persona Options: Revealed when search is clicked/focused or active filter selected */}
+        {(isSearchFocused || personaFilter !== 'all') && (
+          <div className="mt-2.5 p-3 bg-white rounded-2xl border border-amber-200/80 shadow-md space-y-2 animate-in fade-in slide-in-from-top-1">
+            <div className="flex items-center justify-between text-[11px] text-zinc-500 font-semibold px-1">
+              <span>Hızlı Kategori Seçenekleri:</span>
+              <button 
+                onClick={() => setIsSearchFocused(false)} 
+                className="text-zinc-400 hover:text-zinc-700 text-[10px] cursor-pointer"
+              >
+                Kapat ✕
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => { setPersonaFilter('all'); }}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer ${
+                  personaFilter === 'all'
+                    ? 'bg-amber-500 border-amber-500 text-white shadow-xs'
+                    : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-amber-50 hover:border-amber-300'
+                }`}
+              >
+                Tüm İlanlar (20)
+              </button>
+              {(Object.entries(PERSONA_META) as [InvestorPersona, typeof PERSONA_META[InvestorPersona]][]).map(([key, meta]) => (
+                <button
+                  key={key}
+                  onClick={() => { setPersonaFilter(key); }}
+                  title={meta.desc}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer flex items-center gap-1.5 ${
+                    personaFilter === key
+                      ? 'bg-amber-500 border-amber-500 text-white shadow-xs'
+                      : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-amber-50 hover:border-amber-300'
+                  }`}
+                >
+                  <span>{meta.emoji}</span>
+                  <span>{meta.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Property Cards Grid */}
@@ -259,8 +285,8 @@ export function InvestInIstanbul({ hotel, roomNumber }: InvestInIstanbulProps) {
                   )}
                 </div>
 
-                {/* Description */}
-                <p className="text-xs text-zinc-600 leading-relaxed bg-amber-50/30 p-2.5 rounded-xl border border-amber-100/60 line-clamp-2">
+                {/* Description (Full text, not cut off) */}
+                <p className="text-xs text-zinc-600 leading-relaxed bg-amber-50/40 p-3 rounded-2xl border border-amber-100/60">
                   {p.description}
                 </p>
 

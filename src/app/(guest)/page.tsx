@@ -15,6 +15,7 @@ import { AiChatDrawer } from '@/components/guest/ai-chat-drawer';
 import { AuthModal } from '@/components/auth-modal';
 import { FairShoppingPolicy } from '@/components/guest/fair-shopping-policy';
 import { InvestInIstanbul } from '@/components/guest/invest-in-istanbul';
+import { RestaurantReservationModal } from '@/components/guest/restaurant-reservation-modal';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -54,6 +55,7 @@ export default function GuestPage() {
   const [selectedDetailExp, setSelectedDetailExp] = useState<Experience | null>(null);
   const [transitExp, setTransitExp] = useState<Experience | null>(null);
   const [checkoutExp, setCheckoutExp] = useState<Experience | null>(null);
+  const [restaurantReserveExp, setRestaurantReserveExp] = useState<Experience | null>(null);
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -198,10 +200,17 @@ export default function GuestPage() {
         {/* TAB 2: Experiences & Tours Grid (Tüm İlanlar) */}
         {activeTab === 'experiences' && (
           <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-bold font-serif text-zinc-900">{t.experiencesTitle}</h2>
-              <p className="text-xs text-zinc-500">{t.experiencesSubtitle}</p>
-            </div>
+            {selectedCategory === 'Önerdiğimiz Restoranlar' || selectedCategory.toLowerCase().includes('restoran') ? (
+              <div>
+                <h2 className="text-xl font-bold font-serif text-zinc-900">Önerdiğimiz Restoranlar</h2>
+                <p className="text-xs text-zinc-500">Michelin yıldızlı şefler, tarihi lezzetler ve Boğaz manzaralı teraslar ile 20 seçkin gastronomi adresi.</p>
+              </div>
+            ) : (
+              <div>
+                <h2 className="text-xl font-bold font-serif text-zinc-900">{t.experiencesTitle}</h2>
+                <p className="text-xs text-zinc-500">{t.experiencesSubtitle}</p>
+              </div>
+            )}
 
             {/* Search & Category Filter */}
             <div className="space-y-2.5">
@@ -245,6 +254,7 @@ export default function GuestPage() {
                   onSelect={(e) => setSelectedDetailExp(e)}
                   onOpenTransit={(e) => setTransitExp(e)}
                   onOpenCheckout={(e) => setCheckoutExp(e)}
+                  onOpenRestaurantReserve={(e) => setRestaurantReserveExp(e)}
                 />
               ))}
             </div>
@@ -261,6 +271,8 @@ export default function GuestPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {categoryShowcase.map((cat, idx) => {
+                const isScaledUp = cat.key.includes('Gastronomi') || cat.key.includes('Macera') || cat.key.includes('Hamam') || cat.key.includes('Spa');
+
                 return (
                   <div
                     key={idx}
@@ -287,7 +299,7 @@ export default function GuestPage() {
                         <img 
                           src={cat.iconPath} 
                           alt={cat.key} 
-                          className="w-full h-full object-contain"
+                          className={`w-full h-full object-contain transition-transform ${isScaledUp ? 'scale-135' : 'scale-100'}`}
                         />
                       </div>
                       <div className="min-w-0">
@@ -341,6 +353,20 @@ export default function GuestPage() {
           onClose={() => setSelectedDetailExp(null)}
           onOpenTransit={(exp) => setTransitExp(exp)}
           onOpenCheckout={(exp) => setCheckoutExp(exp)}
+          onOpenRestaurantReserve={(exp) => {
+            setSelectedDetailExp(null);
+            setRestaurantReserveExp(exp);
+          }}
+        />
+      )}
+
+      {/* Restaurant Reservation Modal */}
+      {restaurantReserveExp && (
+        <RestaurantReservationModal
+          restaurant={restaurantReserveExp}
+          hotel={currentHotel}
+          roomNumber={activeRoomNumber}
+          onClose={() => setRestaurantReserveExp(null)}
         />
       )}
 
