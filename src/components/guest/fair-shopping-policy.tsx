@@ -137,6 +137,65 @@ export function FairShoppingPolicy() {
   return (
     <div className="space-y-6">
       
+      {/* SAYFA BAŞI: RESMİ İSTANBULKART & MÜZEKART MODÜLLERİ */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-white rounded-3xl p-5 border border-red-200/80 shadow-sm space-y-3 flex flex-col justify-between">
+          <div className="space-y-2">
+            <div className="h-16 w-24 rounded-xl bg-red-500/5 p-1 border border-red-200 flex items-center justify-center overflow-hidden">
+              <Image 
+                src="/icons/istanbulkart.png" 
+                alt="Resmi İstanbulkart & Ulaşım" 
+                width={80} 
+                height={52} 
+                className="object-contain drop-shadow-xs" 
+              />
+            </div>
+            <h3 className="text-base font-bold text-zinc-900">Resmi İstanbulkart & Ulaşım</h3>
+            <p className="text-xs text-zinc-600 leading-relaxed">
+              Metro, tramvay, vapur, Marmaray ve otobüslerde geçerli tek resmi toplu taşıma kartı. Biletmatik cihazlarından veya online temin edebilirsiniz.
+            </p>
+          </div>
+
+          <a
+            href="https://www.istanbulkart.istanbul"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
+          >
+            <span>İstanbulkart Resmi Portalı</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        <div className="bg-white rounded-3xl p-5 border border-amber-200/80 shadow-sm space-y-3 flex flex-col justify-between">
+          <div className="space-y-2">
+            <div className="h-16 w-24 rounded-xl bg-amber-500/5 p-1 border border-amber-200 flex items-center justify-center overflow-hidden">
+              <Image 
+                src="/icons/muzekart.png" 
+                alt="Resmi MüzeKart & Biletler" 
+                width={80} 
+                height={52} 
+                className="object-contain drop-shadow-xs" 
+              />
+            </div>
+            <h3 className="text-base font-bold text-zinc-900">Resmi MüzeKart & Biletler</h3>
+            <p className="text-xs text-zinc-600 leading-relaxed">
+              T.C. Kültür ve Turizm Bakanlığı'na bağlı 300'den fazla müze ve ören yerinde sıra beklemeden geçerli resmi giriş kartı.
+            </p>
+          </div>
+
+          <a
+            href="https://muze.gov.tr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
+          >
+            <span>MüzeKart Satın Al / İncele</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      </div>
+
       {/* Visual Header matching the uploaded banner */}
       <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-md space-y-5">
         
@@ -174,7 +233,7 @@ export function FairShoppingPolicy() {
             </div>
             <div>
               <strong className="text-sm font-bold text-zinc-900 block">Xenios Misafir Kalkanı</strong>
-              <span className="text-[11px] text-zinc-500 block">9 Yaygın Tuzak, İstanbulkart & MüzeKart</span>
+              <span className="text-[11px] text-zinc-500 block">9 Yaygın Tuzak, İstanbul Seyahat Rehberi</span>
             </div>
           </button>
 
@@ -232,69 +291,10 @@ export function FairShoppingPolicy() {
         </div>
       </div>
 
-      {/* SECTION 1: XENIOS MİSAFİR KALKANI (9 Hayati Rehber + İstanbulkart & MüzeKart) */}
+      {/* SECTION 1: XENIOS MİSAFİR KALKANI (9 Hayati Rehber) */}
       {activeSection === 'shield' && (
         <div className="space-y-5">
           
-          {/* ISTANBULKART & MUZEKART MODULLERI */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-white rounded-3xl p-5 border border-red-200/80 shadow-sm space-y-3 flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="h-16 w-24 rounded-xl bg-red-500/5 p-1 border border-red-200 flex items-center justify-center overflow-hidden">
-                  <Image 
-                    src="/icons/istanbulkart.png" 
-                    alt="Resmi İstanbulkart & Ulaşım" 
-                    width={80} 
-                    height={52} 
-                    className="object-contain drop-shadow-xs" 
-                  />
-                </div>
-                <h3 className="text-base font-bold text-zinc-900">Resmi İstanbulkart & Ulaşım</h3>
-                <p className="text-xs text-zinc-600 leading-relaxed">
-                  Metro, tramvay, vapur, Marmaray ve otobüslerde geçerli tek resmi toplu taşıma kartı. Biletmatik cihazlarından veya online temin edebilirsiniz.
-                </p>
-              </div>
-
-              <a
-                href="https://www.istanbulkart.istanbul"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
-              >
-                <span>İstanbulkart Resmi Portalı</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-
-            <div className="bg-white rounded-3xl p-5 border border-amber-200/80 shadow-sm space-y-3 flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="h-16 w-24 rounded-xl bg-amber-500/5 p-1 border border-amber-200 flex items-center justify-center overflow-hidden">
-                  <Image 
-                    src="/icons/muzekart.png" 
-                    alt="Resmi MüzeKart & Biletler" 
-                    width={80} 
-                    height={52} 
-                    className="object-contain drop-shadow-xs" 
-                  />
-                </div>
-                <h3 className="text-base font-bold text-zinc-900">Resmi MüzeKart & Biletler</h3>
-                <p className="text-xs text-zinc-600 leading-relaxed">
-                  T.C. Kültür ve Turizm Bakanlığı'na bağlı 300'den fazla müze ve ören yerinde sıra beklemeden geçerli resmi giriş kartı.
-                </p>
-              </div>
-
-              <a
-                href="https://muze.gov.tr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
-              >
-                <span>MüzeKart Satın Al / İncele</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </div>
-
           {/* 9 Hayati Güvenlik & Tuzak Rehberi */}
           <div className="space-y-3">
             <h3 className="text-base font-bold font-serif text-zinc-900">
