@@ -3,23 +3,22 @@ import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAuth, Auth } from 'firebase/auth';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDummyKeyForLocalDev1234567890",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "xenios-istanbul.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "xenios-istanbul",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "xenios-istanbul.appspot.com",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "123456789012",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789012:web:abcdef123456"
+export const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDPwOJErJ21lSphF4Rvb7l0Utj2isY67nM",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "xenios-prod-c55cd.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "xenios-prod-c55cd",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "xenios-prod-c55cd.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "1017910005285",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:1017910005285:web:36f5948916843ecc98f9cc",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-Q09ZCFR3KF"
 };
 
-// Check if valid Firebase project configuration is provided
 export const isFirebaseConfigured = Boolean(
-  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID &&
-  process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
-  !process.env.NEXT_PUBLIC_FIREBASE_API_KEY.startsWith("AIzaSyDummy")
+  firebaseConfig.projectId &&
+  firebaseConfig.apiKey &&
+  !firebaseConfig.apiKey.startsWith("AIzaSyDummy")
 );
 
-// Initialize Firebase App singleton
 let app: FirebaseApp;
 let db: Firestore | null = null;
 let auth: Auth | null = null;
@@ -31,7 +30,7 @@ try {
   auth = getAuth(app);
   storage = getStorage(app);
 } catch (e) {
-  console.warn("Firebase initialization warning (using local fallback store):", e);
+  console.warn("Firebase initialization warning:", e);
 }
 
 export { app, db, auth, storage };
