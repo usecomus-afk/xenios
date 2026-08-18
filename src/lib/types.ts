@@ -27,6 +27,8 @@ export interface Hotel {
   featured?: boolean;
 }
 
+export type ExperienceStatus = 'active' | 'suspended';
+
 export interface Experience {
   id: string;
   category: string;
@@ -46,6 +48,8 @@ export interface Experience {
   iconName: string;
   featured?: boolean;
   image?: string;
+  /** Admin-controlled listing status. Missing/undefined is treated as 'active' for older records. */
+  status?: ExperienceStatus;
 }
 
 export type ServiceStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
@@ -187,7 +191,7 @@ export interface XeniosUser {
   name: string;
   email: string;
   avatar?: string;
-  role: 'guest' | 'hotel' | 'pilot';
+  role: 'guest' | 'hotel' | 'pilot' | 'admin';
   hotelCode?: string;
   hotelName?: string;
   provider: 'google' | 'email';

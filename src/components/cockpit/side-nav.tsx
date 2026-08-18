@@ -14,7 +14,8 @@ import {
   ArrowLeft,
   Compass,
   Scale,
-  LayoutGrid
+  LayoutGrid,
+  Lock
 } from "lucide-react";
 
 export function CockpitSideNav() {
@@ -25,6 +26,7 @@ export function CockpitSideNav() {
     { href: "/dashboard", label: "Kokpit / Özet", icon: LayoutDashboard },
     { href: "/live-requests", label: "Canlı Oda Talepleri", icon: BellRing, badge: "Canlı" },
     { href: "/module-settings", label: "Hizmet Modülleri Yönetimi", icon: LayoutGrid },
+    { href: "/admin", label: "İlan & Rezervasyon Yönetimi", icon: Lock, badge: "Admin" },
     { href: "/disputes", label: "Misafir Hakları & Hakem", icon: Scale, badge: "Hakem" },
     { href: "/hotels", label: "Anlaşmalı Oteller", icon: Building2 },
     { href: "/qr-generator", label: "Oda QR Üretici", icon: QrCode },

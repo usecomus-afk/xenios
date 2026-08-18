@@ -92,8 +92,9 @@ export default function GuestPage() {
     { key: 'Özel VIP Transfer', iconPath: '/icons/categories/ozel-vip-transfer.png', count: 5, desc: 'Havalimanı karşılama, şoförlü lüks Mercedes Vito' }
   ];
 
-  // Filter experiences
+  // Filter experiences (admin-suspended listings never reach the guest catalog)
   const filteredExperiences = allExperiences.filter(e => {
+    if (e.status === 'suspended') return false;
     const matchesCat = selectedCategory === 'all' || e.category === selectedCategory;
     const matchesSearch = !searchQuery || 
       e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
