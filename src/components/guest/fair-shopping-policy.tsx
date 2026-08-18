@@ -195,7 +195,7 @@ export function FairShoppingPolicy() {
             href="https://www.istanbulkart.istanbul"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
+            className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition"
           >
             <span>İstanbulkart Resmi Portalı</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -300,7 +300,7 @@ export function FairShoppingPolicy() {
               </div>
               <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
                 <span className="text-zinc-500 block text-[10px]">Turizm Polisi</span>
-                <strong className="text-blue-600 text-sm font-mono">+90 212 527 45 03</strong>
+                <strong className="text-zinc-900 text-sm font-mono font-bold">+90 212 527 45 03</strong>
               </div>
               <div className="p-2.5 bg-amber-50/60 rounded-xl border border-amber-200/50">
                 <span className="text-zinc-500 block text-[10px]">İBB Beyaz Masa</span>
@@ -334,12 +334,13 @@ export function FairShoppingPolicy() {
           {/* Empathy & Quick Complaint Submission Action Box */}
           <div className="bg-gradient-to-b from-amber-50 to-orange-50/60 p-5 rounded-2xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4 text-center sm:text-left">
-              <div className="w-14 h-14 rounded-2xl bg-red-500/10 p-1.5 flex items-center justify-center shrink-0 border border-red-200/80 shadow-xs">
+              <div className="w-14 h-14 rounded-2xl bg-orange-500/10 p-1.5 flex items-center justify-center shrink-0 border border-orange-200/80 shadow-xs">
                 <Image
                   src="/icons/bad-experience.png"
                   alt="Yaşadığınız kötü deneyim için üzgünüz"
                   width={48}
                   height={48}
+                  unoptimized
                   className="object-contain"
                 />
               </div>

@@ -19,7 +19,7 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
     { id: 'experiences', label: 'Deneyimler', iconType: 'lucide', icon: Compass },
     { id: 'categories', label: 'Kategoriler', iconType: 'lucide', icon: LayoutGrid },
     { id: 'ai', label: 'comusAI', iconType: 'image', imgSrc: '/icons/menu/aiGuide.png' },
-    { id: 'practical', label: 'Rehber & Haklar', iconType: 'image', imgSrc: '/icons/menu/practical.png' },
+    { id: 'practical', label: 'Rehber', iconType: 'image', imgSrc: '/icons/menu/practical.png' },
     { id: 'invest', label: 'Invest', iconType: 'lucide', icon: Building2 }
   ];
 

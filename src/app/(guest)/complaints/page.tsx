@@ -166,7 +166,7 @@ export default function GuestComplaintsPage() {
               </p>
             </div>
             <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md p-2 border border-white/20 shrink-0 hidden sm:flex items-center justify-center">
-              <Image src="/icons/bad-experience.png" alt="Mağduriyet İnceleme" width={48} height={48} className="object-contain" />
+              <Image src="/icons/bad-experience.png" alt="Mağduriyet İnceleme" width={48} height={48} unoptimized className="object-contain" />
             </div>
           </div>
         </div>
