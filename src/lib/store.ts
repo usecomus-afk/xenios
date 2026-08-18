@@ -138,7 +138,12 @@ export const XeniosStore = {
   getPropertyListings(): PropertyListing[] {
     try {
       const stored = safeGet(STORAGE_KEYS.PROPERTIES);
-      if (stored) return JSON.parse(stored);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.id?.startsWith('invest-')) {
+          return parsed;
+        }
+      }
     } catch (e) {}
     return rawProperties as PropertyListing[];
   },

@@ -153,6 +153,12 @@ export interface PropertyListing {
   coords: { lat: number; lng: number };
   citizenshipEligible: boolean;
   roiEstimate?: string;
+  agency?: string;
+  referenceUrl?: string;
+  categoryType?: string;
+  targetProfile?: string;
+  citizenshipStatus?: string;
+  airbnbEligible?: boolean;
   /** Admin-controlled listing status. Missing/undefined is treated as 'active' for older records. */
   status?: PropertyStatus;
 }

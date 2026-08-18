@@ -82,6 +82,7 @@ export default function GuestPage() {
 
   // Category Catalog Grid Items with Custom Canva PNG Icons
   const categoryShowcase = [
+    { key: 'İstanbul\'da Yatırım', iconPath: '/icons/categories/invest.png', count: 20, desc: 'Vatandaşlığa uygun lüks rezidanslar, tarihi yalılar & Airbnb mülkleri', tab: 'invest' },
     { key: 'Önerdiğimiz Restoranlar', iconPath: '/icons/categories/onerdigimiz-restoranlar.png', count: 20, desc: 'Michelin yıldızlı şefler, tarihi lezzetler & Boğaz manzaralı teraslar' },
     { key: 'Boğaz Turları & Yat', iconPath: '/icons/categories/bogaz-yatturlari.png', count: 7, desc: 'Akşam yemekli turlar, özel yat kiralama & Adalar rotaları' },
     { key: 'Tarih & Müzeler', iconPath: '/icons/categories/tarih-muzeler.png', count: 8, desc: 'Ayasofya, Topkapı Sarayı, Yerebatan & Arkeoloji Müzeleri' },
@@ -264,6 +265,10 @@ export default function GuestPage() {
                   <div
                     key={idx}
                     onClick={() => {
+                      if ((cat as any).tab === 'invest') {
+                        setActiveTab('invest');
+                        return;
+                      }
                       const searchToken = cat.key.toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, ' ');
                       const matched = categories.find(c => {
                         const cLower = c.toLowerCase();
