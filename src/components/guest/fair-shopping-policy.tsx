@@ -24,9 +24,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export function FairShoppingPolicy() {
-  const [activeSection, setActiveSection] = useState<'shield' | 'policy'>('shield');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [openTrap, setOpenTrap] = useState<number | null>(1);
+  const [openTrap, setOpenTrap] = useState<number | null>(null);
 
   const faqs = [
     {
@@ -196,104 +195,8 @@ export function FairShoppingPolicy() {
         </div>
       </div>
 
-      {/* Visual Header matching the uploaded banner */}
-      <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-md space-y-5">
-        
-        <div className="flex flex-col items-center text-center space-y-2">
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-red-600 text-white text-xs font-bold uppercase tracking-wider shadow-md">
-            Haksız, şüpheli alışveriş & kötü deneyim
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold font-serif text-zinc-900 mt-2">
-            Xenios Misafir Kalkanı & Adil Alışveriş Politikası
-          </h2>
-          <p className="text-xs sm:text-sm text-zinc-600 max-w-xl">
-            İstanbul'da her misafir adil, güvenilir ve şeffaf bir seyahat yaşamalıdır. Xenios haksız kazanç, fahiş fiyat ve kötü niyetli işletmelere karşı haklarınızı korur.
-          </p>
-        </div>
-
-        {/* 2 Main Mode Badges (Shield vs Policy) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-          <button
-            type="button"
-            onClick={() => setActiveSection('shield')}
-            className={`p-4 rounded-2xl border transition-all flex items-center gap-3.5 text-left cursor-pointer ${
-              activeSection === 'shield'
-                ? 'bg-amber-500/10 border-amber-500 ring-2 ring-amber-400/40 shadow-sm'
-                : 'bg-[#fbf8f1] border-amber-200/70 hover:border-amber-300'
-            }`}
-          >
-            <div className="w-12 h-12 rounded-2xl bg-red-500/10 p-1.5 flex items-center justify-center shrink-0 border border-red-200/60 shadow-xs">
-              <Image 
-                src="/icons/xenios-misafir-kalkani.png" 
-                alt="Xenios Misafir Kalkanı" 
-                width={36} 
-                height={36} 
-                className="object-contain" 
-              />
-            </div>
-            <div>
-              <strong className="text-sm font-bold text-zinc-900 block">Xenios Misafir Kalkanı</strong>
-              <span className="text-[11px] text-zinc-500 block">9 Yaygın Tuzak, İstanbul Seyahat Rehberi</span>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveSection('policy')}
-            className={`p-4 rounded-2xl border transition-all flex items-center gap-3.5 text-left cursor-pointer ${
-              activeSection === 'policy'
-                ? 'bg-amber-500/10 border-amber-500 ring-2 ring-amber-400/40 shadow-sm'
-                : 'bg-[#fbf8f1] border-amber-200/70 hover:border-amber-300'
-            }`}
-          >
-            <div className="w-12 h-12 rounded-2xl bg-red-500/10 p-1.5 flex items-center justify-center shrink-0 border border-red-200/60 shadow-xs">
-              <Image 
-                src="/icons/xenios-adil-alisveris.png" 
-                alt="Xenios Adil Alışveriş Politikası" 
-                width={36} 
-                height={36} 
-                className="object-contain" 
-              />
-            </div>
-            <div>
-              <strong className="text-sm font-bold text-zinc-900 block">Xenios Adil Alışveriş Politikası</strong>
-              <span className="text-[11px] text-zinc-500 block">Şikayet, 7 Günlük İtiraz & İhbar Süreci</span>
-            </div>
-          </button>
-        </div>
-
-        {/* Empathy & Quick Complaint Submission Action Box */}
-        <div className="bg-gradient-to-b from-amber-50 to-orange-50/60 p-5 rounded-2xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-14 h-14 rounded-2xl bg-red-500/10 p-1.5 flex items-center justify-center shrink-0 border border-red-200/80 shadow-xs">
-              <Image 
-                src="/icons/bad-experience.png" 
-                alt="Yaşadığınız kötü deneyim için üzgünüz" 
-                width={48} 
-                height={48} 
-                className="object-contain" 
-              />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-zinc-900">Yaşadığınız kötü deneyim için üzgünüz</h4>
-              <p className="text-xs text-zinc-600 mt-0.5 max-w-md">
-                Lütfen deneyiminizi ve fatura, fiş, taksi plakası veya konum gibi kanıtları sisteme yükleyin.
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href="/complaints"
-            className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-md transition shrink-0 flex items-center gap-1.5 cursor-pointer"
-          >
-            <span>Hemen Şikayet Aç →</span>
-          </Link>
-        </div>
-      </div>
-
       {/* SECTION 1: XENIOS MİSAFİR KALKANI (9 Hayati Rehber) */}
-      {activeSection === 'shield' && (
-        <div className="space-y-5">
+      <div className="space-y-5">
           
           {/* 9 Hayati Güvenlik & Tuzak Rehberi */}
           <div className="space-y-3">
@@ -375,12 +278,53 @@ export function FairShoppingPolicy() {
           </div>
 
         </div>
-      )}
 
-      {/* SECTION 2: XENIOS ADİL ALIŞVERİŞ POLİTİKASI */}
-      {activeSection === 'policy' && (
-        <div className="space-y-6">
-          
+      {/* SECTION 2: XENIOS ADİL ALIŞVERİŞ POLİTİKASI — en altta: Haksız, Şüpheli Alışveriş & Kötü Deneyim */}
+      <div className="space-y-6">
+        {/* Visual Header / Banner */}
+        <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-md space-y-5">
+          <div className="flex flex-col items-center text-center space-y-2">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-red-600 text-white text-xs font-bold uppercase tracking-wider shadow-md">
+              Haksız, şüpheli alışveriş & kötü deneyim
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold font-serif text-zinc-900 mt-2">
+              Xenios Misafir Kalkanı & Adil Alışveriş Politikası
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-600 max-w-xl">
+              İstanbul'da her misafir adil, güvenilir ve şeffaf bir seyahat yaşamalıdır. Xenios haksız kazanç, fahiş fiyat ve kötü niyetli işletmelere karşı haklarınızı korur.
+            </p>
+          </div>
+
+          {/* Empathy & Quick Complaint Submission Action Box */}
+          <div className="bg-gradient-to-b from-amber-50 to-orange-50/60 p-5 rounded-2xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4 text-center sm:text-left">
+              <div className="w-14 h-14 rounded-2xl bg-red-500/10 p-1.5 flex items-center justify-center shrink-0 border border-red-200/80 shadow-xs">
+                <Image
+                  src="/icons/bad-experience.png"
+                  alt="Yaşadığınız kötü deneyim için üzgünüz"
+                  width={48}
+                  height={48}
+                  className="object-contain"
+                />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-zinc-900">Yaşadığınız kötü deneyim için üzgünüz</h4>
+                <p className="text-xs text-zinc-600 mt-0.5 max-w-md">
+                  Lütfen deneyiminizi ve fatura, fiş, taksi plakası veya konum gibi kanıtları sisteme yükleyin.
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/complaints"
+              className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-md transition shrink-0 flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>Hemen Şikayet Aç →</span>
+            </Link>
+          </div>
+        </div>
+
+
           <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-sm space-y-4">
             <h3 className="text-base font-bold font-serif text-zinc-900 flex items-center gap-2">
               <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">1</span>
@@ -507,7 +451,6 @@ export function FairShoppingPolicy() {
           </div>
 
         </div>
-      )}
 
     </div>
   );
