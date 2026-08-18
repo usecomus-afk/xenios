@@ -1,21 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { CockpitSideNav } from "@/components/cockpit/side-nav";
+import { HotelSideNav } from "@/components/hotel/hotel-side-nav";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
-import { ArrowLeft, Menu, Hotel, ArrowUpRight, ShieldCheck, QrCode } from "lucide-react";
+import { Menu, ArrowLeft, Building2, BellRing, QrCode } from "lucide-react";
+import { XeniosStore } from "@/lib/store";
 
-export default function CockpitLayout({
+export default function HotelPortalLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const hotels = XeniosStore.getHotels();
+  const activeHotelId = XeniosStore.getActiveHotelId();
+  const currentHotel = hotels.find(h => h.id === activeHotelId) || hotels[0];
 
   return (
     <div className="min-h-screen bg-[#0b0c0f] text-[#f2efe8] flex flex-col md:flex-row">
-      <CockpitSideNav
+      <HotelSideNav
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
       />
@@ -35,18 +39,17 @@ export default function CockpitLayout({
 
         <div className="flex items-center gap-2">
           <Link
-            href="/hotel-portal"
-            className="px-2.5 py-1.5 bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-xl text-[11px] font-bold flex items-center gap-1"
+            href="/hotel-portal/requests"
+            className="p-2 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 relative"
           >
-            <Hotel className="w-3 h-3 text-amber-400" />
-            <span>Otel Paneli</span>
+            <BellRing className="w-4 h-4" />
           </Link>
           <Link
-            href="/"
-            className="px-2 py-1.5 bg-[#171a22] text-zinc-400 hover:text-white border border-[#2c313d] rounded-xl text-[11px] font-semibold flex items-center gap-1"
+            href="/dashboard"
+            className="px-2 py-1.5 bg-[#171a22] text-zinc-300 border border-[#2c313d] rounded-xl text-[11px] font-semibold flex items-center gap-1"
           >
             <ArrowLeft className="w-3 h-3" />
-            <span>Misafir</span>
+            <span>Admin</span>
           </Link>
         </div>
       </div>
@@ -56,28 +59,28 @@ export default function CockpitLayout({
         <header className="hidden md:flex items-center justify-between px-8 py-4 border-b border-[#2c313d] bg-[#12141a]/80 backdrop-blur-md sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs text-zinc-400 font-mono">
-              Xenios Master Deck • Proje Yöneticisi Paneli
+            <span className="text-xs text-zinc-300 font-bold">
+              {currentHotel.name}
             </span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 font-mono font-bold border border-amber-500/30">
-              43 Partner Otel Aktif
+              {currentHotel.rooms.length} Oda Canlı
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             <Link
-              href="/hotel-portal"
-              className="px-3.5 py-1.5 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs"
+              href="/hotel-portal/requests"
+              className="px-3.5 py-1.5 bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/40 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs"
             >
-              <Hotel className="w-3.5 h-3.5 text-amber-400" />
-              <span>Otel Yönetim Paneline Geç ↗</span>
+              <BellRing className="w-3.5 h-3.5 text-red-400" />
+              <span>Canlı Talepler</span>
             </Link>
             <Link
-              href="/qr-generator"
+              href="/hotel-portal/qr-generator"
               className="px-3.5 py-1.5 bg-[#171a22] hover:bg-[#202430] text-zinc-300 border border-[#2c313d] rounded-xl text-xs font-bold transition flex items-center gap-1.5"
             >
               <QrCode className="w-3.5 h-3.5 text-amber-400" />
-              <span>Toplu QR Üretici</span>
+              <span>Oda QR'ları</span>
             </Link>
           </div>
         </header>
