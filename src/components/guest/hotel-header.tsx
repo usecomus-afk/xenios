@@ -92,7 +92,7 @@ export function HotelHeader({
     <header className="bg-gradient-to-b from-amber-500/10 via-amber-100/20 to-transparent pt-3 pb-3 px-3.5 sm:px-4 border-b border-amber-200/50 w-full relative z-40 overflow-visible">
       <div className="max-w-4xl mx-auto space-y-2.5">
         {/* Top Bar: Brand Logo + Compact Unified Action Pill (Bell, Lang, User) */}
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 relative z-30">
           <div className="shrink-0">
             <BrandMark size={32} showText={true} theme="light" />
           </div>
@@ -199,7 +199,7 @@ export function HotelHeader({
         {/* SINGLE-LINE SLEEK HOTEL BAR (Tıklanınca Açılır Pencere) */}
         <div 
           onClick={() => setShowHotelModal(true)}
-          className="bg-white/95 hover:bg-white rounded-2xl px-3.5 py-2.5 shadow-xs hover:shadow-sm border border-amber-200/80 backdrop-blur-md flex items-center justify-between gap-2.5 cursor-pointer transition group"
+          className="bg-white/95 hover:bg-white rounded-2xl px-3.5 py-2.5 shadow-xs hover:shadow-sm border border-amber-200/80 backdrop-blur-md flex items-center justify-between gap-2.5 cursor-pointer transition group relative z-10"
         >
           <div className="flex items-center gap-2 min-w-0">
             <Building2 className="w-4 h-4 text-amber-700 shrink-0" />

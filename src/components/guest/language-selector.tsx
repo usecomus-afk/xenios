@@ -17,7 +17,7 @@ export function LanguageSelector({ currentLang, onSelect }: { currentLang: Langu
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-bold text-zinc-800 hover:bg-amber-50 transition cursor-pointer"
@@ -29,7 +29,7 @@ export function LanguageSelector({ currentLang, onSelect }: { currentLang: Langu
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 mt-1.5 w-36 bg-white rounded-2xl shadow-2xl border border-amber-200 p-1 z-50 animate-in fade-in zoom-in-95">
+          <div className="absolute right-0 top-full mt-2 w-36 bg-white rounded-2xl shadow-2xl border-2 border-amber-300 p-1.5 z-50 animate-in fade-in zoom-in-95 text-zinc-900">
             {langs.map(l => (
               <button
                 key={l.code}
