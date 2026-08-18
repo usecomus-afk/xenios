@@ -1,11 +1,13 @@
 "use client";
 
-import { PwaNotificationModal } from "../pwa-notification-modal";
-import { PwaNotificationManager } from "@/lib/pwa-notifications";
-
+import { useState, useEffect } from 'react';
 import { Hotel, Language, XeniosUser } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { LanguageSelector } from './language-selector';
+import { PwaNotificationModal } from '../pwa-notification-modal';
+import { PwaNotificationManager } from '@/lib/pwa-notifications';
+import { BrandMark } from '../brand-mark';
+import { XeniosStore } from '@/lib/store';
 import { 
   Wifi, 
   MapPin, 
@@ -24,10 +26,7 @@ import {
   ShieldCheck,
   Sparkles
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { BrandMark } from '../brand-mark';
-import { XeniosStore } from '@/lib/store';
 
 interface HotelHeaderProps {
   hotel: Hotel;
@@ -57,13 +56,10 @@ export function HotelHeader({
   const [pwaPerm, setPwaPerm] = useState<NotificationPermission>('default');
 
   useEffect(() => {
+    setUser(XeniosStore.getUser());
     if (typeof window !== 'undefined') {
       setPwaPerm(PwaNotificationManager.getPermission());
     }
-  }, []);
-
-  useEffect(() => {
-    setUser(XeniosStore.getUser());
 
     const handleAuth = () => {
       setUser(XeniosStore.getUser());
@@ -72,7 +68,10 @@ export function HotelHeader({
     return () => window.removeEventListener('xenios_auth_updated', handleAuth);
   }, []);
 
-  const room = hotel.rooms.find(r => r.number === roomNumber) || hotel.rooms[0];
+  const room = hotel.rooms?.find(r => r.number === roomNumber) || hotel.rooms?.[0] || {
+    wifiPass: 'Xenios2026!',
+    wifiSsid: 'Hotel_Guest'
+  };
   const wifiPass = room?.wifiPass || 'Xenios2026!';
   const wifiSsid = room?.wifiSsid || `${hotel.name.split(' ')[0]}_Guest`;
 
@@ -339,6 +338,15 @@ export function HotelHeader({
           </div>
         </div>
       )}
+
+      {/* PWA NOTIFICATION SETTINGS MODAL */}
+      <PwaNotificationModal 
+        isOpen={showPwaModal} 
+        onClose={() => { 
+          setShowPwaModal(false); 
+          setPwaPerm(PwaNotificationManager.getPermission()); 
+        }} 
+      />
     </header>
   );
 }
