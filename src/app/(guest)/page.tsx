@@ -82,6 +82,7 @@ export default function GuestPage() {
 
   // Category Catalog Grid Items with Custom Canva PNG Icons
   const categoryShowcase = [
+    { key: 'Önerdiğimiz Restoranlar', iconPath: '/icons/categories/onerdigimiz-restoranlar.png', count: 20, desc: 'Michelin yıldızlı şefler, tarihi lezzetler & Boğaz manzaralı teraslar' },
     { key: 'Boğaz Turları & Yat', iconPath: '/icons/categories/bogaz-yatturlari.png', count: 7, desc: 'Akşam yemekli turlar, özel yat kiralama & Adalar rotaları' },
     { key: 'Tarih & Müzeler', iconPath: '/icons/categories/tarih-muzeler.png', count: 8, desc: 'Ayasofya, Topkapı Sarayı, Yerebatan & Arkeoloji Müzeleri' },
     { key: 'Gastronomi & Gurme', iconPath: '/icons/categories/gastronomi-gurme.png', count: 6, desc: 'Sokak lezzetleri, Türk kahvesi atölyesi & Boğaz meyhaneleri' },
@@ -162,11 +163,11 @@ export default function GuestPage() {
                     </div>
 
                     <h3 className="text-base sm:text-lg font-bold font-serif text-zinc-900 leading-snug">
-                      Boğaz Turları, Tarihi Hamamlar & VIP Şehir Deneyimleri
+                      Boğaz Turları, Seçkin Restoranlar, Hamamlar & VIP Deneyimler
                     </h3>
 
                     <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed max-w-xl font-medium">
-                      İstanbul'un 52 seçkin ve doğrulanmış işletme ilanını inceleyin; otelinizden ayrılmadan güvenle yerinizi ayırtın.
+                      İstanbul'un 72 seçkin ve doğrulanmış işletme ve restoran ilanını inceleyin; otelinizden ayrılmadan güvenle yerinizi ayırtın.
                     </p>
                   </div>
                 </div>
@@ -183,7 +184,7 @@ export default function GuestPage() {
                       height={20} 
                       className="object-contain brightness-0 invert" 
                     />
-                    <span>Kataloğu Keşfet (52 İlan) →</span>
+                    <span>Kataloğu Keşfet (72 İlan) →</span>
                   </button>
                 </div>
               </div>
@@ -226,7 +227,7 @@ export default function GuestPage() {
                         : 'bg-white text-zinc-600 hover:bg-amber-50 border border-amber-200/60'
                     }`}
                   >
-                    {cat === 'all' ? t.allCategories : cat.replace(/^[0-9]+.s*/, '')}
+                    {cat === 'all' ? t.allCategories : cat.replace(/^[0-9]+\.\s*/, '')}
                   </button>
                 ))}
               </div>
@@ -254,7 +255,7 @@ export default function GuestPage() {
           <div className="space-y-5">
             <div>
               <h2 className="text-xl font-bold font-serif text-zinc-900">Hizmet & Deneyim Kategorileri</h2>
-              <p className="text-xs text-zinc-500">İstanbul'daki 52 lisanslı deneyim ve concierge hizmetini tematik kategorilerle keşfedin.</p>
+              <p className="text-xs text-zinc-500">İstanbul'daki 72 lisanslı deneyim, restoran ve concierge hizmetini tematik kategorilerle keşfedin.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -263,7 +264,14 @@ export default function GuestPage() {
                   <div
                     key={idx}
                     onClick={() => {
-                      const matched = categories.find(c => c.toLowerCase().includes(cat.key.split(' ')[0].toLowerCase())) || 'all';
+                      const searchToken = cat.key.toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, ' ');
+                      const matched = categories.find(c => {
+                        const cLower = c.toLowerCase();
+                        if (cLower === cat.key.toLowerCase()) return true;
+                        if (cLower.includes(cat.key.toLowerCase())) return true;
+                        const tokens = searchToken.split(' ').filter(Boolean);
+                        return tokens.some(t => t.length > 3 && cLower.includes(t));
+                      }) || 'all';
                       setSelectedCategory(matched);
                       setActiveTab('experiences');
                     }}

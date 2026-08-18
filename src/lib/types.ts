@@ -50,6 +50,10 @@ export interface Experience {
   image?: string;
   /** Admin-controlled listing status. Missing/undefined is treated as 'active' for older records. */
   status?: ExperienceStatus;
+  cuisine?: string;
+  priceLevel?: string;
+  specialties?: string[];
+  reviewsCount?: string;
 }
 
 export type ServiceStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';

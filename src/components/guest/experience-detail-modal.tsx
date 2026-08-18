@@ -25,7 +25,9 @@ import {
   CheckCircle2,
   ChevronRight,
   Shield,
-  ExternalLink
+  ExternalLink,
+  Phone,
+  Utensils
 } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
@@ -54,61 +56,45 @@ export function ExperienceDetailModal({
 
   const t = getT(lang);
   const imageSrc = experience.image || `/images/experiences/${experience.id}.jpg`;
+  const isRestaurant = experience.category.toLowerCase().includes('restoran') || experience.id.startsWith('rest-');
 
   // Dynamic tailored steps based on category
   const steps = [
     {
-      title: "Buluşma & Sıcak Karşılama",
-      desc: `${experience.provider} ekibi tarafından belirlenen noktada Türk çayı veya ikramlarla samimi bir karşılama.`,
+      title: isRestaurant ? "Masa Rezervasyonu & Karşılama" : "Buluşma & Sıcak Karşılama",
+      desc: isRestaurant 
+        ? `${experience.title} ekibi tarafından kapıda karşılama ve ayrılan masanıza yerleşim.` 
+        : `${experience.provider} ekibi tarafından belirlenen noktada Türk çayı veya ikramlarla samimi bir karşılama.`,
       img: imageSrc
     },
     {
-      title: "Tarih ve Zanaat Hikayesi",
-      desc: "Uzman rehber ve zanaatkarlardan deneyimin köklü İstanbul tarihi ve inceliklerini öğrenin.",
+      title: isRestaurant ? "Menü & Gurme Tadım Rehberi" : "Tarih ve Zanaat Hikayesi",
+      desc: isRestaurant 
+        ? `${experience.cuisine || 'Şef'} imzalı mevsimlik lezzetler ve imza spesiyallerin tanıtımı.` 
+        : "Uzman rehber ve zanaatkarlardan deneyimin köklü İstanbul tarihi ve inceliklerini öğrenin.",
       img: "/images/istanbul/499db9bf1acc9374f13ea0b3d0043ce6.webp"
     },
     {
-      title: "Uygulama & Ana Deneyim",
-      desc: `Rehberlik eşliğinde ${experience.title.toLowerCase()} sürecine bizzat dahil olun.`,
+      title: isRestaurant ? "Ana Lezzet & Gastronomi Şöleni" : "Uygulama & Ana Deneyim",
+      desc: isRestaurant 
+        ? `Taze yerel malzemeler ve usta şefler tarafından hazırlanan özel tabakların sunumu.` 
+        : `Rehberlik eşliğinde ${experience.title.toLowerCase()} sürecine bizzat dahil olun.`,
       img: "/images/istanbul/63bab1fbccecc867bfd70f0f41b0d943.webp"
     },
     {
-      title: "İkramlar & Fotoğraf Çekimi",
-      desc: "Geleneksel Türk lezzetlerinin tadını çıkarırken unutulmaz anı fotoğrafları çekilin.",
+      title: isRestaurant ? "Geleneksel Tatlı & İkramlar" : "İkramlar & Fotoğraf Çekimi",
+      desc: isRestaurant 
+        ? "İstanbul usulü kahve veya geleneksel tatlı ikramlarıyla lezzet deneyiminin tamamlanması." 
+        : "Geleneksel Türk lezzetlerinin tadını çıkarırken unutulmaz anı fotoğrafları çekilin.",
       img: "/images/istanbul/il_1588xN.7346047570_63w8.webp"
-    },
-    {
-      title: "Kapanış & Hatıra",
-      desc: "Deneyiminizi benzersiz bir anı veya eserle tamamlayıp güvenle ayrılın.",
-      img: "/images/istanbul/il_1588xN.7982654509_jcsh.webp"
-    }
-  ];
-
-  // Dynamic reviews
-  const reviews = [
-    {
-      author: "Anais M.",
-      location: "Lille, Fransa",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80",
-      rating: 5,
-      date: "Dün",
-      content: `Bu deneyim kesinlikle seyahatimizin en güzel anıydı! ${experience.provider} ekibi çok nazik ve misafirperverdi. Her şey adım adım açıklandı. İstanbul'a gelen herkese tavsiye ederim.`
-    },
-    {
-      author: "David & Sarah K.",
-      location: "Londra, İngiltere",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80",
-      rating: 5,
-      date: "3 gün önce",
-      content: `${experience.title} beklentilerimizin çok üzerindeydi. Otelimizden ulaşım da çok rahattı. Hem eğlenceli hem çok bilgilendirici bir etkinlikti.`
     }
   ];
 
   // Time slots
   const slots = [
-    { id: 0, day: "Bugün", time: "16:00 – 18:00", quota: "10 uygun yer var" },
-    { id: 1, day: "Bugün", time: "19:00 – 21:00", quota: "6 uygun yer var" },
-    { id: 2, day: "Yarın", time: "14:00 – 16:00", quota: "12 uygun yer var" }
+    { id: 0, day: "Bugün", time: "18:00 – 20:00", quota: "Masa müsait" },
+    { id: 1, day: "Bugün", time: "20:30 – 22:30", quota: "Popüler saat" },
+    { id: 2, day: "Yarın", time: "19:00 – 21:00", quota: "Rezervasyon açık" }
   ];
 
   const handleShare = () => {
@@ -176,10 +162,16 @@ export function ExperienceDetailModal({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
           
-          {/* TÜRSAB Verified Badge */}
+          {/* TÜRSAB / Verified Badge */}
           <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 text-zinc-900 text-xs font-bold shadow-md backdrop-blur-md">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>TÜRSAB Lisanslı</span>
+            <span>{isRestaurant ? 'Doğrulanmış Restoran' : 'TÜRSAB Lisanslı'}</span>
+          </div>
+
+          {/* Rating Badge */}
+          <div className="absolute top-4 right-4 flex items-center gap-1 px-3 py-1 rounded-full bg-black/70 text-amber-300 text-xs font-bold shadow-md backdrop-blur-md border border-amber-400/40">
+            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+            <span>{experience.scoreStr || '4.8/5'}</span>
           </div>
 
           {/* Dots Indicator */}
@@ -187,12 +179,27 @@ export function ExperienceDetailModal({
             <span className="w-2 h-2 rounded-full bg-white" />
             <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
             <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
-            <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
           </div>
         </div>
 
         {/* Title & Headline Section */}
         <div className="space-y-3 pb-5 border-b border-zinc-200">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+              {experience.categoryTag || experience.category}
+            </span>
+            {experience.cuisine && (
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-100 text-zinc-800 border border-zinc-200">
+                🍽️ {experience.cuisine}
+              </span>
+            )}
+            {experience.priceLevel && (
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                💰 {experience.priceLevel}
+              </span>
+            )}
+          </div>
+
           <h1 className="text-2xl sm:text-3xl font-bold font-serif text-zinc-900 leading-tight">
             {experience.title}
           </h1>
@@ -201,15 +208,36 @@ export function ExperienceDetailModal({
             {experience.agentNote}
           </p>
 
+          {/* Öne Çıkan Lezzetler / Specialties Section */}
+          {experience.specialties && experience.specialties.length > 0 && (
+            <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 uppercase tracking-wider">
+                <Sparkles className="w-4 h-4 text-amber-600" />
+                <span>Öne Çıkan İmza Lezzetler</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {experience.specialties.map((item, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center gap-1 px-3 py-1 rounded-xl text-xs font-semibold bg-white text-zinc-800 border border-amber-300 shadow-2xs"
+                  >
+                    <span className="text-amber-600">✦</span>
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-2 text-xs text-zinc-500 pt-1">
             <Globe className="w-4 h-4 text-zinc-400" />
-            <span>Türkçe, İngilizce & Arapça rehberlik desteği</span>
+            <span>Türkçe, İngilizce & Uluslararası menü desteği</span>
           </div>
 
           <div className="flex items-center gap-2 text-xs font-bold text-zinc-900 pt-1">
             <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Doğrulanmış İşletme & TÜRSAB Güvencesi</span>
+              <span>Xenios Doğrulanmış İşletme & Tüketici Güvencesi</span>
             </span>
           </div>
         </div>
@@ -221,8 +249,8 @@ export function ExperienceDetailModal({
               {experience.provider.charAt(0)}
             </div>
             <div>
-              <h3 className="text-sm font-bold text-zinc-900">İlan Sahibi: {experience.provider}</h3>
-              <p className="text-xs text-zinc-500">{experience.categoryTag || experience.category} Uzmanı</p>
+              <h3 className="text-sm font-bold text-zinc-900">{experience.provider}</h3>
+              <p className="text-xs text-zinc-500">{experience.cuisine || (experience.categoryTag || experience.category)}</p>
             </div>
           </div>
 
@@ -234,19 +262,41 @@ export function ExperienceDetailModal({
             </div>
           </div>
 
-          <div className="flex items-start gap-3.5 text-xs text-zinc-700">
-            <Clock className="w-5 h-5 text-zinc-800 shrink-0 mt-0.5" />
-            <div>
-              <strong className="block text-zinc-900">Yaklaşık {experience.duration} süreli deneyim</strong>
-              <span className="text-zinc-500">Bu ilan Türkçe ve İngilizce sunuluyor</span>
+          {experience.phone && (
+            <div className="flex items-start gap-3.5 text-xs text-zinc-700">
+              <Phone className="w-5 h-5 text-zinc-800 shrink-0 mt-0.5" />
+              <div>
+                <strong className="block text-zinc-900">Telefon & Rezervasyon</strong>
+                <a href={`tel:${experience.phone}`} className="text-amber-700 font-mono font-semibold hover:underline">
+                  {experience.phone}
+                </a>
+              </div>
             </div>
-          </div>
+          )}
+
+          {experience.website && (
+            <div className="flex items-start gap-3.5 text-xs text-zinc-700">
+              <Globe className="w-5 h-5 text-zinc-800 shrink-0 mt-0.5" />
+              <div>
+                <strong className="block text-zinc-900">Resmi Web Sitesi / Menü</strong>
+                <a 
+                  href={experience.website} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-amber-700 font-semibold hover:underline flex items-center gap-1"
+                >
+                  <span>{experience.website}</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* NELER YAPACAKSINIZ? (Timeline Step-by-Step) */}
         <div className="space-y-4 pb-7 border-b border-zinc-200">
           <h2 className="text-lg sm:text-xl font-bold font-serif text-zinc-900">
-            Neler yapacaksınız?
+            {isRestaurant ? 'Gastronomi Deneyimi Akışı' : 'Neler yapacaksınız?'}
           </h2>
 
           <div className="space-y-4">
@@ -273,10 +323,11 @@ export function ExperienceDetailModal({
         <div className="space-y-4 pb-7 border-b border-zinc-200">
           <div className="flex items-center justify-between">
             <h2 className="text-lg sm:text-xl font-bold font-serif text-zinc-900">
-              Misafir Değerlendirmeleri & Kalite Güvencesi
+              Misafir Değerlendirmeleri & Puan
             </h2>
-            <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold">
-              Yeni İlan
+            <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold flex items-center gap-1">
+              <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+              <span>{experience.scoreStr || '4.8/5'}</span>
             </span>
           </div>
 
@@ -286,49 +337,22 @@ export function ExperienceDetailModal({
                 ★
               </div>
               <div>
-                <strong className="text-xs text-zinc-900 block font-bold">İlk Değerlendirmeyi Siz Yapın</strong>
+                <strong className="text-xs text-zinc-900 block font-bold">
+                  {experience.reviewsCount ? `${experience.reviewsCount} Google / Tripadvisor Skoru` : 'Yüksek Misafir Memnuniyeti'}
+                </strong>
                 <span className="text-[11px] text-zinc-500">Bu işletme Xenios kalite ve tüketici hakları onaylıdır.</span>
               </div>
             </div>
             <p className="text-xs text-zinc-600 leading-relaxed">
-              Katıldığınız bu deneyim sonrasında değerlendirme yaparak İstanbul'u ziyaret eden diğer misafirlere rehberlik edebilirsiniz.
+              Ziyaretiniz sonrasında değerlendirme yaparak İstanbul'u keşfeden diğer misafirlere rehberlik edebilirsiniz.
             </p>
-          </div>
-        </div>
-
-        {/* YAKIN GELECEKTEKİ UYGUNLUK DURUMU (Slots) */}
-        <div className="space-y-3 pb-7 border-b border-zinc-200">
-          <h2 className="text-lg sm:text-xl font-bold font-serif text-zinc-900">
-            Yakın gelecekteki uygunluk durumu
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            {slots.map((slot) => (
-              <div
-                key={slot.id}
-                onClick={() => setSelectedSlot(slot.id)}
-                className={`p-3.5 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
-                  selectedSlot === slot.id
-                    ? 'bg-amber-500/10 border-amber-500 ring-2 ring-amber-400/40'
-                    : 'bg-white border-zinc-200 hover:border-zinc-300'
-                }`}
-              >
-                <div className="space-y-0.5">
-                  <span className="text-xs font-bold text-zinc-900 block">{slot.day}</span>
-                  <strong className="text-sm font-mono text-zinc-800 block">{slot.time}</strong>
-                </div>
-                <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md mt-2 inline-block">
-                  {slot.quota}
-                </span>
-              </div>
-            ))}
           </div>
         </div>
 
         {/* BULUŞACAĞIMIZ YER (Meeting Point & Map) */}
         <div className="space-y-3 pb-7 border-b border-zinc-200">
           <h2 className="text-lg sm:text-xl font-bold font-serif text-zinc-900">
-            Buluşacağımız yer
+            {isRestaurant ? 'Restoran Konumu & Ulaşım' : 'Buluşacağımız yer'}
           </h2>
           <p className="text-xs text-zinc-600 font-mono">
             {experience.location}, İstanbul
@@ -348,7 +372,7 @@ export function ExperienceDetailModal({
               />
             </div>
 
-            <div className="flex items-center justify-between gap-2 pt-1">
+            <div className="flex items-center justify-between gap-2 pt-1 flex-wrap">
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(experience.location + ', Istanbul, Turkey')}`}
                 target="_blank"
@@ -372,10 +396,10 @@ export function ExperienceDetailModal({
           </div>
         </div>
 
-        {/* HAKKIMDA (Host Profile Box) */}
+        {/* HAKKIMDA / İŞLETME PROFİLİ */}
         <div className="space-y-4 pb-7 border-b border-zinc-200">
           <h2 className="text-lg sm:text-xl font-bold font-serif text-zinc-900">
-            Hakkımda
+            {isRestaurant ? 'İşletme & Mutfak Hakkında' : 'Hakkımda'}
           </h2>
 
           <div className="p-5 rounded-3xl bg-zinc-50 border border-zinc-200 space-y-3">
@@ -384,31 +408,41 @@ export function ExperienceDetailModal({
                 {experience.provider.charAt(0)}
               </div>
               <div>
-                <h3 className="text-sm font-bold text-zinc-900">{experience.provider}</h3>
-                <p className="text-xs text-zinc-500">TÜRSAB Kayıtlı Deneyim Tasarımcısı</p>
+                <h3 className="text-sm font-bold text-zinc-900">{experience.title}</h3>
+                <p className="text-xs text-zinc-500">{experience.cuisine || experience.provider}</p>
               </div>
             </div>
 
             <p className="text-xs text-zinc-600 leading-relaxed">
-              Selam! İstanbul'un zengin kültür ve tarihini yerel zanaatkarlar ve uzman rehberlerle misafirlerimize sunmaktan mutluluk duyuyoruz. Amacımız şehrimizden unutulmaz, samimi ve güvenli anılarla ayrılmanızı sağlamak.
+              {experience.agentNote}
             </p>
 
-            <button
-              onClick={() => toast.info(`${experience.provider} resepsiyon veya Xenios üzerinden anında yönlendirilmektedir.`)}
-              className="w-full py-2.5 rounded-xl bg-white hover:bg-zinc-100 border border-zinc-300 text-zinc-800 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-amber-600" />
-              <span>{experience.provider} için bir mesaj gönderin</span>
-            </button>
-          </div>
-
-          <div className="p-3 bg-amber-50/60 rounded-2xl border border-amber-200/60 text-[11px] text-zinc-500 flex items-start gap-2">
-            <Shield className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
-            <p>Ödemenizi ve misafir haklarınızı korumak için rezervasyonlarınızı her zaman Xenios Güvenli Sanal POS üzerinden gerçekleştirin.</p>
+            <div className="flex items-center gap-2 pt-1">
+              {experience.phone && (
+                <a
+                  href={`tel:${experience.phone}`}
+                  className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>Telefonla Rezervasyon</span>
+                </a>
+              )}
+              {experience.website && (
+                <a
+                  href={experience.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-2.5 rounded-xl bg-white hover:bg-zinc-100 border border-zinc-300 text-zinc-800 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Globe className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Web Sitesi & Menü</span>
+                </a>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* BİLİNMESİ GEREKENLER (Requirements & Cancellation Policy) */}
+        {/* BİLİNMESİ GEREKENLER (Requirements & Policy) */}
         <div className="space-y-4">
           <h2 className="text-lg sm:text-xl font-bold font-serif text-zinc-900">
             Bilinmesi gerekenler
@@ -418,24 +452,16 @@ export function ExperienceDetailModal({
             <div className="flex items-start gap-3.5">
               <Users className="w-5 h-5 text-zinc-800 shrink-0 mt-0.5" />
               <div>
-                <strong className="block text-zinc-900 font-bold">Misafir gereklilikleri</strong>
-                <p className="text-zinc-500 mt-0.5">Her yaştan misafirler katılabilir. Grup mevcudu en fazla 10-15 kişi ile sınırlıdır.</p>
+                <strong className="block text-zinc-900 font-bold">Rezervasyon Politikası</strong>
+                <p className="text-zinc-500 mt-0.5">Akşam saatleri ve teras masaları için önceden telefonla veya web üzerinden rezervasyon önerilir.</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3.5">
               <Activity className="w-5 h-5 text-zinc-800 shrink-0 mt-0.5" />
               <div>
-                <strong className="block text-zinc-900 font-bold">Etkinlik seviyesi</strong>
-                <p className="text-zinc-500 mt-0.5">Hafif düzey ve keyifli bir akışa sahiptir. Özel deneyim gerektirmez.</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3.5">
-              <CalendarCheck className="w-5 h-5 text-zinc-800 shrink-0 mt-0.5" />
-              <div>
-                <strong className="block text-zinc-900 font-bold">İptal politikası</strong>
-                <p className="text-zinc-500 mt-0.5">Tam para iadesi almak için rezervasyonunuzu başlangıç saatinden en az 24 saat önce iptal edebilirsiniz.</p>
+                <strong className="block text-zinc-900 font-bold">Kıyafet & Atmosfer</strong>
+                <p className="text-zinc-500 mt-0.5">Smart Casual / Şık günlük kıyafet tarzı uygundur.</p>
               </div>
             </div>
           </div>
@@ -443,33 +469,56 @@ export function ExperienceDetailModal({
 
       </div>
 
-      {/* FLOATING AIRBNB STYLED BOTTOM BAR (Sticky Footer) */}
+      {/* FLOATING BOTTOM BAR (Sticky Footer) */}
       <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-lg border-t border-zinc-200 p-4 safe-bottom z-50 shadow-2xl">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-4">
           <div className="space-y-0.5">
             <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold">
-              <CalendarCheck className="w-3.5 h-3.5" />
-              <span>Ücretsiz iptal (24 saat öncesine kadar)</span>
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Xenios Onaylı Mekan</span>
             </div>
             <div>
-              <span className="text-[10px] text-zinc-400 uppercase font-semibold block">Başlangıç Fiyatı</span>
+              <span className="text-[10px] text-zinc-400 uppercase font-semibold block">
+                {isRestaurant ? 'Fiyat Seviyesi' : 'Başlangıç Fiyatı'}
+              </span>
               <div className="flex items-baseline gap-1">
-                <span className="text-lg sm:text-xl font-bold font-mono text-zinc-900">
-                  {formatPrice(experience.price, experience.currency)}
+                <span className="text-base sm:text-lg font-bold font-mono text-zinc-900">
+                  {experience.priceLevel || formatPrice(experience.price, experience.currency)}
                 </span>
-                <span className="text-xs text-zinc-500">/ misafir</span>
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => onOpenCheckout(experience)}
-              className="px-6 py-3 rounded-2xl bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-bold shadow-lg shadow-black/20 flex items-center gap-2 transition transform active:scale-95 cursor-pointer"
-            >
-              <CreditCard className="w-4 h-4 text-amber-400" />
-              <span>Tarihleri Göster & Rezerve Et</span>
-            </button>
+            {isRestaurant ? (
+              <>
+                {experience.phone && (
+                  <a
+                    href={`tel:${experience.phone}`}
+                    className="px-4 sm:px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-emerald-600/25 flex items-center gap-2 transition transform active:scale-95 cursor-pointer"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>Ara / Rezervasyon</span>
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={() => onOpenTransit(experience)}
+                  className="px-3.5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-bold shadow-lg shadow-amber-500/25 flex items-center gap-1.5 transition cursor-pointer"
+                  title="Yol Tarifi"
+                >
+                  <Navigation className="w-4 h-4" />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => onOpenCheckout(experience)}
+                className="px-6 py-3 rounded-2xl bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-bold shadow-lg shadow-black/20 flex items-center gap-2 transition transform active:scale-95 cursor-pointer"
+              >
+                <CreditCard className="w-4 h-4 text-amber-400" />
+                <span>Tarihleri Göster & Rezerve Et</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

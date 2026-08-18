@@ -3,7 +3,7 @@
 import { Experience, Hotel, Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
-import { MapPin, Clock, Star, Navigation, CreditCard, Info } from 'lucide-react';
+import { MapPin, Clock, Star, Navigation, CreditCard, Info, Phone, Globe, Utensils, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
 interface ExperienceCardProps {
@@ -25,6 +25,7 @@ export function ExperienceCard({
 }: ExperienceCardProps) {
   const t = getT(lang);
   const imageSrc = experience.image || `/images/experiences/${experience.id}.jpg`;
+  const isRestaurant = experience.category.toLowerCase().includes('restoran') || experience.id.startsWith('rest-');
 
   return (
     <div className="bg-white rounded-3xl overflow-hidden border border-amber-200/70 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
@@ -43,19 +44,24 @@ export function ExperienceCard({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
           
-          <div className="absolute top-3 left-3 flex items-center gap-1.5">
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap max-w-[70%]">
             <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/95 text-amber-900 shadow-sm backdrop-blur-md">
-              {experience.categoryTag || experience.category.split('.')[1] || experience.category}
+              {experience.categoryTag || (experience.category.includes('.') ? experience.category.split('.')[1].trim() : experience.category)}
             </span>
+            {experience.cuisine && (
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-amber-500/90 text-white shadow-xs backdrop-blur-md hidden xs:inline-block">
+                {experience.cuisine.split('&')[0].trim()}
+              </span>
+            )}
           </div>
 
-          <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-bold bg-black/60 text-amber-400 backdrop-blur-md border border-amber-500/30">
-            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+          <div className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-black/70 text-amber-300 backdrop-blur-md border border-amber-400/40 shadow-sm">
+            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
             <span>{experience.scoreStr || '4.9/5'}</span>
           </div>
 
           <div className="absolute bottom-3 left-3 right-3 text-white">
-            <span className="text-[11px] text-amber-300 font-medium block truncate">
+            <span className="text-[11px] text-amber-300 font-semibold block truncate">
               {experience.provider}
             </span>
             <h3 className="text-sm font-bold font-serif leading-snug line-clamp-1 group-hover:text-amber-300 transition-colors">
@@ -67,25 +73,57 @@ export function ExperienceCard({
         {/* Card Body */}
         <div className="p-4 space-y-3">
           <div className="flex items-center justify-between text-xs text-zinc-500">
-            <div className="flex items-center gap-1 truncate max-w-[170px]">
+            <div className="flex items-center gap-1 truncate max-w-[200px]" title={experience.location}>
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span className="truncate">{experience.location}</span>
             </div>
-            <div className="flex items-center gap-1 font-medium text-zinc-700">
-              <Clock className="w-3.5 h-3.5 text-zinc-400" />
-              <span>{experience.duration}</span>
+            <div className="flex items-center gap-1 font-medium text-zinc-700 shrink-0">
+              {isRestaurant && experience.priceLevel ? (
+                <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 font-semibold text-[11px] border border-amber-200/60">
+                  {experience.priceLevel.split(' ')[0]}
+                </span>
+              ) : (
+                <>
+                  <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>{experience.duration}</span>
+                </>
+              )}
             </div>
           </div>
 
-          <p className="text-xs text-zinc-600 line-clamp-2 leading-relaxed bg-amber-50/40 p-2.5 rounded-xl border border-amber-100/60">
+          {/* Description / Agent Note */}
+          <p className="text-xs text-zinc-600 leading-relaxed bg-amber-50/40 p-3 rounded-xl border border-amber-100/60 min-h-[3.8rem]">
             {experience.agentNote}
           </p>
 
+          {/* Öne Çıkan Lezzetler / Specialties Chips */}
+          {experience.specialties && experience.specialties.length > 0 && (
+            <div className="space-y-1.5 pt-0.5">
+              <div className="flex items-center gap-1 text-[10px] font-bold text-amber-900 uppercase tracking-wider">
+                <Sparkles className="w-3 h-3 text-amber-600" />
+                <span>Öne Çıkan Lezzetler</span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {experience.specialties.map((item, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-block px-2 py-0.5 rounded-lg text-[10px] font-medium bg-amber-100/70 text-amber-950 border border-amber-200/80"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Price & Details Bar */}
           <div className="flex items-center justify-between pt-1">
             <div>
-              <span className="text-[10px] uppercase tracking-wider text-zinc-400 block font-semibold">{t.price}</span>
-              <span className="text-base font-bold text-zinc-900 font-mono">
-                {formatPrice(experience.price, experience.currency)}
+              <span className="text-[10px] uppercase tracking-wider text-zinc-400 block font-semibold">
+                {isRestaurant ? 'Fiyat / Seviye' : t.price}
+              </span>
+              <span className="text-sm sm:text-base font-bold text-zinc-900 font-mono">
+                {experience.priceLevel ? experience.priceLevel : formatPrice(experience.price, experience.currency)}
               </span>
             </div>
 
@@ -106,6 +144,7 @@ export function ExperienceCard({
 
       {/* Action Footer */}
       <div className="p-4 pt-0 flex items-center gap-2">
+        {/* Transit / Map Route */}
         <button
           type="button"
           onClick={(e) => {
@@ -113,22 +152,54 @@ export function ExperienceCard({
             onOpenTransit(experience);
           }}
           className="p-2.5 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-semibold flex items-center justify-center transition cursor-pointer"
-          title="Otelden Ulaşım Seçenekleri"
+          title="Otelden Ulaşım & Harita"
         >
           <Navigation className="w-4 h-4 text-amber-700" />
         </button>
 
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpenCheckout(experience);
-          }}
-          className="flex-1 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
-        >
-          <CreditCard className="w-3.5 h-3.5" />
-          <span>{t.buyNow} ({formatPrice(experience.price, experience.currency)})</span>
-        </button>
+        {isRestaurant ? (
+          <>
+            {/* Phone Call / Reservation Button */}
+            {experience.phone && (
+              <a
+                href={`tel:${experience.phone}`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
+                title="Restoranı Ara & Rezervasyon Yap"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>Ara / Rezervasyon</span>
+              </a>
+            )}
+
+            {/* Website / Menu Button */}
+            {experience.website && (
+              <a
+                href={experience.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="p-2.5 rounded-2xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200 text-xs font-semibold flex items-center justify-center transition cursor-pointer"
+                title="Web Sitesi / Menü"
+              >
+                <Globe className="w-4 h-4 text-zinc-700" />
+              </a>
+            )}
+          </>
+        ) : (
+          /* Book Now Button for standard experiences */
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenCheckout(experience);
+            }}
+            className="flex-1 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
+          >
+            <CreditCard className="w-3.5 h-3.5" />
+            <span>{t.buyNow} ({formatPrice(experience.price, experience.currency)})</span>
+          </button>
+        )}
       </div>
     </div>
   );

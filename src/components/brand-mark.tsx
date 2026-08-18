@@ -11,7 +11,7 @@ export function BrandMark({ size = 44, showText = true, theme = 'sand' }: BrandM
   return (
     <Link href="/" className="inline-flex items-center gap-3 group">
       <div 
-        className={`relative overflow-hidden rounded-xl p-1 shadow-sm transition-transform group-hover:scale-105 ${
+        className={`relative overflow-hidden rounded-xl shadow-xs transition-transform group-hover:scale-105 ${
           theme === 'dark' ? 'bg-zinc-800/80 ring-1 ring-amber-500/30' : 'bg-white ring-1 ring-amber-200/70'
         }`}
         style={{ width: size, height: size }}
@@ -21,7 +21,7 @@ export function BrandMark({ size = 44, showText = true, theme = 'sand' }: BrandM
           alt="Xenios Istanbul" 
           width={size} 
           height={size}
-          className="object-contain w-full h-full rounded-lg"
+          className="object-cover w-full h-full rounded-xl"
           priority
         />
       </div>
