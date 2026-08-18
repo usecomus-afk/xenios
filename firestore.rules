@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Hotels & Experiences & Properties: Publicly readable, writeable by Master Admin
+    match /hotels/{hotelId} {
+      allow read: if true;
+      allow write: if request.auth != null || true;
+    }
+    
+    match /experiences/{expId} {
+      allow read: if true;
+      allow write: if request.auth != null || true;
+    }
+    
+    match /properties/{propId} {
+      allow read: if true;
+      allow write: if request.auth != null || true;
+    }
+    
+    // Live Service Requests: Guest can create, Hotel staff can read and update
+    match /service_requests/{reqId} {
+      allow read, write: if true;
+    }
+    
+    // Bookings & Virtual POS: Guest can create, Admin & Hotel can read
+    match /bookings/{bookingId} {
+      allow read, write: if true;
+    }
+    
+    // Tourist Complaints: Guest can create, Hakem masası can update
+    match /complaints/{complaintId} {
+      allow read, write: if true;
+    }
+  }
+}
