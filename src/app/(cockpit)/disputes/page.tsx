@@ -16,15 +16,16 @@ import {
   CreditCard,
   ExternalLink,
   ShieldAlert,
-  ShieldCheck
+  ShieldCheck,
+  EyeOff
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { DemoBadge } from '@/components/demo-badge';
 
 export default function CockpitComplaintsPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [filter, setFilter] = useState<'all' | ComplaintStatus>('all');
   const [selectedComp, setSelectedComp] = useState<Complaint | null>(null);
-  const [responseNote, setResponseNote] = useState('');
 
   const refreshData = () => {
     setComplaints(XeniosStore.getComplaints());
@@ -33,7 +34,11 @@ export default function CockpitComplaintsPage() {
   useEffect(() => {
     refreshData();
     window.addEventListener('xenios_complaints_updated', refreshData);
-    return () => window.removeEventListener('xenios_complaints_updated', refreshData);
+    window.addEventListener('xenios_demo_updated', refreshData);
+    return () => {
+      window.removeEventListener('xenios_complaints_updated', refreshData);
+      window.removeEventListener('xenios_demo_updated', refreshData);
+    };
   }, []);
 
   const handleSendEmail = (comp: Complaint) => {
@@ -71,186 +76,199 @@ export default function CockpitComplaintsPage() {
   const filtered = complaints.filter(c => filter === 'all' || c.status === filter);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 text-zinc-900 pb-12">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-200 pb-4">
         <div>
-          <h1 className="text-xl font-bold font-serif text-white flex items-center gap-2">
-            <Scale className="w-5 h-5 text-amber-400" />
+          <h1 className="text-xl font-bold font-serif text-zinc-900 flex items-center gap-2">
+            <Scale className="w-5 h-5 text-amber-700" />
             <span>Misafir Hakları & Hakem Masası</span>
           </h1>
-          <p className="text-xs text-zinc-400">
-            Turistlerin bildirdiği fahiş fiyat, aldatmaca ve mağduriyetlerin arabuluculuk ve şeffaflık yönetimi
-          </p>
+          <p className="text-xs text-zinc-500">İstanbul Misafirlerinin Fahiş Fiyat, Aldatma ve Mağduriyet Dosyaları</p>
         </div>
 
-        {/* Status Filters */}
-        <div className="flex flex-wrap gap-1.5 bg-[#171a22] p-1 rounded-xl border border-[#2c313d] text-xs">
+        {/* Global Demo Dismiss Action */}
+        {!XeniosStore.isDemoDataHidden() && (
           <button
-            onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition ${
-              filter === 'all' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-white'
-            }`}
+            onClick={() => {
+              XeniosStore.setHideDemoData(true);
+              toast.success('Tüm örnek vakalar gizlendi.');
+              refreshData();
+            }}
+            className="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-xl border border-amber-300 flex items-center gap-1.5 transition cursor-pointer self-start sm:self-auto"
           >
-            Tümü ({complaints.length})
+            <EyeOff className="w-3.5 h-3.5" />
+            <span>Örnek Vakaları Gizle</span>
           </button>
-          <button
-            onClick={() => setFilter('under_review')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition ${
-              filter === 'under_review' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            Yeni / İncelemede
-          </button>
-          <button
-            onClick={() => setFilter('contacted_business')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition ${
-              filter === 'contacted_business' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            Yazı Gönderildi (30 Gün)
-          </button>
-          <button
-            onClick={() => setFilter('resolved_refunded')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition ${
-              filter === 'resolved_refunded' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            İade Edildi / Çözüldü
-          </button>
-          <button
-            onClick={() => setFilter('published_blacklisted')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition ${
-              filter === 'published_blacklisted' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            Uyarı Panosunda (Kara Liste)
-          </button>
+        )}
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="p-4 rounded-2xl bg-white border border-amber-200/80 shadow-xs">
+          <span className="text-[10px] text-zinc-500 font-bold uppercase">Toplam Dosya</span>
+          <div className="text-xl font-bold text-zinc-900 mt-1 font-mono">{complaints.length}</div>
+        </div>
+        <div className="p-4 rounded-2xl bg-white border border-amber-200/80 shadow-xs">
+          <span className="text-[10px] text-amber-700 font-bold uppercase">İncelemede</span>
+          <div className="text-xl font-bold text-amber-700 mt-1 font-mono">
+            {complaints.filter(c => c.status === 'under_review').length}
+          </div>
+        </div>
+        <div className="p-4 rounded-2xl bg-white border border-emerald-200/80 shadow-xs">
+          <span className="text-[10px] text-emerald-700 font-bold uppercase">İade Edilenler</span>
+          <div className="text-xl font-bold text-emerald-700 mt-1 font-mono">
+            {complaints.filter(c => c.status === 'resolved_refunded').length}
+          </div>
+        </div>
+        <div className="p-4 rounded-2xl bg-white border border-red-200/80 shadow-xs">
+          <span className="text-[10px] text-red-700 font-bold uppercase">Kara Liste</span>
+          <div className="text-xl font-bold text-red-700 mt-1 font-mono">
+            {complaints.filter(c => c.status === 'published_blacklisted').length}
+          </div>
         </div>
       </div>
 
-      {/* Complaints Grid */}
-      <div className="space-y-4">
-        {filtered.map((comp) => (
-          <div
-            key={comp.id}
-            className="p-5 rounded-3xl bg-[#171a22] border border-[#2c313d] hover:border-amber-500/40 transition space-y-3 text-xs"
+      {/* Filter Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {[
+          { id: 'all', label: 'Tümü' },
+          { id: 'under_review', label: 'İncelemede' },
+          { id: 'contacted_business', label: 'İşletmeyle Temasta' },
+          { id: 'resolved_refunded', label: 'İade Edildi / Çözüldü' },
+          { id: 'published_blacklisted', label: 'Uyarı Panosu / Kara Liste' }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setFilter(tab.id as any)}
+            className={`px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer border ${
+              filter === tab.id
+                ? 'bg-amber-500 border-amber-500 text-zinc-950 shadow-xs'
+                : 'bg-white border-amber-200 text-zinc-600 hover:bg-amber-50'
+            }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2c313d] pb-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-amber-400 font-bold bg-[#12141a] px-2 py-0.5 rounded border border-[#2c313d]">
-                    {comp.trackingCode}
-                  </span>
-                  <strong className="text-sm text-white">{comp.businessName}</strong>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-semibold">
-                    {comp.businessCategory}
-                  </span>
-                </div>
-                <span className="text-[11px] text-zinc-400 mt-0.5 block">{comp.location} • Olay Tarihi: {comp.incidentDate}</span>
-              </div>
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-              {/* Status Badge */}
-              <div>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  comp.status === 'resolved_refunded'
-                    ? 'bg-emerald-500/20 text-emerald-400'
-                    : comp.status === 'contacted_business'
-                      ? 'bg-blue-500/20 text-blue-400 animate-pulse'
-                      : comp.status === 'published_blacklisted'
-                        ? 'bg-red-500/20 text-red-400'
-                        : 'bg-amber-500/20 text-amber-400'
-                }`}>
-                  {comp.status === 'resolved_refunded'
-                    ? '✓ İade Yapıldı / Uzlaşıldı'
-                    : comp.status === 'contacted_business'
-                      ? `⏳ İşletme Yanıtı Bekleniyor (${comp.daysPending}/30 Gün)`
-                      : comp.status === 'published_blacklisted'
-                        ? '⚠️ Uyarı Panosunda Yayınlandı'
-                        : 'Yeni / İncelemede'}
-                </span>
-              </div>
-            </div>
+      {/* Complaints List */}
+      <div className="space-y-3">
+        {filtered.length === 0 ? (
+          <div className="p-8 text-center bg-white rounded-3xl border border-amber-200 text-zinc-500">
+            Filtreye uygun şikayet veya mağduriyet kaydı bulunmuyor.
+          </div>
+        ) : (
+          filtered.map((comp) => (
+            <div
+              key={comp.id}
+              className="p-5 rounded-3xl bg-white border border-amber-200/80 hover:border-amber-400 shadow-xs transition space-y-4"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-mono text-xs font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200">
+                      {comp.trackingCode}
+                    </span>
+                    <strong className="text-base text-zinc-900 font-bold">{comp.businessName}</strong>
+                    <span className="text-[10px] text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full border border-zinc-200">
+                      {comp.businessCategory}
+                    </span>
+                    {comp.isDemo && <DemoBadge />}
+                  </div>
 
-            {/* Dispute Details */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="bg-[#12141a] p-3 rounded-2xl border border-[#2c313d] space-y-1">
-                <strong className="text-zinc-400 text-[10px] uppercase block">Misafir & Konaklama</strong>
-                <p className="text-zinc-200 font-bold">{comp.guestName}</p>
-                <p className="text-zinc-400 text-[11px]">{comp.hotelName} (Oda {comp.roomNumber})</p>
-                <p className="text-zinc-400 text-[11px] font-mono">{comp.guestPhone} • {comp.guestEmail}</p>
-                {comp.refundIbanOrCard && (
-                  <p className="text-amber-400/80 text-[10px] font-mono mt-1 truncate">
-                    İade Hesabı: {comp.refundIbanOrCard}
+                  <p className="text-xs text-zinc-600 flex items-center gap-2">
+                    <span>{comp.location}</span>
+                    <span>•</span>
+                    <span>Olay Tarihi: {comp.incidentDate}</span>
                   </p>
-                )}
-              </div>
+                </div>
 
-              <div className="bg-[#12141a] p-3 rounded-2xl border border-[#2c313d] space-y-1">
-                <strong className="text-zinc-400 text-[10px] uppercase block">Mali Uyuşmazlık & Fark</strong>
-                <div className="flex justify-between text-zinc-300">
-                  <span>Tahsil Edilen:</span>
-                  <strong className="font-mono text-white">{formatPrice(comp.amountPaid, comp.currency)}</strong>
-                </div>
-                <div className="flex justify-between text-zinc-400">
-                  <span>Makul Piyasa:</span>
-                  <span className="font-mono">{formatPrice(comp.amountExpected, comp.currency)}</span>
-                </div>
-                <div className="flex justify-between text-amber-400 border-t border-[#2c313d] pt-1">
-                  <span>Talep Edilen İade:</span>
-                  <strong className="font-mono font-bold text-red-400">+{formatPrice(comp.discrepancyAmount, comp.currency)}</strong>
+                <div className="text-left sm:text-right">
+                  <div className="text-xs text-zinc-500">Talep Edilen Fark:</div>
+                  <strong className="text-base font-mono font-bold text-red-600">
+                    {comp.discrepancyAmount} {comp.currency}
+                  </strong>
+                  <span className="text-[10px] text-zinc-500 block">
+                    (Ödenen: {comp.amountPaid} {comp.currency} / Normal: {comp.amountExpected} {comp.currency})
+                  </span>
                 </div>
               </div>
 
-              <div className="bg-[#12141a] p-3 rounded-2xl border border-[#2c313d] space-y-1">
-                <strong className="text-zinc-400 text-[10px] uppercase block">Olay Açıklaması & Not</strong>
-                <p className="text-zinc-300 line-clamp-3 leading-relaxed text-[11px]">{comp.description}</p>
-              </div>
-            </div>
-
-            {/* Arbitration Action Buttons */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#2c313d]">
-              <div className="text-[11px] text-zinc-500">
-                {comp.businessResponse ? (
-                  <span>Son İşlem: <strong className="text-zinc-300">{comp.businessResponse}</strong></span>
-                ) : (
-                  <span>İşletme E-posta: <strong className="text-zinc-300 font-mono">{comp.businessEmail || 'Kayıtlarda yok'}</strong></span>
-                )}
+              {/* Description */}
+              <div className="p-3 bg-amber-50/50 rounded-2xl border border-amber-100 text-xs text-zinc-700 leading-relaxed">
+                <strong className="text-zinc-900 block font-bold mb-0.5">Misafir Beyanı:</strong>
+                {comp.description}
               </div>
 
-              <div className="flex items-center gap-2">
-                {comp.status === 'under_review' && (
+              {/* Guest & Hotel Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-zinc-50 p-3 rounded-2xl border border-zinc-200">
+                <div className="space-y-0.5">
+                  <span className="text-zinc-500 text-[10px]">Misafir İletişim:</span>
+                  <div className="font-bold text-zinc-900">{comp.guestName}</div>
+                  <div className="text-zinc-500 font-mono text-[11px]">{comp.guestEmail} • {comp.guestPhone}</div>
+                </div>
+                <div className="space-y-0.5">
+                  <span className="text-zinc-500 text-[10px]">Konaklanan Tesis:</span>
+                  <div className="font-bold text-zinc-900">{comp.hotelName}</div>
+                  <div className="text-zinc-500 font-mono text-[11px]">Oda {comp.roomNumber}</div>
+                </div>
+              </div>
+
+              {/* Official Response if any */}
+              {comp.businessResponse && (
+                <div className="p-3 bg-blue-50/60 rounded-2xl border border-blue-200 text-xs text-blue-950">
+                  <strong className="text-blue-900 block font-bold mb-0.5">Hakem Masası Süreci:</strong>
+                  {comp.businessResponse}
+                </div>
+              )}
+
+              {/* Status Action Buttons */}
+              <div className="pt-2 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase ${
+                    comp.status === 'resolved_refunded'
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                      : comp.status === 'published_blacklisted'
+                      ? 'bg-red-100 text-red-800 border border-red-200'
+                      : comp.status === 'contacted_business'
+                      ? 'bg-blue-100 text-blue-800 border border-blue-200'
+                      : 'bg-amber-100 text-amber-800 border border-amber-200'
+                  }`}>
+                    {comp.status === 'resolved_refunded' ? '✓ İade Edildi / Çözüldü' :
+                     comp.status === 'published_blacklisted' ? '⚠️ Kara Liste / Yayınlandı' :
+                     comp.status === 'contacted_business' ? 'İşletmeyle Temasta' : 'İncelemede'}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleSendEmail(comp)}
-                    className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold flex items-center gap-1.5 transition"
+                    className="px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-xl text-xs font-bold border border-zinc-200 transition cursor-pointer flex items-center gap-1"
                   >
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>İşletmeye Resmi Yazı Gönder</span>
+                    <Mail className="w-3.5 h-3.5 text-zinc-600" />
+                    <span>Resmi Yazı Gönder</span>
                   </button>
-                )}
 
-                {comp.status !== 'resolved_refunded' && (
                   <button
                     onClick={() => handleResolveRefund(comp)}
-                    className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold flex items-center gap-1.5 transition"
+                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 shadow-xs"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>İadeyi Onayla & Dosyayı Kapat</span>
+                    <span>İadeyi Onayla & Kapat</span>
                   </button>
-                )}
 
-                {comp.status !== 'published_blacklisted' && (
                   <button
                     onClick={() => handlePublishBlacklist(comp)}
-                    className="px-3.5 py-1.5 bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 rounded-xl font-bold flex items-center gap-1.5 transition"
+                    className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 shadow-xs"
                   >
                     <AlertTriangle className="w-3.5 h-3.5" />
-                    <span>Uyarı Panosunda Yayınla (Kara Liste)</span>
+                    <span>Kara Listeye Al</span>
                   </button>
-                )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

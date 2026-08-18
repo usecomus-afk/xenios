@@ -41,19 +41,19 @@ export function CockpitSideNav({ isOpen, onClose }: CockpitSideNavProps) {
   ];
 
   const content = (
-    <div className="flex flex-col h-full bg-[#12141a] text-zinc-100">
+    <div className="flex flex-col h-full bg-white text-zinc-900 border-r border-amber-200/80 shadow-xs">
       {/* Brand Header */}
-      <div className="border-b border-[#2c313d] px-5 py-4 flex items-center justify-between">
+      <div className="border-b border-amber-100 px-5 py-4 flex items-center justify-between">
         <div>
-          <BrandMark size={36} showText={true} theme="dark" />
-          <p className="text-[10px] text-amber-400 font-mono tracking-wider mt-1 uppercase">
+          <BrandMark size={36} showText={true} theme="light" />
+          <p className="text-[10px] text-amber-800 font-mono tracking-wider mt-1 uppercase font-bold">
             Master Proje Yöneticisi
           </p>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="md:hidden p-1.5 rounded-lg bg-[#171a22] text-zinc-400 hover:text-white border border-[#2c313d] cursor-pointer"
+            className="md:hidden p-1.5 rounded-lg bg-zinc-100 text-zinc-600 hover:text-zinc-900 border border-zinc-200 cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -61,17 +61,17 @@ export function CockpitSideNav({ isOpen, onClose }: CockpitSideNavProps) {
       </div>
 
       {/* Switcher to Partner Hotel Dashboard */}
-      <div className="p-3 border-b border-[#2c313d]/80 bg-amber-500/[0.04]">
+      <div className="p-3 border-b border-amber-100 bg-amber-50/50">
         <Link
           href="/hotel-portal"
           onClick={onClose}
-          className="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-amber-600/10 hover:from-amber-500/30 hover:to-amber-600/20 border border-amber-500/40 text-amber-300 text-xs font-bold transition shadow-xs group"
+          className="flex items-center justify-between p-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-300 text-amber-950 text-xs font-bold transition shadow-xs group"
         >
           <div className="flex items-center gap-2">
-            <Hotel className="w-4 h-4 text-amber-400" />
+            <Hotel className="w-4 h-4 text-amber-700" />
             <span>Otel Yönetim Paneli</span>
           </div>
-          <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          <ArrowUpRight className="w-3.5 h-3.5 text-amber-800 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </Link>
       </div>
 
@@ -87,17 +87,17 @@ export function CockpitSideNav({ isOpen, onClose }: CockpitSideNavProps) {
               onClick={onClose}
               className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-semibold transition ${
                 active
-                  ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
-                  : "text-zinc-400 hover:bg-white/5 hover:text-zinc-200"
+                  ? "bg-amber-500/15 text-amber-950 border border-amber-300 font-bold shadow-xs"
+                  : "text-zinc-600 hover:bg-amber-50/60 hover:text-zinc-900"
               }`}
             >
               <div className="flex items-center gap-3">
-                <Icon className="h-4 w-4 shrink-0" />
+                <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-amber-700' : 'text-zinc-500'}`} />
                 <span>{item.label}</span>
               </div>
               {item.badge && (
-                <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
-                  item.badge === 'Hakem' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-amber-500/20 text-amber-400'
+                <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold ${
+                  item.badge === 'Hakem' ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-amber-100 text-amber-800 border border-amber-200'
                 }`}>
                   {item.badge}
                 </span>
@@ -108,13 +108,13 @@ export function CockpitSideNav({ isOpen, onClose }: CockpitSideNavProps) {
       </nav>
 
       {/* Return to Guest App */}
-      <div className="p-3 border-t border-[#2c313d] space-y-2">
+      <div className="p-3 border-t border-amber-100 space-y-2 bg-amber-50/30">
         <Link
           href="/"
           onClick={onClose}
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#171a22] hover:bg-[#202430] text-zinc-300 rounded-xl text-xs font-bold border border-[#2c313d] transition"
+          className="flex items-center justify-center gap-2 w-full py-2.5 bg-white hover:bg-amber-50 text-zinc-700 rounded-xl text-xs font-bold border border-amber-200 shadow-xs transition"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-3.5 h-3.5 text-amber-600" />
           <span>Misafir PWA Moduna Geç</span>
         </Link>
       </div>
@@ -124,15 +124,15 @@ export function CockpitSideNav({ isOpen, onClose }: CockpitSideNavProps) {
   return (
     <>
       {/* Desktop Static Sidebar */}
-      <aside className="hidden w-64 shrink-0 border-r border-[#2c313d] bg-[#12141a]/95 md:flex md:flex-col text-zinc-100">
+      <aside className="hidden w-64 shrink-0 md:flex md:flex-col">
         {content}
       </aside>
 
       {/* Mobile Slide-over Drawer */}
       {isOpen && (
         <div className="fixed inset-0 z-50 md:hidden flex">
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-xs" onClick={onClose} />
-          <div className="relative w-72 max-w-[85vw] h-full shadow-2xl z-10 border-r border-[#2c313d]">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={onClose} />
+          <div className="relative w-72 max-w-[85vw] h-full shadow-2xl z-10">
             {content}
           </div>
         </div>

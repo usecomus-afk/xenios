@@ -12,9 +12,11 @@ import {
   Building2,
   Search,
   Sparkles,
-  AlertTriangle
+  AlertTriangle,
+  EyeOff
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { DemoBadge } from '@/components/demo-badge';
 
 export default function HotelLiveRequestsPage() {
   const hotels = XeniosStore.getHotels();
@@ -33,7 +35,11 @@ export default function HotelLiveRequestsPage() {
   useEffect(() => {
     refresh();
     window.addEventListener('xenios_requests_updated', refresh);
-    return () => window.removeEventListener('xenios_requests_updated', refresh);
+    window.addEventListener('xenios_demo_updated', refresh);
+    return () => {
+      window.removeEventListener('xenios_requests_updated', refresh);
+      window.removeEventListener('xenios_demo_updated', refresh);
+    };
   }, [currentHotel.id]);
 
   const handleUpdateStatus = (id: string, status: ServiceRequest['status']) => {
@@ -80,33 +86,49 @@ export default function HotelLiveRequestsPage() {
   });
 
   return (
-    <div className="space-y-6 text-zinc-100 pb-12">
+    <div className="space-y-6 text-zinc-900 pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#2c313d] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-200 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-xs text-amber-400 font-bold uppercase tracking-wider">{currentHotel.name}</span>
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+            <span className="text-xs text-amber-800 font-bold uppercase tracking-wider">{currentHotel.name}</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-zinc-900 mt-1">
             Canlı Oda Talepleri & Kat Hizmetleri Masası
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs text-zinc-500 mt-0.5">
             Misafir odalarından gelen QR taleplerini departman bazında anlık takip edin ve çözün.
           </p>
         </div>
 
-        <button
-          onClick={handleSimulateRequest}
-          className="px-4 py-2.5 bg-[#171a22] hover:bg-[#202430] text-amber-400 border border-amber-500/30 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer self-start sm:self-auto"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>+ Örnek Canlı Talep Gönder</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {!XeniosStore.isDemoDataHidden() && (
+            <button
+              onClick={() => {
+                XeniosStore.setHideDemoData(true);
+                toast.success('Tüm örnek kayıtlar gizlendi.');
+                refresh();
+              }}
+              className="px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-xl border border-amber-300 flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <EyeOff className="w-3.5 h-3.5" />
+              <span>Örnekleri Gizle</span>
+            </button>
+          )}
+
+          <button
+            onClick={handleSimulateRequest}
+            className="px-4 py-2 bg-white hover:bg-amber-50 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+          >
+            <Sparkles className="w-4 h-4 text-amber-600" />
+            <span>+ Örnek Canlı Talep Gönder</span>
+          </button>
+        </div>
       </div>
 
       {/* Filters Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#171a22] p-3.5 rounded-2xl border border-[#2c313d]">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-amber-200 shadow-xs">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-3" />
           <input
@@ -114,7 +136,7 @@ export default function HotelLiveRequestsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Oda no, hizmet adı veya not ara..."
-            className="w-full pl-9 pr-4 py-2 text-xs bg-[#0f1116] border border-[#2c313d] rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="w-full pl-9 pr-4 py-2 text-xs bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
           />
         </div>
 
@@ -122,7 +144,7 @@ export default function HotelLiveRequestsPage() {
           <select
             value={filterDept}
             onChange={(e) => setFilterDept(e.target.value)}
-            className="text-xs bg-[#0f1116] border border-[#2c313d] text-zinc-300 rounded-xl px-3 py-2 focus:outline-none"
+            className="text-xs bg-white border border-amber-200 text-zinc-700 rounded-xl px-3 py-2 focus:outline-none cursor-pointer"
           >
             <option value="all">Tüm Departmanlar</option>
             <option value="Housekeeping">Housekeeping</option>
@@ -135,7 +157,7 @@ export default function HotelLiveRequestsPage() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="text-xs bg-[#0f1116] border border-[#2c313d] text-zinc-300 rounded-xl px-3 py-2 focus:outline-none"
+            className="text-xs bg-white border border-amber-200 text-zinc-700 rounded-xl px-3 py-2 focus:outline-none cursor-pointer"
           >
             <option value="all">Tüm Durumlar</option>
             <option value="pending">Bekleyenler</option>
@@ -148,47 +170,48 @@ export default function HotelLiveRequestsPage() {
       {/* Requests List */}
       <div className="space-y-3">
         {filtered.length === 0 ? (
-          <div className="p-12 text-center bg-[#171a22] rounded-3xl border border-[#2c313d] text-zinc-400 space-y-2">
-            <BellRing className="w-8 h-8 mx-auto text-amber-500/50" />
+          <div className="p-12 text-center bg-white rounded-3xl border border-amber-200 text-zinc-500 space-y-2 shadow-xs">
+            <BellRing className="w-8 h-8 mx-auto text-amber-600/60" />
             <p className="text-xs font-semibold">Şu anda bekleyen veya filtrelere uyan talep bulunmuyor.</p>
           </div>
         ) : (
           filtered.map((req) => (
             <div
               key={req.id}
-              className={`p-4 rounded-2xl border transition flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+              className={`p-4 rounded-2xl border transition flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs ${
                 req.status === 'completed'
-                  ? 'bg-[#171a22]/50 border-zinc-800 opacity-70'
+                  ? 'bg-white/70 border-zinc-200 opacity-75'
                   : req.priority === 'acil'
-                  ? 'bg-red-500/[0.04] border-red-500/40 shadow-xs'
-                  : 'bg-[#171a22] border-[#2c313d] hover:border-[#3e4453]'
+                  ? 'bg-red-50/50 border-red-300 shadow-xs'
+                  : 'bg-white border-amber-200/80 hover:border-amber-400'
               }`}
             >
               <div className="space-y-1.5 min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-xl bg-amber-500/20 text-amber-400 font-mono font-bold text-xs border border-amber-500/30">
+                  <span className="px-2.5 py-1 rounded-xl bg-amber-100 text-amber-900 font-mono font-bold text-xs border border-amber-300">
                     Oda {req.roomNumber}
                   </span>
-                  <strong className="text-sm font-bold text-white">{req.serviceTitle}</strong>
+                  <strong className="text-sm font-bold text-zinc-900">{req.serviceTitle}</strong>
+                  {req.isDemo && <DemoBadge />}
                   {req.priority === 'acil' && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 font-bold border border-red-500/30 flex items-center gap-1">
-                      <AlertTriangle className="w-3 h-3" /> ACİL
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-800 font-bold border border-red-200 flex items-center gap-1">
+                      <AlertTriangle className="w-3 h-3 text-red-600" /> ACİL
                     </span>
                   )}
                   {req.department && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#0f1116] border border-[#2c313d] text-zinc-400 font-semibold">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-600 font-semibold">
                       {req.department}
                     </span>
                   )}
                 </div>
 
                 {req.notes && (
-                  <p className="text-xs text-zinc-300 leading-relaxed pl-1">
+                  <p className="text-xs text-zinc-700 leading-relaxed pl-1">
                     {req.notes}
                   </p>
                 )}
 
-                <div className="text-[10px] text-zinc-500 flex items-center gap-2 pl-1">
+                <div className="text-[10px] text-zinc-500 flex items-center gap-2 pl-1 font-mono">
                   <span>Talep Zamanı: {new Date(req.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
               </div>
@@ -198,7 +221,7 @@ export default function HotelLiveRequestsPage() {
                 {req.status === 'pending' && (
                   <button
                     onClick={() => handleUpdateStatus(req.id, 'in_progress')}
-                    className="px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 rounded-xl text-xs font-bold transition cursor-pointer"
+                    className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-xl text-xs font-bold transition cursor-pointer"
                   >
                     İşleme Al
                   </button>
@@ -207,7 +230,7 @@ export default function HotelLiveRequestsPage() {
                 {req.status !== 'completed' && (
                   <button
                     onClick={() => handleUpdateStatus(req.id, 'completed')}
-                    className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1"
+                    className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1"
                   >
                     <Check className="w-3.5 h-3.5" />
                     <span>Çözüldü</span>
@@ -215,8 +238,8 @@ export default function HotelLiveRequestsPage() {
                 )}
 
                 {req.status === 'completed' && (
-                  <span className="px-3 py-1.5 rounded-xl bg-emerald-500/15 text-emerald-400 font-bold text-xs border border-emerald-500/30 flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span className="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 font-bold text-xs border border-emerald-200 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Tamamlandı</span>
                   </span>
                 )}

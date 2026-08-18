@@ -94,36 +94,36 @@ function AdminLoginGate({ onLogin }: { onLogin: (user: XeniosUser) => void }) {
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center p-4">
-      <div className="bg-[#171a22] border border-[#2c313d] rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl">
+      <div className="bg-white border border-amber-200/80 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl">
         <div className="flex flex-col items-center text-center gap-2">
           <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
             <Lock className="w-6 h-6 text-amber-400" />
           </div>
-          <h1 className="text-base font-bold font-serif text-white">İlan & Rezervasyon Yönetimi</h1>
-          <p className="text-xs text-zinc-400">Bu bölüm sadece yetkili yöneticiler içindir. Devam etmek için e-posta ve şifrenizi girin.</p>
+          <h1 className="text-base font-bold font-serif text-zinc-900">İlan & Rezervasyon Yönetimi</h1>
+          <p className="text-xs text-zinc-500">Bu bölüm sadece yetkili yöneticiler içindir. Devam etmek için e-posta ve şifrenizi girin.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="text-[11px] font-bold text-zinc-400 block mb-1 flex items-center gap-1"><Mail className="w-3 h-3" /> E-Posta</label>
+            <label className="text-[11px] font-bold text-zinc-500 block mb-1 flex items-center gap-1"><Mail className="w-3 h-3" /> E-Posta</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="yonetici@usecomus.com"
-              className="w-full px-3 py-2.5 text-xs bg-[#0f1116] border border-[#2c313d] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+              className="w-full px-3 py-2.5 text-xs bg-amber-50/40 border border-amber-200/80 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             />
           </div>
           <div>
-            <label className="text-[11px] font-bold text-zinc-400 block mb-1 flex items-center gap-1"><KeyRound className="w-3 h-3" /> Şifre</label>
+            <label className="text-[11px] font-bold text-zinc-500 block mb-1 flex items-center gap-1"><KeyRound className="w-3 h-3" /> Şifre</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••"
-              className="w-full px-3 py-2.5 text-xs bg-[#0f1116] border border-[#2c313d] rounded-xl text-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+              className="w-full px-3 py-2.5 text-xs bg-amber-50/40 border border-amber-200/80 rounded-xl text-zinc-900 font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             />
           </div>
           <button
@@ -267,14 +267,14 @@ export default function AdminPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold font-serif text-white">İlan & Rezervasyon Yönetimi</h1>
-          <p className="text-xs text-zinc-400">Yeni ilan girişi, düzenleme, fiyat değiştirme, askıya alma ve satın alma/rezervasyon takibi — hepsi tek ekrandan.</p>
+          <h1 className="text-xl font-bold font-serif text-zinc-900">İlan & Rezervasyon Yönetimi</h1>
+          <p className="text-xs text-zinc-500">Yeni ilan girişi, düzenleme, fiyat değiştirme, askıya alma ve satın alma/rezervasyon takibi — hepsi tek ekrandan.</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-[11px] text-zinc-400">{user?.name} ({user?.email})</span>
+          <span className="text-[11px] text-zinc-500">{user?.name} ({user?.email})</span>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 px-3 py-2 bg-[#171a22] border border-[#2c313d] text-zinc-300 hover:text-red-400 hover:border-red-500/40 rounded-xl text-xs font-bold transition"
+            className="flex items-center gap-1.5 px-3 py-2 bg-white border border-amber-200/80 text-zinc-700 hover:text-red-400 hover:border-red-500/40 rounded-xl text-xs font-bold transition"
           >
             <LogOut className="w-3.5 h-3.5" /> Çıkış
           </button>
@@ -283,49 +283,49 @@ export default function AdminPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="p-3.5 rounded-2xl bg-[#171a22] border border-[#2c313d]">
+        <div className="p-3.5 rounded-2xl bg-white border border-amber-200/80">
           <span className="text-[10px] text-zinc-500 font-semibold uppercase">Toplam İlan</span>
-          <div className="text-xl font-bold text-white mt-1 font-mono">{stats.total}</div>
+          <div className="text-xl font-bold text-zinc-900 mt-1 font-mono">{stats.total}</div>
         </div>
-        <div className="p-3.5 rounded-2xl bg-[#171a22] border border-[#2c313d]">
+        <div className="p-3.5 rounded-2xl bg-white border border-amber-200/80">
           <span className="text-[10px] text-zinc-500 font-semibold uppercase">Aktif İlan</span>
           <div className="text-xl font-bold text-emerald-400 mt-1 font-mono">{stats.active}</div>
         </div>
-        <div className="p-3.5 rounded-2xl bg-[#171a22] border border-[#2c313d]">
+        <div className="p-3.5 rounded-2xl bg-white border border-amber-200/80">
           <span className="text-[10px] text-zinc-500 font-semibold uppercase">Askıda</span>
           <div className="text-xl font-bold text-red-400 mt-1 font-mono">{stats.suspended}</div>
         </div>
-        <div className="p-3.5 rounded-2xl bg-[#171a22] border border-[#2c313d]">
+        <div className="p-3.5 rounded-2xl bg-white border border-amber-200/80">
           <span className="text-[10px] text-zinc-500 font-semibold uppercase">Toplam Rezervasyon</span>
-          <div className="text-xl font-bold text-white mt-1 font-mono">{stats.bookingsTotal}</div>
+          <div className="text-xl font-bold text-zinc-900 mt-1 font-mono">{stats.bookingsTotal}</div>
         </div>
-        <div className="p-3.5 rounded-2xl bg-[#171a22] border border-[#2c313d]">
+        <div className="p-3.5 rounded-2xl bg-white border border-amber-200/80">
           <span className="text-[10px] text-zinc-500 font-semibold uppercase">Bekleyen</span>
           <div className="text-xl font-bold text-amber-400 mt-1 font-mono">{stats.pendingBookings}</div>
         </div>
-        <div className="p-3.5 rounded-2xl bg-[#171a22] border border-[#2c313d]">
+        <div className="p-3.5 rounded-2xl bg-white border border-amber-200/80">
           <span className="text-[10px] text-zinc-500 font-semibold uppercase">Toplam Hacim</span>
           <div className="text-xl font-bold text-amber-400 mt-1 font-mono">{stats.totalVolume.toLocaleString('tr-TR')} ₺</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1.5 bg-[#171a22] p-1 rounded-xl border border-[#2c313d] w-fit">
+      <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-amber-200/80 w-fit">
         <button
           onClick={() => setTab('listings')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${tab === 'listings' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-zinc-200'}`}
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${tab === 'listings' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-500 hover:text-zinc-800'}`}
         >
           <Ticket className="w-3.5 h-3.5" /> İlan Yönetimi
         </button>
         <button
           onClick={() => setTab('bookings')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${tab === 'bookings' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-zinc-200'}`}
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${tab === 'bookings' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-500 hover:text-zinc-800'}`}
         >
           <Package className="w-3.5 h-3.5" /> Satın Almalar & Rezervasyonlar
         </button>
         <button
           onClick={() => setTab('properties')}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${tab === 'properties' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-zinc-200'}`}
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${tab === 'properties' ? 'bg-amber-500 text-black font-bold' : 'text-zinc-500 hover:text-zinc-800'}`}
         >
           <Building2 className="w-3.5 h-3.5" /> Emlak Vitrini & Talepler
         </button>
@@ -343,7 +343,7 @@ export default function AdminPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="İlan, işletme veya konum ara..."
-                className="w-full pl-10 pr-4 py-2.5 text-xs bg-[#171a22] border border-[#2c313d] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+                className="w-full pl-10 pr-4 py-2.5 text-xs bg-white border border-amber-200/80 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
               />
             </div>
             <button
@@ -361,7 +361,7 @@ export default function AdminPage() {
                 <div
                   key={exp.id}
                   className={`rounded-3xl p-4 border space-y-3 flex flex-col justify-between transition ${
-                    suspended ? 'bg-[#171a22]/50 border-red-500/30' : 'bg-[#171a22] border-[#2c313d] hover:border-amber-500/40'
+                    suspended ? 'bg-white/50 border-red-500/30' : 'bg-white border-amber-200/80 hover:border-amber-500/40'
                   }`}
                 >
                   <div className="space-y-2">
@@ -378,16 +378,16 @@ export default function AdminPage() {
                       )}
                     </div>
 
-                    <h3 className={`text-sm font-bold font-serif line-clamp-2 ${suspended ? 'text-zinc-500' : 'text-white'}`}>{exp.title}</h3>
+                    <h3 className={`text-sm font-bold font-serif line-clamp-2 ${suspended ? 'text-zinc-500' : 'text-zinc-900'}`}>{exp.title}</h3>
                     {suspended && <strong className="text-xs font-mono text-zinc-500">{formatPrice(exp.price, exp.currency)}</strong>}
 
-                    <div className="space-y-1 text-xs text-zinc-400 pt-1">
-                      <p className="text-zinc-300 truncate"><strong>{exp.provider}</strong></p>
+                    <div className="space-y-1 text-xs text-zinc-500 pt-1">
+                      <p className="text-zinc-700 truncate"><strong>{exp.provider}</strong></p>
                       <p className="truncate">{exp.location}</p>
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-[#2c313d] flex items-center gap-2">
+                  <div className="pt-3 border-t border-amber-200/80 flex items-center gap-2">
                     <button
                       onClick={() => openEdit(exp)}
                       className="flex-1 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 font-bold text-xs rounded-xl border border-amber-500/30 transition flex items-center justify-center gap-1.5"
@@ -398,7 +398,7 @@ export default function AdminPage() {
                       onClick={() => toggleStatus(exp)}
                       title={suspended ? 'Yeniden yayınla' : 'Askıya al'}
                       className={`p-2 rounded-xl border transition ${
-                        suspended ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-zinc-700/20 hover:bg-zinc-700/30 text-zinc-300 border-zinc-600'
+                        suspended ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-zinc-700/20 hover:bg-zinc-700/30 text-zinc-700 border-zinc-600'
                       }`}
                     >
                       <Power className="w-3.5 h-3.5" />
@@ -423,13 +423,13 @@ export default function AdminPage() {
 
       {tab === 'bookings' && (
         <div className="space-y-4">
-          <div className="flex items-center gap-1.5 bg-[#171a22] p-1 rounded-xl border border-[#2c313d] overflow-x-auto w-fit">
+          <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-amber-200/80 overflow-x-auto w-fit">
             {(['all', 'payment_success', 'provider_pending', 'confirmed', 'cancelled'] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setBookingFilter(f)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
-                  bookingFilter === f ? 'bg-amber-500 text-black font-bold' : 'text-zinc-400 hover:text-zinc-200'
+                  bookingFilter === f ? 'bg-amber-500 text-black font-bold' : 'text-zinc-500 hover:text-zinc-800'
                 }`}
               >
                 {f === 'all' ? 'Tümü' : BOOKING_STATUS_LABEL[f]}
@@ -438,7 +438,7 @@ export default function AdminPage() {
           </div>
 
           {filteredBookings.length === 0 ? (
-            <div className="bg-[#171a22] rounded-3xl p-12 text-center text-zinc-500 border border-[#2c313d] space-y-2">
+            <div className="bg-white rounded-3xl p-12 text-center text-zinc-500 border border-amber-200/80 space-y-2">
               <CreditCard className="w-8 h-8 mx-auto text-emerald-400 opacity-40" />
               <p className="text-xs">Bu filtreye uygun bir satın alma/rezervasyon kaydı yok.</p>
             </div>
@@ -447,20 +447,20 @@ export default function AdminPage() {
               {filteredBookings.map((b) => (
                 <div
                   key={b.id}
-                  className="p-5 rounded-3xl bg-[#171a22] border border-[#2c313d] hover:border-amber-500/40 transition flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs"
+                  className="p-5 rounded-3xl bg-white border border-amber-200/80 hover:border-amber-500/40 transition flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs"
                 >
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-bold text-xs">{b.confirmationCode}</span>
-                      <strong className="text-sm text-white">{b.experienceTitle}</strong>
+                      <strong className="text-sm text-zinc-900">{b.experienceTitle}</strong>
                       <span className={`px-2 py-0.5 rounded-lg font-bold text-[10px] ${
                         b.status === 'confirmed' ? 'bg-emerald-500/20 text-emerald-400' :
-                        b.status === 'cancelled' ? 'bg-zinc-600/30 text-zinc-400' : 'bg-amber-500/20 text-amber-400'
+                        b.status === 'cancelled' ? 'bg-zinc-600/30 text-zinc-500' : 'bg-amber-500/20 text-amber-400'
                       }`}>
                         {BOOKING_STATUS_LABEL[b.status]}
                       </span>
                     </div>
-                    <div className="text-[11px] text-zinc-400 space-y-0.5">
+                    <div className="text-[11px] text-zinc-500 space-y-0.5">
                       <p><strong>Misafir:</strong> {b.guestName} ({b.hotelName} - Oda {b.roomNumber}) • Tel: {b.guestPhone}</p>
                       <p><strong>Sağlayıcı:</strong> {b.providerName} (Tel: {b.providerPhone})</p>
                       <p><strong>Tarih:</strong> {b.bookingDate} {b.bookingTime} • {b.guestCount} Kişi • Tutar: <span className="text-amber-400 font-bold">{formatPrice(b.amount, b.currency)}</span></p>
@@ -470,7 +470,7 @@ export default function AdminPage() {
                     <a
                       href={`/confirm-booking/${b.id}`}
                       target="_blank"
-                      className="px-3 py-2 bg-[#12141a] hover:bg-white/5 border border-[#2c313d] text-zinc-300 rounded-xl font-semibold flex items-center gap-1 transition"
+                      className="px-3 py-2 bg-white hover:bg-white/5 border border-amber-200/80 text-zinc-700 rounded-xl font-semibold flex items-center gap-1 transition"
                     >
                       <span>Onay Sayfası</span>
                       <ExternalLink className="w-3 h-3" />
@@ -480,7 +480,7 @@ export default function AdminPage() {
                     ) : b.status !== 'cancelled' ? (
                       <button
                         onClick={() => handleApproveBooking(b.id)}
-                        className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition flex items-center gap-1"
+                        className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-zinc-900 rounded-xl font-bold transition flex items-center gap-1"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" /> Onayla
                       </button>
@@ -535,13 +535,13 @@ function ExperienceFormModal({ title, submitLabel, values, onChange, onCancel, o
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-      <div className="bg-[#171a22] rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-100 animate-in zoom-in-95">
-        <div className="flex items-center justify-between border-b border-[#2c313d] pb-3">
+      <div className="bg-white rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
+        <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
           <div className="flex items-center gap-2">
             <Edit3 className="w-5 h-5 text-amber-400" />
-            <h2 className="text-base font-bold font-serif text-white">{title}</h2>
+            <h2 className="text-base font-bold font-serif text-zinc-900">{title}</h2>
           </div>
-          <button onClick={onCancel} className="w-8 h-8 rounded-full bg-[#0f1116] hover:bg-white/10 flex items-center justify-center text-zinc-400">
+          <button onClick={onCancel} className="w-8 h-8 rounded-full bg-amber-50/40 hover:bg-white/10 flex items-center justify-center text-zinc-500">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -549,75 +549,75 @@ function ExperienceFormModal({ title, submitLabel, values, onChange, onCancel, o
         <form onSubmit={onSubmit} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="sm:col-span-2">
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">İlan Başlığı</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">İlan Başlığı</label>
               <input
                 type="text" required value={values.title}
                 onChange={(e) => set({ title: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-semibold"
+                className="w-full px-3.5 py-2.5 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900 font-semibold"
               />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Kategori</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">Kategori</label>
               <input
                 type="text" value={values.category}
                 onChange={(e) => set({ category: e.target.value })}
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+                className="w-full px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900"
               />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Kategori Etiketi (Misafir Arayüzünde)</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">Kategori Etiketi (Misafir Arayüzünde)</label>
               <input
                 type="text" value={values.categoryTag}
                 onChange={(e) => set({ categoryTag: e.target.value })}
                 placeholder="Örn: Boğaz & Deniz"
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+                className="w-full px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900"
               />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1 flex items-center gap-1"><Star className="w-3 h-3 text-amber-400" /> Puan</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1 flex items-center gap-1"><Star className="w-3 h-3 text-amber-400" /> Puan</label>
               <input
                 type="text" value={values.scoreStr}
                 onChange={(e) => set({ scoreStr: e.target.value })}
                 placeholder="Örn: 4.8/5"
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+                className="w-full px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900"
               />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">İşletme / Acente Adı</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">İşletme / Acente Adı</label>
               <input
                 type="text" required value={values.provider}
                 onChange={(e) => set({ provider: e.target.value })}
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+                className="w-full px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900"
               />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">İşletme Telefonu</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">İşletme Telefonu</label>
               <input
                 type="text" value={values.phone}
                 onChange={(e) => set({ phone: e.target.value })}
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-mono"
+                className="w-full px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900 font-mono"
               />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Web Sitesi</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">Web Sitesi</label>
               <input
                 type="text" value={values.website}
                 onChange={(e) => set({ website: e.target.value })}
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+                className="w-full px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900"
               />
             </div>
             <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Fiyat & Para Birimi</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">Fiyat & Para Birimi</label>
               <div className="flex gap-2">
                 <input
                   type="number" required value={values.price}
                   onChange={(e) => set({ price: Number(e.target.value) })}
-                  className="flex-1 px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-emerald-400 font-bold font-mono"
+                  className="flex-1 px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-emerald-400 font-bold font-mono"
                 />
                 <select
                   value={values.currency}
                   onChange={(e) => set({ currency: e.target.value })}
-                  className="w-20 px-2 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl text-white font-bold"
+                  className="w-20 px-2 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl text-zinc-900 font-bold"
                 >
                   <option value="₺">₺ (TL)</option>
                   <option value="€">€ (EUR)</option>
@@ -626,23 +626,23 @@ function ExperienceFormModal({ title, submitLabel, values, onChange, onCancel, o
               </div>
             </div>
             <div>
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Süre</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">Süre</label>
               <input
                 type="text" value={values.duration}
                 onChange={(e) => set({ duration: e.target.value })}
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+                className="w-full px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Buluşma Noktası / Konum (Metin)</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">Buluşma Noktası / Konum (Metin)</label>
               <input
                 type="text" value={values.location}
                 onChange={(e) => set({ location: e.target.value })}
-                className="w-full px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white"
+                className="w-full px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900"
               />
             </div>
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-[11px] font-bold text-zinc-300 flex items-center gap-1"><MapPin className="w-3 h-3 text-amber-400" /> Harita Koordinatları (Ulaşım Rotası & Mesafe Hesabı İçin)</label>
+              <label className="text-[11px] font-bold text-zinc-700 flex items-center gap-1"><MapPin className="w-3 h-3 text-amber-400" /> Harita Koordinatları (Ulaşım Rotası & Mesafe Hesabı İçin)</label>
               <p className="text-[10px] text-zinc-500">
                 Google Haritalar'da konuma sağ tıklayıp koordinatları kopyalayabilirsiniz.{' '}
                 <a
@@ -658,20 +658,20 @@ function ExperienceFormModal({ title, submitLabel, values, onChange, onCancel, o
                   type="number" step="0.0001" value={values.lat}
                   onChange={(e) => set({ lat: Number(e.target.value) })}
                   placeholder="Enlem (lat)"
-                  className="flex-1 px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-mono"
+                  className="flex-1 px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900 font-mono"
                 />
                 <input
                   type="number" step="0.0001" value={values.lng}
                   onChange={(e) => set({ lng: Number(e.target.value) })}
                   placeholder="Boylam (lng)"
-                  className="flex-1 px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-mono"
+                  className="flex-1 px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900 font-mono"
                 />
               </div>
             </div>
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-[11px] font-bold text-zinc-300 block">Görsel URL</label>
+              <label className="text-[11px] font-bold text-zinc-700 block">Görsel URL</label>
               <div className="flex items-center gap-3">
-                <div className="w-20 h-20 rounded-xl border border-[#2c313d] bg-[#0f1116] shrink-0 overflow-hidden flex items-center justify-center">
+                <div className="w-20 h-20 rounded-xl border border-amber-200/80 bg-amber-50/40 shrink-0 overflow-hidden flex items-center justify-center">
                   {values.image && !imageError ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -689,22 +689,22 @@ function ExperienceFormModal({ title, submitLabel, values, onChange, onCancel, o
                   type="text" value={values.image ?? ''}
                   onChange={(e) => { setImageError(false); set({ image: e.target.value }); }}
                   placeholder="/images/experiences/... veya https://..."
-                  className="flex-1 px-3 py-2 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-white font-mono text-[11px]"
+                  className="flex-1 px-3 py-2 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-900 font-mono text-[11px]"
                 />
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label className="text-[11px] font-bold text-zinc-300 block mb-1">Açıklama / Rehber Notu</label>
+              <label className="text-[11px] font-bold text-zinc-700 block mb-1">Açıklama / Rehber Notu</label>
               <textarea
                 rows={3} value={values.agentNote}
                 onChange={(e) => set({ agentNote: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-[#0f1116] border border-[#2c313d] rounded-xl focus:border-amber-500 focus:outline-none text-zinc-200"
+                className="w-full px-3.5 py-2.5 bg-amber-50/40 border border-amber-200/80 rounded-xl focus:border-amber-500 focus:outline-none text-zinc-800"
               />
             </div>
           </div>
 
-          <div className="pt-3 border-t border-[#2c313d] flex justify-end gap-2">
-            <button type="button" onClick={onCancel} className="px-4 py-2 rounded-xl bg-[#0f1116] hover:bg-white/5 text-zinc-300 font-bold">
+          <div className="pt-3 border-t border-amber-200/80 flex justify-end gap-2">
+            <button type="button" onClick={onCancel} className="px-4 py-2 rounded-xl bg-amber-50/40 hover:bg-white/5 text-zinc-700 font-bold">
               İptal
             </button>
             <button type="submit" className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20">

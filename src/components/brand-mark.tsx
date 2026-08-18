@@ -4,7 +4,7 @@ import Link from 'next/link';
 interface BrandMarkProps {
   size?: number;
   showText?: boolean;
-  theme?: 'sand' | 'dark';
+  theme?: 'sand' | 'dark' | 'light';
 }
 
 export function BrandMark({ size = 44, showText = true, theme = 'sand' }: BrandMarkProps) {

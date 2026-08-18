@@ -232,7 +232,7 @@ export default function PilotDashboardPage() {
   });
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto p-4 sm:p-6 text-zinc-100">
+    <div className="space-y-6 max-w-7xl mx-auto p-4 sm:p-6 text-zinc-900">
       
       {/* Pilot Master Header */}
       <div className="bg-gradient-to-r from-zinc-950 via-[#181a20] to-zinc-900 rounded-3xl p-6 border border-amber-500/40 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -246,10 +246,10 @@ export default function PilotDashboardPage() {
               Yetkili: anilaslan@usecomus.com
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-serif text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold font-serif text-zinc-900">
             Xenios İstanbul Operasyon Masası
           </h1>
-          <p className="text-xs text-zinc-400 max-w-2xl leading-relaxed">
+          <p className="text-xs text-zinc-500 max-w-2xl leading-relaxed">
             Tüm gerçek işletme ilanlarını düzenleyin, anlık fiyat değiştirin, yeni anlaşmalı oteller tanımlayın ve misafir kullanım ile comusAI istatistiklerini takip edin.
           </p>
         </div>
@@ -291,13 +291,13 @@ export default function PilotDashboardPage() {
               className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap cursor-pointer border ${
                 isActive
                   ? 'bg-amber-500/15 text-amber-400 border-amber-500/40 shadow-sm'
-                  : 'bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:bg-zinc-800/80 hover:text-zinc-200'
+                  : 'bg-zinc-900/60 text-zinc-500 border-zinc-800 hover:bg-zinc-800/80 hover:text-zinc-800'
               }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
               <span>{tab.label}</span>
               <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                isActive ? 'bg-amber-500 text-black' : 'bg-zinc-800 text-zinc-400'
+                isActive ? 'bg-amber-500 text-black' : 'bg-zinc-800 text-zinc-500'
               }`}>
                 {tab.count}
               </span>
@@ -318,7 +318,7 @@ export default function PilotDashboardPage() {
                 value={searchExp}
                 onChange={(e) => setSearchExp(e.target.value)}
                 placeholder="İlan adı, acente veya konum ara..."
-                className="w-full pl-10 pr-4 py-2 text-xs bg-zinc-950 border border-zinc-800 rounded-2xl focus:outline-none focus:border-amber-500 text-zinc-200"
+                className="w-full pl-10 pr-4 py-2 text-xs bg-zinc-950 border border-zinc-800 rounded-2xl focus:outline-none focus:border-amber-500 text-zinc-800"
               />
             </div>
 
@@ -330,7 +330,7 @@ export default function PilotDashboardPage() {
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                     selectedCategory === cat
                       ? 'bg-amber-500 text-black'
-                      : 'bg-zinc-950 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
+                      : 'bg-zinc-950 text-zinc-500 hover:text-zinc-800 border border-zinc-800'
                   }`}
                 >
                   {cat === 'ALL' ? 'Tümü' : cat}
@@ -356,14 +356,14 @@ export default function PilotDashboardPage() {
                     </strong>
                   </div>
 
-                  <h3 className="text-sm font-bold text-white font-serif line-clamp-2">
+                  <h3 className="text-sm font-bold text-zinc-900 font-serif line-clamp-2">
                     {exp.title}
                   </h3>
 
-                  <div className="space-y-1 text-xs text-zinc-400 pt-1">
-                    <p className="flex items-center gap-1.5 text-zinc-300">
+                  <div className="space-y-1 text-xs text-zinc-500 pt-1">
+                    <p className="flex items-center gap-1.5 text-zinc-700">
                       <ShieldCheck className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                      <strong className="text-zinc-200 truncate">{exp.provider}</strong>
+                      <strong className="text-zinc-800 truncate">{exp.provider}</strong>
                     </p>
                     <p className="flex items-center gap-1.5 text-[11px]">
                       <Phone className="w-3 h-3 text-zinc-500 shrink-0" />
@@ -403,8 +403,8 @@ export default function PilotDashboardPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between bg-zinc-900/80 p-4 rounded-3xl border border-zinc-800">
             <div>
-              <h2 className="text-sm font-bold text-white">Sözleşmeli Partner Oteller</h2>
-              <p className="text-xs text-zinc-400">Tek tek anlaşma yapılan aktif tesisler ve oda envanterleri.</p>
+              <h2 className="text-sm font-bold text-zinc-900">Sözleşmeli Partner Oteller</h2>
+              <p className="text-xs text-zinc-500">Tek tek anlaşma yapılan aktif tesisler ve oda envanterleri.</p>
             </div>
             <button
               onClick={() => setIsNewHotelModalOpen(true)}
@@ -426,8 +426,8 @@ export default function PilotDashboardPage() {
                     <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30 uppercase">
                       {hotel.type}
                     </span>
-                    <h3 className="text-base font-bold font-serif text-white mt-1">{hotel.name}</h3>
-                    <p className="text-xs text-zinc-400 flex items-center gap-1 mt-0.5">
+                    <h3 className="text-base font-bold font-serif text-zinc-900 mt-1">{hotel.name}</h3>
+                    <p className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5">
                       <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                       <span>{hotel.address}</span>
                     </p>
@@ -445,18 +445,18 @@ export default function PilotDashboardPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                   <div className="p-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-0.5">
                     <span className="text-[10px] text-zinc-500 block">Wi-Fi Ağı & Şifre</span>
-                    <strong className="text-zinc-200 block truncate font-mono text-[11px]">{hotel.rooms[0]?.wifiSsid || 'Hotel_Guest'}</strong>
+                    <strong className="text-zinc-800 block truncate font-mono text-[11px]">{hotel.rooms[0]?.wifiSsid || 'Hotel_Guest'}</strong>
                     <code className="text-amber-400 text-[10px]">{hotel.rooms[0]?.wifiPass || 'Xenios2026!'}</code>
                   </div>
 
                   <div className="p-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-0.5">
                     <span className="text-[10px] text-zinc-500 block">Kahvaltı Saatleri</span>
-                    <strong className="text-zinc-200 block text-xs">{hotel.breakfastHours}</strong>
+                    <strong className="text-zinc-800 block text-xs">{hotel.breakfastHours}</strong>
                   </div>
 
                   <div className="p-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-0.5">
                     <span className="text-[10px] text-zinc-500 block">Çıkış Saati / Ext</span>
-                    <strong className="text-zinc-200 block text-xs">{hotel.checkoutTime} (Ext: {hotel.receptionExt})</strong>
+                    <strong className="text-zinc-800 block text-xs">{hotel.checkoutTime} (Ext: {hotel.receptionExt})</strong>
                   </div>
                 </div>
 
@@ -496,14 +496,14 @@ export default function PilotDashboardPage() {
 
             <div className="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Günlük Ortalama İstek</span>
-              <strong className="text-2xl font-mono text-white font-bold block">46 Talep</strong>
-              <span className="text-[10px] text-zinc-400">Pik saatler: 08:30 & 21:00</span>
+              <strong className="text-2xl font-mono text-zinc-900 font-bold block">46 Talep</strong>
+              <span className="text-[10px] text-zinc-500">Pik saatler: 08:30 & 21:00</span>
             </div>
 
             <div className="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Ortalama Teslim Süresi</span>
               <strong className="text-2xl font-mono text-emerald-400 font-bold block">8.4 Dk</strong>
-              <span className="text-[10px] text-zinc-400">Hedef: &lt; 15 Dk</span>
+              <span className="text-[10px] text-zinc-500">Hedef: &lt; 15 Dk</span>
             </div>
 
             <div className="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 space-y-1">
@@ -515,7 +515,7 @@ export default function PilotDashboardPage() {
 
           {/* Service breakdown list */}
           <div className="bg-zinc-900 rounded-3xl p-6 border border-zinc-800 space-y-4">
-            <h3 className="text-sm font-bold text-white">En Çok Kullanılan Otel İçi Hizmetler</h3>
+            <h3 className="text-sm font-bold text-zinc-900">En Çok Kullanılan Otel İçi Hizmetler</h3>
             
             <div className="space-y-3 text-xs">
               {[
@@ -527,9 +527,9 @@ export default function PilotDashboardPage() {
                 { name: 'Minibar & Su Talebi', count: 112, pct: 7.8, color: 'bg-pink-500' },
               ].map((item, idx) => (
                 <div key={idx} className="space-y-1">
-                  <div className="flex items-center justify-between text-zinc-300">
+                  <div className="flex items-center justify-between text-zinc-700">
                     <span className="font-bold">{item.name}</span>
-                    <span className="font-mono text-zinc-400">{item.count} İstek (%{item.pct})</span>
+                    <span className="font-mono text-zinc-500">{item.count} İstek (%{item.pct})</span>
                   </div>
                   <div className="h-2 w-full bg-zinc-950 rounded-full overflow-hidden">
                     <div className={`h-full ${item.color}`} style={{ width: `${item.pct}%` }} />
@@ -548,13 +548,13 @@ export default function PilotDashboardPage() {
             <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam AI Sohbet Oturumu</span>
               <strong className="text-3xl font-mono text-amber-400 font-bold block">842</strong>
-              <span className="text-[10px] text-zinc-400">Turistler 6 dilde aktif soruyor</span>
+              <span className="text-[10px] text-zinc-500">Turistler 6 dilde aktif soruyor</span>
             </div>
 
             <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Ortalama AI Yanıt Hızı</span>
               <strong className="text-3xl font-mono text-emerald-400 font-bold block">1.1 Sn</strong>
-              <span className="text-[10px] text-zinc-400">Gemini 2.5 Flash Hızlı API</span>
+              <span className="text-[10px] text-zinc-500">Gemini 2.5 Flash Hızlı API</span>
             </div>
 
             <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
@@ -566,7 +566,7 @@ export default function PilotDashboardPage() {
 
           {/* Most asked topics */}
           <div className="bg-zinc-900 rounded-3xl p-6 border border-zinc-800 space-y-4">
-            <h3 className="text-sm font-bold text-white">Turistlerin comusAI'ya En Çok Sorduğu Konular</h3>
+            <h3 className="text-sm font-bold text-zinc-900">Turistlerin comusAI'ya En Çok Sorduğu Konular</h3>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5">
@@ -574,7 +574,7 @@ export default function PilotDashboardPage() {
                   <span>1. Boğaz Turları & Akşam Yemeği</span>
                   <span className="font-mono">%34</span>
                 </div>
-                <p className="text-zinc-400 text-[11px]">
+                <p className="text-zinc-500 text-[11px]">
                   Turistler iskele kalkış saatlerini, yemekli tekneleri ve özel yat kiralama fiyatlarını sormaktadır.
                 </p>
               </div>
@@ -584,7 +584,7 @@ export default function PilotDashboardPage() {
                   <span>2. Döviz Bürosu & Güvenli Para Bozdurma</span>
                   <span className="font-mono">%21</span>
                 </div>
-                <p className="text-zinc-400 text-[11px]">
+                <p className="text-zinc-500 text-[11px]">
                   Kapalıçarşı ve Sultanahmet'te komisyonsuz en iyi döviz bürolarının konumları talep ediliyor.
                 </p>
               </div>
@@ -594,7 +594,7 @@ export default function PilotDashboardPage() {
                   <span>3. Müzeler, Ayasofya & Yürüyüş Rotaları</span>
                   <span className="font-mono">%19</span>
                 </div>
-                <p className="text-zinc-400 text-[11px]">
+                <p className="text-zinc-500 text-[11px]">
                   MüzeKart geçerliliği, namaz saatlerindeki ziyaret kısıtlamaları ve sıra beklemeden giriş yolları.
                 </p>
               </div>
@@ -604,7 +604,7 @@ export default function PilotDashboardPage() {
                   <span>4. Taksi Güvenliği & Dolandırıcılık Kalkanı</span>
                   <span className="font-mono">%15</span>
                 </div>
-                <p className="text-zinc-400 text-[11px]">
+                <p className="text-zinc-500 text-[11px]">
                   Havalimanı ve Kadıköy dönüşlerinde ortalama taksimetre rayiç fiyatları ve plaka sorgulamaları.
                 </p>
               </div>
@@ -620,7 +620,7 @@ export default function PilotDashboardPage() {
             <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam Sanal POS Hacmi</span>
               <strong className="text-3xl font-mono text-emerald-400 font-bold block">184,200 ₺</strong>
-              <span className="text-[10px] text-zinc-400">256-Bit SSL 3D Secure</span>
+              <span className="text-[10px] text-zinc-500">256-Bit SSL 3D Secure</span>
             </div>
 
             <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
@@ -631,8 +631,8 @@ export default function PilotDashboardPage() {
 
             <div className="bg-zinc-900 p-5 rounded-3xl border border-zinc-800 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Acentelere Aktarılan</span>
-              <strong className="text-3xl font-mono text-white font-bold block">156,570 ₺</strong>
-              <span className="text-[10px] text-zinc-400">Otomatik Hakediş Dağıtımı</span>
+              <strong className="text-3xl font-mono text-zinc-900 font-bold block">156,570 ₺</strong>
+              <span className="text-[10px] text-zinc-500">Otomatik Hakediş Dağıtımı</span>
             </div>
           </div>
         </div>
@@ -641,15 +641,15 @@ export default function PilotDashboardPage() {
       {/* EDIT EXPERIENCE MODAL */}
       {editingExp && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-zinc-900 rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-100 animate-in zoom-in-95">
+          <div className="bg-zinc-900 rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
                 <Edit3 className="w-5 h-5 text-amber-400" />
-                <h2 className="text-base font-bold font-serif text-white">İlan & Fiyat Düzenleme Masası</h2>
+                <h2 className="text-base font-bold font-serif text-zinc-900">İlan & Fiyat Düzenleme Masası</h2>
               </div>
               <button
                 onClick={() => setEditingExp(null)}
-                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -658,49 +658,49 @@ export default function PilotDashboardPage() {
             <form onSubmit={handleSaveExp} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">İlan Başlığı</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">İlan Başlığı</label>
                   <input
                     type="text"
                     required
                     value={editingExp.title}
                     onChange={(e) => setEditingExp({ ...editingExp, title: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Kategori</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Kategori</label>
                   <input
                     type="text"
                     value={editingExp.category}
                     onChange={(e) => setEditingExp({ ...editingExp, category: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">İşletme / Acente Adı</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">İşletme / Acente Adı</label>
                   <input
                     type="text"
                     required
                     value={editingExp.provider}
                     onChange={(e) => setEditingExp({ ...editingExp, provider: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">İşletme Telefonu</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">İşletme Telefonu</label>
                   <input
                     type="text"
                     value={editingExp.phone}
                     onChange={(e) => setEditingExp({ ...editingExp, phone: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white font-mono"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Fiyat & Para Birimi</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Fiyat & Para Birimi</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
@@ -712,7 +712,7 @@ export default function PilotDashboardPage() {
                     <select
                       value={editingExp.currency}
                       onChange={(e) => setEditingExp({ ...editingExp, currency: e.target.value })}
-                      className="w-20 px-2 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-white font-bold"
+                      className="w-20 px-2 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-zinc-900 font-bold"
                     >
                       <option value="₺">₺ (TL)</option>
                       <option value="€">€ (EUR)</option>
@@ -722,32 +722,32 @@ export default function PilotDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Süre</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Süre</label>
                   <input
                     type="text"
                     value={editingExp.duration}
                     onChange={(e) => setEditingExp({ ...editingExp, duration: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Buluşma Noktası / Konum</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Buluşma Noktası / Konum</label>
                   <input
                     type="text"
                     value={editingExp.location}
                     onChange={(e) => setEditingExp({ ...editingExp, location: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Açıklama / Rehber Notu</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Açıklama / Rehber Notu</label>
                   <textarea
                     rows={3}
                     value={editingExp.agentNote}
                     onChange={(e) => setEditingExp({ ...editingExp, agentNote: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-200"
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-800"
                   />
                 </div>
               </div>
@@ -756,7 +756,7 @@ export default function PilotDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setEditingExp(null)}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold"
+                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-700 font-bold"
                 >
                   İptal
                 </button>
@@ -776,15 +776,15 @@ export default function PilotDashboardPage() {
       {/* CREATE NEW EXPERIENCE MODAL */}
       {isNewExpModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-zinc-900 rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-100 animate-in zoom-in-95">
+          <div className="bg-zinc-900 rounded-3xl max-w-2xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
                 <Plus className="w-5 h-5 text-amber-400" />
-                <h2 className="text-base font-bold font-serif text-white">Yeni Gerçek İşletme İlanı Ekle</h2>
+                <h2 className="text-base font-bold font-serif text-zinc-900">Yeni Gerçek İşletme İlanı Ekle</h2>
               </div>
               <button
                 onClick={() => setIsNewExpModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -793,23 +793,23 @@ export default function PilotDashboardPage() {
             <form onSubmit={handleCreateExp} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">İlan Başlığı</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">İlan Başlığı</label>
                   <input
                     type="text"
                     required
                     value={newExp.title}
                     onChange={(e) => setNewExp({ ...newExp, title: e.target.value })}
                     placeholder="Örn: Tarihi Yarımada Özel Rehberli VIP Tur"
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Kategori</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Kategori</label>
                   <select
                     value={newExp.category}
                     onChange={(e) => setNewExp({ ...newExp, category: e.target.value })}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-white font-bold"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-zinc-900 font-bold"
                   >
                     <option value="Boğaz Turları & Yat">Boğaz Turları & Yat</option>
                     <option value="Fotoğraf & Kostüm">Fotoğraf & Kostüm</option>
@@ -822,30 +822,30 @@ export default function PilotDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">İşletme / Acente Adı</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">İşletme / Acente Adı</label>
                   <input
                     type="text"
                     required
                     value={newExp.provider}
                     onChange={(e) => setNewExp({ ...newExp, provider: e.target.value })}
                     placeholder="Örn: Bosphorus Cruise Travel (TÜRSAB 14230)"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">İşletme Telefonu</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">İşletme Telefonu</label>
                   <input
                     type="text"
                     value={newExp.phone}
                     onChange={(e) => setNewExp({ ...newExp, phone: e.target.value })}
                     placeholder="+90 532 123 45 67"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white font-mono"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Fiyat & Para Birimi</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Fiyat & Para Birimi</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
@@ -857,7 +857,7 @@ export default function PilotDashboardPage() {
                     <select
                       value={newExp.currency}
                       onChange={(e) => setNewExp({ ...newExp, currency: e.target.value })}
-                      className="w-20 px-2 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-white font-bold"
+                      className="w-20 px-2 py-2 bg-zinc-950 border border-zinc-700 rounded-xl text-zinc-900 font-bold"
                     >
                       <option value="₺">₺ (TL)</option>
                       <option value="€">€ (EUR)</option>
@@ -867,35 +867,35 @@ export default function PilotDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Süre</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Süre</label>
                   <input
                     type="text"
                     value={newExp.duration}
                     onChange={(e) => setNewExp({ ...newExp, duration: e.target.value })}
                     placeholder="2.5 Saat"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Buluşma Noktası / Konum</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Buluşma Noktası / Konum</label>
                   <input
                     type="text"
                     value={newExp.location}
                     onChange={(e) => setNewExp({ ...newExp, location: e.target.value })}
                     placeholder="Eminönü İskelesi, Fatih"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Açıklama / Rehber Notu</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Açıklama / Rehber Notu</label>
                   <textarea
                     rows={3}
                     value={newExp.agentNote}
                     onChange={(e) => setNewExp({ ...newExp, agentNote: e.target.value })}
                     placeholder="İlan detayları, misafir ayrıcalıkları ve rezervasyon bilgileri..."
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-200"
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-800"
                   />
                 </div>
               </div>
@@ -904,7 +904,7 @@ export default function PilotDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setIsNewExpModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold"
+                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-700 font-bold"
                 >
                   İptal
                 </button>
@@ -924,15 +924,15 @@ export default function PilotDashboardPage() {
       {/* CREATE NEW HOTEL MODAL */}
       {isNewHotelModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-zinc-900 rounded-3xl max-w-xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-100 animate-in zoom-in-95">
+          <div className="bg-zinc-900 rounded-3xl max-w-xl w-full p-6 border border-amber-500/40 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
                 <Building2 className="w-5 h-5 text-amber-400" />
-                <h2 className="text-base font-bold font-serif text-white">Yeni Anlaşmalı Otel Tanımla</h2>
+                <h2 className="text-base font-bold font-serif text-zinc-900">Yeni Anlaşmalı Otel Tanımla</h2>
               </div>
               <button
                 onClick={() => setIsNewHotelModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-500 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -941,52 +941,52 @@ export default function PilotDashboardPage() {
             <form onSubmit={handleCreateHotel} className="space-y-3.5 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Otel Adı</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Otel Adı</label>
                   <input
                     type="text"
                     required
                     value={newHotelName}
                     onChange={(e) => setNewHotelName(e.target.value)}
                     placeholder="Örn: Sultanahmet Palace Boutique Hotel"
-                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Bölge / Semt</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Bölge / Semt</label>
                   <input
                     type="text"
                     value={newHotelDistrict}
                     onChange={(e) => setNewHotelDistrict(e.target.value)}
                     placeholder="Sultanahmet / Fatih"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Tesis Türü</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Tesis Türü</label>
                   <input
                     type="text"
                     value={newHotelType}
                     onChange={(e) => setNewHotelType(e.target.value)}
                     placeholder="Butik Otel & Konak"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Adres</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Adres</label>
                   <input
                     type="text"
                     value={newHotelAddress}
                     onChange={(e) => setNewHotelAddress(e.target.value)}
                     placeholder="Divanyolu Cad. No:14 Sultanahmet, İstanbul"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Toplam Oda Sayısı</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Toplam Oda Sayısı</label>
                   <input
                     type="number"
                     min="1"
@@ -999,55 +999,55 @@ export default function PilotDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Resepsiyon Dahili No</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Resepsiyon Dahili No</label>
                   <input
                     type="text"
                     value={newHotelReceptionExt}
                     onChange={(e) => setNewHotelReceptionExt(e.target.value)}
                     placeholder="9"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white font-mono"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Wi-Fi Ağı (SSID)</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Wi-Fi Ağı (SSID)</label>
                   <input
                     type="text"
                     value={newHotelWifiSsid}
                     onChange={(e) => setNewHotelWifiSsid(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Wi-Fi Şifresi</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Wi-Fi Şifresi</label>
                   <input
                     type="text"
                     value={newHotelWifiPass}
                     onChange={(e) => setNewHotelWifiPass(e.target.value)}
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white font-mono"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900 font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Kahvaltı Saatleri</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Kahvaltı Saatleri</label>
                   <input
                     type="text"
                     value={newHotelBreakfast}
                     onChange={(e) => setNewHotelBreakfast(e.target.value)}
                     placeholder="07:30 - 10:30"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-zinc-300 block mb-1">Çıkış Saati</label>
+                  <label className="text-[11px] font-bold text-zinc-700 block mb-1">Çıkış Saati</label>
                   <input
                     type="text"
                     value={newHotelCheckout}
                     onChange={(e) => setNewHotelCheckout(e.target.value)}
                     placeholder="11:30"
-                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-white"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-700 rounded-xl focus:border-amber-500 text-zinc-900"
                   />
                 </div>
               </div>
@@ -1056,7 +1056,7 @@ export default function PilotDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setIsNewHotelModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold"
+                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-700 font-bold"
                 >
                   İptal
                 </button>

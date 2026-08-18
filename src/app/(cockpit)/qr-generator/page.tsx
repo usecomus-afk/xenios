@@ -39,8 +39,8 @@ function QrGeneratorContent() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold font-serif text-white">Odaya Özel Dinamik QR Kod Üretici</h1>
-          <p className="text-xs text-zinc-400">
+          <h1 className="text-xl font-bold font-serif text-zinc-900">Odaya Özel Dinamik QR Kod Üretici</h1>
+          <p className="text-xs text-zinc-500">
             Misafir odalarına yerleştirilecek QR etiketler. Okutulduğunda şifresiz doğrudan odaya özel PWA açılır.
           </p>
         </div>
@@ -55,9 +55,9 @@ function QrGeneratorContent() {
       </div>
 
       {/* Selectors */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 bg-[#171a22] rounded-3xl border border-[#2c313d]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 bg-white rounded-3xl border border-amber-200/80">
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-zinc-400">Otel Seçin:</label>
+          <label className="text-xs font-semibold text-zinc-500">Otel Seçin:</label>
           <select
             value={selectedHotelId}
             onChange={(e) => {
@@ -65,7 +65,7 @@ function QrGeneratorContent() {
               const h = hotels.find(item => item.id === e.target.value);
               if (h && h.rooms.length > 0) setSelectedRoomNumber(h.rooms[0].number);
             }}
-            className="w-full p-2.5 text-xs bg-[#12141a] border border-[#2c313d] rounded-xl text-white"
+            className="w-full p-2.5 text-xs bg-white border border-amber-200/80 rounded-xl text-zinc-900"
           >
             {hotels.map(h => (
               <option key={h.id} value={h.id}>{h.name} ({h.district})</option>
@@ -74,11 +74,11 @@ function QrGeneratorContent() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-zinc-400">Oda Numarası:</label>
+          <label className="text-xs font-semibold text-zinc-500">Oda Numarası:</label>
           <select
             value={selectedRoomNumber}
             onChange={(e) => setSelectedRoomNumber(e.target.value)}
-            className="w-full p-2.5 text-xs bg-[#12141a] border border-[#2c313d] rounded-xl text-white"
+            className="w-full p-2.5 text-xs bg-white border border-amber-200/80 rounded-xl text-zinc-900"
           >
             {currentHotel.rooms.map(r => (
               <option key={r.id} value={r.number}>
@@ -96,7 +96,7 @@ function QrGeneratorContent() {
             XENIOS ISTANBUL
           </span>
           <h2 className="text-xl font-bold font-serif text-zinc-900">{currentHotel.name}</h2>
-          <div className="inline-block px-4 py-1 rounded-full bg-amber-500 text-white font-bold text-sm shadow-sm">
+          <div className="inline-block px-4 py-1 rounded-full bg-amber-500 text-zinc-900 font-bold text-sm shadow-sm">
             ODA {selectedRoomNumber}
           </div>
         </div>
@@ -126,7 +126,7 @@ function QrGeneratorContent() {
 
 export default function QrGeneratorPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-zinc-400">Yükleniyor...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-zinc-500">Yükleniyor...</div>}>
       <QrGeneratorContent />
     </Suspense>
   );

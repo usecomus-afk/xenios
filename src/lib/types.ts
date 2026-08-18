@@ -76,6 +76,7 @@ export interface ServiceRequest {
   department?: string;
   priority?: ServicePriority;
   stage?: string;
+  isDemo?: boolean;
 }
 
 export type BookingStatus = 'payment_success' | 'provider_pending' | 'confirmed' | 'cancelled';
@@ -101,6 +102,7 @@ export interface Booking {
   createdAt: string;
   calendarLink?: string;
   confirmationCode: string;
+  isDemo?: boolean;
 }
 
 export type TourPace = 'sakin' | 'dengeli' | 'yogun';
@@ -229,6 +231,7 @@ export interface Complaint {
   isPublicAlert: boolean;
   createdAt: string;
   updatedAt: string;
+  isDemo?: boolean;
 }
 
 

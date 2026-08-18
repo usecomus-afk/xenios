@@ -17,7 +17,8 @@ const STORAGE_KEYS = {
   MODULE_SETTINGS: 'xenios_module_settings',
   IN_ROOM_SERVICES: 'xenios_in_room_services_v2',
   PROPERTIES: 'xenios_custom_properties',
-  INVESTMENT_LEADS: 'xenios_investment_leads'
+  INVESTMENT_LEADS: 'xenios_investment_leads',
+  HIDE_DEMO_DATA: 'xenios_hide_demo_data'
 };
 
 const DEFAULT_MODULE_SETTING: ModuleAdminSettings = { enabled: true, hidden: false };
@@ -227,14 +228,17 @@ export const XeniosStore = {
     safeSet(STORAGE_KEYS.LANG, lang);
   },
 
-  // In-Room Service Requests
+    // In-Room Service Requests
   getRequests(): ServiceRequest[] {
+    const isHidden = this.isDemoDataHidden();
     try {
       const stored = safeGet(STORAGE_KEYS.REQUESTS);
-      if (stored) return JSON.parse(stored);
+      if (stored) {
+        const list: ServiceRequest[] = JSON.parse(stored);
+        return isHidden ? list.filter(r => !r.isDemo) : list;
+      }
     } catch (e) {}
 
-    // No demo/seed requests — the cockpit must only ever show real guest-submitted requests.
     return [];
   },
 
@@ -398,13 +402,84 @@ export const XeniosStore = {
     } catch (e) {}
   },
 
+    // Demo / Sample Data Control
+  isDemoDataHidden(): boolean {
+    return safeGet(STORAGE_KEYS.HIDE_DEMO_DATA) === '1';
+  },
+
+  setHideDemoData(hide: boolean) {
+    safeSet(STORAGE_KEYS.HIDE_DEMO_DATA, hide ? '1' : '0');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_demo_updated'));
+      window.dispatchEvent(new Event('xenios_complaints_updated'));
+      window.dispatchEvent(new Event('xenios_bookings_updated'));
+      window.dispatchEvent(new Event('xenios_requests_updated'));
+    }
+  },
+
   // Bookings & Virtual POS
   getBookings(): Booking[] {
+    const isHidden = this.isDemoDataHidden();
     try {
       const stored = safeGet(STORAGE_KEYS.BOOKINGS);
-      if (stored) return JSON.parse(stored);
+      if (stored) {
+        const list: Booking[] = JSON.parse(stored);
+        return isHidden ? list.filter(b => !b.isDemo) : list;
+      }
     } catch (e) {}
-    return [];
+
+    const seed: Booking[] = [
+      {
+        id: 'book-demo-1',
+        hotelId: 'hotel-1',
+        hotelName: 'Hotel Sultanahmet',
+        roomNumber: '204',
+        experienceId: 'exp-1',
+        experienceTitle: 'Özel Yat ile Boğazda Günbatımı Turu',
+        providerName: 'Bosphorus Yacht Club',
+        providerPhone: '+90 212 514 00 00',
+        guestName: 'Marc & Sophie Laurent',
+        guestPhone: '+33 6 12 34 56 78',
+        guestEmail: 'sophie.laurent@paris.fr',
+        guestCount: 2,
+        bookingDate: new Date().toISOString().split('T')[0],
+        bookingTime: '18:30',
+        amount: 250,
+        currency: 'EUR',
+        status: 'confirmed',
+        confirmationCode: 'XEN-DEMO-88',
+        createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
+        isDemo: true
+      },
+      {
+        id: 'book-demo-2',
+        hotelId: 'hotel-1',
+        hotelName: 'Hotel Sultanahmet',
+        roomNumber: '301',
+        experienceId: 'exp-2',
+        experienceTitle: 'Tarihi Yarımada VIP Rehberli Kültür Turu',
+        providerName: 'Istanbul Heritage Tours',
+        providerPhone: '+90 212 522 11 22',
+        guestName: 'Hans Weber',
+        guestPhone: '+49 170 987 65 43',
+        guestEmail: 'h.weber@berlin.de',
+        guestCount: 3,
+        bookingDate: new Date().toISOString().split('T')[0],
+        bookingTime: '10:00',
+        amount: 180,
+        currency: 'EUR',
+        status: 'confirmed',
+        confirmationCode: 'XEN-DEMO-42',
+        createdAt: new Date(Date.now() - 3600000 * 8).toISOString(),
+        isDemo: true
+      }
+    ];
+
+    try {
+      safeSet(STORAGE_KEYS.BOOKINGS, JSON.stringify(seed));
+    } catch (e) {}
+
+    return isHidden ? [] : seed;
   },
 
   addBooking(booking: Omit<Booking, 'id' | 'createdAt' | 'confirmationCode'>): Booking {
@@ -474,11 +549,15 @@ export const XeniosStore = {
     safeSet('xenios_ai_intro_dismissed', v ? '1' : '0');
   },
 
-  // Tourist Complaints & Fraud Dispute Desk
+    // Tourist Complaints & Fraud Dispute Desk
   getComplaints(): Complaint[] {
+    const isHidden = this.isDemoDataHidden();
     try {
       const stored = safeGet(STORAGE_KEYS.COMPLAINTS);
-      if (stored) return JSON.parse(stored);
+      if (stored) {
+        const list: Complaint[] = JSON.parse(stored);
+        return isHidden ? list.filter(c => !c.isDemo) : list;
+      }
     } catch (e) {}
 
     const seed: Complaint[] = [
@@ -504,7 +583,8 @@ export const XeniosStore = {
         daysPending: 5,
         isPublicAlert: false,
         createdAt: new Date(Date.now() - 5 * 86400000).toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        isDemo: true
       },
       {
         id: 'comp-2',
@@ -529,7 +609,8 @@ export const XeniosStore = {
         daysPending: 34,
         isPublicAlert: true,
         createdAt: new Date(Date.now() - 34 * 86400000).toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        isDemo: true
       },
       {
         id: 'comp-3',
@@ -554,14 +635,15 @@ export const XeniosStore = {
         daysPending: 2,
         isPublicAlert: false,
         createdAt: new Date(Date.now() - 13 * 86400000).toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        isDemo: true
       }
     ];
 
     try {
       safeSet(STORAGE_KEYS.COMPLAINTS, JSON.stringify(seed));
     } catch (e) {}
-    return seed;
+    return isHidden ? [] : seed;
   },
 
   addComplaint(complaint: Omit<Complaint, 'id' | 'trackingCode' | 'daysPending' | 'isPublicAlert' | 'createdAt' | 'updatedAt'>): Complaint {
