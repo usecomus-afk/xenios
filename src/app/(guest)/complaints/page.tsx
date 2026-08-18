@@ -147,10 +147,7 @@ export default function GuestComplaintsPage() {
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-amber-500 text-black font-bold text-[10px] uppercase tracking-wider">
-                  Xenios Güvencesi
-                </span>
-                <span className="text-xs text-amber-400 font-serif">İstanbul'un Misafirleri Başımızın Tacıdır</span>
+                <span className="text-xs text-amber-400 font-serif font-bold">İstanbul'un Misafirleri Başımızın Tacıdır</span>
               </div>
 
               <h1 className="text-xl md:text-2xl font-bold font-serif text-white leading-snug">
