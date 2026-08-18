@@ -17,8 +17,7 @@ import {
   ExternalLink,
   Shield,
   ArrowRight,
-  Landmark,
-  BadgeAlert
+  Landmark
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -406,56 +405,38 @@ export function FairShoppingPolicy() {
           <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-sm space-y-4">
             <h3 className="text-base font-bold font-serif text-zinc-900 flex items-center gap-2">
               <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">2</span>
-              <span>Xenios Ne Yapacak? (7 Günlük İnceleme ve Yaptırım Akışı)</span>
+              <span>Şikayetiniz sonrası Xenios Ne Yapar? (7 Günlük İnceleme ve Yaptırım Akışı)</span>
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="space-y-3 text-xs">
               <div className="p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-1">
-                <strong className="text-zinc-900 font-bold block">Adım 3: Araştırma (1-2 Gün)</strong>
+                <strong className="text-zinc-900 font-bold block">Adım 1: Araştırma (1-2 Gün)</strong>
                 <p className="text-zinc-600">Kanıtların doğruluğu, piyasa rayiçleri ve olayın ciddiyeti incelenir.</p>
               </div>
 
               <div className="p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-1">
-                <strong className="text-zinc-900 font-bold block">Adım 4: İşletmeye Bildirim (Gün 2-3)</strong>
-                <p className="text-zinc-600">İşletmeye resmi e-posta gönderilir: 'Bir hata mı yapıldı? Turisti telafi etmeyi kabul ediyor musunuz?'</p>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-zinc-900 text-white space-y-2 text-xs">
-              <div className="flex items-center gap-2 text-amber-400 font-bold">
-                <BadgeAlert className="w-4 h-4" />
-                <span>Adım 6: Kamuya Açıklanma (8. Gün Sonrası Örnek Kayıt)</span>
-              </div>
-              <div className="font-mono text-[11px] text-zinc-300 bg-black/50 p-3 rounded-xl border border-zinc-800 space-y-1">
-                <p><span className="text-amber-400">⚠️ UYARI:</span> Turist Mağduriyeti Kaydı</p>
-                <p><span className="text-zinc-400">İşletme:</span> Örnek Restoran, Fatih, İstanbul</p>
-                <p><span className="text-zinc-400">Sorun:</span> Fatura 250 TL, müşteriden 450 TL tahsil etme</p>
-                <p><span className="text-zinc-400">Xenios Kararı:</span> İşletme 7 gün içinde telafi etmedi ➔ Kamuya Uyarı Panosunda Yayınlandı</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-3xl p-6 border border-amber-200/80 shadow-sm space-y-4">
-            <h3 className="text-base font-bold font-serif text-zinc-900 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">3</span>
-              <span>Kurumsal Bildirimler (Resmi Devlet Kurumları)</span>
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl space-y-1">
-                <strong className="text-zinc-900 font-bold flex items-center gap-1.5">
-                  <Landmark className="w-4 h-4 text-red-600" />
-                  <span>CİMER (Cumhurbaşkanlığı İletişim)</span>
-                </strong>
-                <p className="text-zinc-500">Turist dolandırıcılığı, sahte acenteler ve esnaf usulsüzlükleri Bakanlıklara sevk edilir.</p>
+                <strong className="text-zinc-900 font-bold block">Adım 2: İşletmeye Bildirim (Gün 2-3)</strong>
+                <p className="text-zinc-600">İşletmeye resmi e-posta gönderilir: <strong>'Bir hata mı yapıldı? Yanlış anlaşılma mı söz konusu?'</strong> İşletmeden makul bir açıklama yapması veya yaşanılan mağduriyeti telafi etmesi beklenir ve verdiğiniz IBAN bilgilerine Xenios hesabı üzerinden aktarım sağlanır. Aksi durumda, işletmeyle ilgili şikayetiniz diğer turist misafirlerin dikkat etmesi için Xenios platformunda <strong>Uyarı Panosu'nda</strong> yayınlanır.</p>
               </div>
 
-              <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl space-y-1">
-                <strong className="text-zinc-900 font-bold flex items-center gap-1.5">
-                  <Car className="w-4 h-4 text-amber-600" />
-                  <span>İBB TUDES (Toplu Ulaşım Hizmetleri)</span>
-                </strong>
-                <p className="text-zinc-500">Taksi plakasıyla bildirilen fazla ücret ve taksimetre açmama şikayetleri doğrudan cezai işleme alınır.</p>
+              <div className="p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-2.5">
+                <strong className="text-zinc-900 font-bold block">Adım 3: Kurumsal Bildirimler (Resmi Devlet Kurumları)</strong>
+
+                <div className="p-3 bg-white border border-zinc-200 rounded-xl space-y-1">
+                  <strong className="text-zinc-900 font-bold flex items-center gap-1.5">
+                    <Landmark className="w-4 h-4 text-red-600" />
+                    <span>CİMER (Cumhurbaşkanlığı İletişim)</span>
+                  </strong>
+                  <p className="text-zinc-500">Turist dolandırıcılığı, sahte acenteler ve esnaf usulsüzlükleri Bakanlıklara sevk edilir.</p>
+                </div>
+
+                <div className="p-3 bg-white border border-zinc-200 rounded-xl space-y-1">
+                  <strong className="text-zinc-900 font-bold flex items-center gap-1.5">
+                    <Car className="w-4 h-4 text-amber-600" />
+                    <span>İBB TUDES (Toplu Ulaşım Hizmetleri)</span>
+                  </strong>
+                  <p className="text-zinc-500">Taksi plakasıyla bildirilen fazla ücret ve taksimetre açmama şikayetleri doğrudan cezai işleme alınır.</p>
+                </div>
               </div>
             </div>
           </div>
