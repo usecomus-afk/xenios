@@ -485,69 +485,15 @@ export const XeniosStore = {
     }
   },
 
-  // Bookings & Virtual POS
+    // Bookings & Virtual POS
   getBookings(): Booking[] {
-    const isHidden = this.isDemoDataHidden();
     try {
       const stored = safeGet(STORAGE_KEYS.BOOKINGS);
       if (stored) {
-        const list: Booking[] = JSON.parse(stored);
-        return isHidden ? list.filter(b => !b.isDemo) : list;
+        return JSON.parse(stored);
       }
     } catch (e) {}
-
-    const seed: Booking[] = [
-      {
-        id: 'book-demo-1',
-        hotelId: 'hotel-1',
-        hotelName: 'Hotel Sultanahmet',
-        roomNumber: '204',
-        experienceId: 'exp-1',
-        experienceTitle: 'Özel Yat ile Boğazda Günbatımı Turu',
-        providerName: 'Bosphorus Yacht Club',
-        providerPhone: '+90 212 514 00 00',
-        guestName: 'Marc & Sophie Laurent',
-        guestPhone: '+33 6 12 34 56 78',
-        guestEmail: 'sophie.laurent@paris.fr',
-        guestCount: 2,
-        bookingDate: new Date().toISOString().split('T')[0],
-        bookingTime: '18:30',
-        amount: 250,
-        currency: 'EUR',
-        status: 'confirmed',
-        confirmationCode: 'XEN-DEMO-88',
-        createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
-        isDemo: true
-      },
-      {
-        id: 'book-demo-2',
-        hotelId: 'hotel-1',
-        hotelName: 'Hotel Sultanahmet',
-        roomNumber: '301',
-        experienceId: 'exp-2',
-        experienceTitle: 'Tarihi Yarımada VIP Rehberli Kültür Turu',
-        providerName: 'Istanbul Heritage Tours',
-        providerPhone: '+90 212 522 11 22',
-        guestName: 'Hans Weber',
-        guestPhone: '+49 170 987 65 43',
-        guestEmail: 'h.weber@berlin.de',
-        guestCount: 3,
-        bookingDate: new Date().toISOString().split('T')[0],
-        bookingTime: '10:00',
-        amount: 180,
-        currency: 'EUR',
-        status: 'confirmed',
-        confirmationCode: 'XEN-DEMO-42',
-        createdAt: new Date(Date.now() - 3600000 * 8).toISOString(),
-        isDemo: true
-      }
-    ];
-
-    try {
-      safeSet(STORAGE_KEYS.BOOKINGS, JSON.stringify(seed));
-    } catch (e) {}
-
-    return isHidden ? [] : seed;
+    return [];
   },
 
   addBooking(booking: Omit<Booking, 'id' | 'createdAt' | 'confirmationCode'>): Booking {
@@ -617,101 +563,15 @@ export const XeniosStore = {
     safeSet('xenios_ai_intro_dismissed', v ? '1' : '0');
   },
 
-    // Tourist Complaints & Fraud Dispute Desk
+      // Tourist Complaints & Fraud Dispute Desk
   getComplaints(): Complaint[] {
-    const isHidden = this.isDemoDataHidden();
     try {
       const stored = safeGet(STORAGE_KEYS.COMPLAINTS);
       if (stored) {
-        const list: Complaint[] = JSON.parse(stored);
-        return isHidden ? list.filter(c => !c.isDemo) : list;
+        return JSON.parse(stored);
       }
     } catch (e) {}
-
-    const seed: Complaint[] = [
-      {
-        id: 'comp-1',
-        trackingCode: 'XEN-HAK-9042',
-        businessName: 'Bosphorus Pearl Seafood & Grill',
-        businessCategory: 'Restoran / Kafe',
-        location: 'Karaköy / Galata',
-        incidentDate: '2026-08-10',
-        amountPaid: 4800,
-        amountExpected: 1600,
-        currency: 'TRY',
-        discrepancyAmount: 3200,
-        guestName: 'Marc & Sophie Laurent',
-        guestEmail: 'sophie.laurent@paris.fr',
-        guestPhone: '+33 6 12 34 56 78',
-        hotelName: 'Hotel Sultanahmet',
-        roomNumber: '204',
-        description: 'Menüde yer almayan balık mezeleri ve kuver için fahiş hesap yansıtıldı. İtiraz ettiğimizde agresif tavır sergilendi.',
-        status: 'contacted_business',
-        businessEmail: 'info@bosphoruspearl.com.tr',
-        daysPending: 5,
-        isPublicAlert: false,
-        createdAt: new Date(Date.now() - 5 * 86400000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        isDemo: true
-      },
-      {
-        id: 'comp-2',
-        trackingCode: 'XEN-HAK-8114',
-        businessName: 'Sultan Carpet & Antique Gallery',
-        businessCategory: 'Alışveriş / Halı & Deri',
-        location: 'Kapalıçarşı / Nuruosmaniye',
-        incidentDate: '2026-07-12',
-        amountPaid: 1400,
-        amountExpected: 250,
-        currency: 'EUR',
-        discrepancyAmount: 1150,
-        guestName: 'Hans & Erika Weber',
-        guestEmail: 'h.weber@berlin.de',
-        guestPhone: '+49 170 987 65 43',
-        hotelName: 'Erba Hotel Sultanahmet',
-        roomNumber: '101',
-        description: 'Makine halısı orijinal 1920 Kök Boya Hereke İpek Halısı diye 1.400 Euroya satıldı. Bilirkişi raporuyla sahte olduğu kanıtlandı. İşletmeye 30 gün boyunca iletilen resmi yazılara hiçbir cevap verilmedi ve iyi niyet gösterilmedi.',
-        status: 'published_blacklisted',
-        businessEmail: 'sultancarpet@gmail.com',
-        businessResponse: '30 gün içinde yanıt verilmedi veya telafi reddedildi.',
-        daysPending: 34,
-        isPublicAlert: true,
-        createdAt: new Date(Date.now() - 34 * 86400000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        isDemo: true
-      },
-      {
-        id: 'comp-3',
-        trackingCode: 'XEN-HAK-7201',
-        businessName: 'Sarı Taksi (34 TAA 192)',
-        businessCategory: 'Taksi / Ulaşım',
-        location: 'Havalimanı - Sultanahmet Hattı',
-        incidentDate: '2026-08-02',
-        amountPaid: 1850,
-        amountExpected: 950,
-        currency: 'TRY',
-        discrepancyAmount: 900,
-        guestName: 'Dmitry Ivanov',
-        guestEmail: 'dmitry.iv@mail.ru',
-        guestPhone: '+7 916 555 33 22',
-        hotelName: 'Hotel Sultanahmet',
-        roomNumber: '301',
-        description: 'Taksimetre açılmadı ve köprü geçişi bahanesiyle 1.850 TL tahsil edildi. Platformumuz taksi durağı ve oda resepsiyonuyla temasa geçti; durak yönetimi hatayı kabul etti ve 900 TL farkı misafirin hesabına iade etti.',
-        status: 'resolved_refunded',
-        businessEmail: 'taksiduragi@istanbul.com',
-        businessResponse: 'Durak başkanı hatayı kabul etti, 900 TL nakit fark otel resepsiyonu aracılığıyla misafire ödendi.',
-        daysPending: 2,
-        isPublicAlert: false,
-        createdAt: new Date(Date.now() - 13 * 86400000).toISOString(),
-        updatedAt: new Date().toISOString(),
-        isDemo: true
-      }
-    ];
-
-    try {
-      safeSet(STORAGE_KEYS.COMPLAINTS, JSON.stringify(seed));
-    } catch (e) {}
-    return isHidden ? [] : seed;
+    return [];
   },
 
   addComplaint(complaint: Omit<Complaint, 'id' | 'trackingCode' | 'daysPending' | 'isPublicAlert' | 'createdAt' | 'updatedAt'>): Complaint {

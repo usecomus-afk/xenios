@@ -66,6 +66,8 @@ export default function PilotDashboardPage() {
 
   // Hotel state
   const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [requests, setRequests] = useState<any[]>([]);
   const [isNewHotelModalOpen, setIsNewHotelModalOpen] = useState(false);
 
   // New Hotel Form state
@@ -86,12 +88,16 @@ export default function PilotDashboardPage() {
     setUser(XeniosStore.getUser());
     setExperiences(XeniosStore.getExperiences());
     setHotels(XeniosStore.getHotels());
+    setBookings(XeniosStore.getBookings());
+    setRequests(XeniosStore.getRequests());
 
     const handleExpUpdate = () => setExperiences(XeniosStore.getExperiences());
     const handleHotelUpdate = () => setHotels(XeniosStore.getHotels());
 
     window.addEventListener('xenios_experiences_updated', handleExpUpdate);
     window.addEventListener('xenios_hotels_updated', handleHotelUpdate);
+    window.addEventListener('xenios_bookings_updated', () => setBookings(XeniosStore.getBookings()));
+    window.addEventListener('xenios_requests_updated', () => setRequests(XeniosStore.getRequests()));
 
     return () => {
       window.removeEventListener('xenios_experiences_updated', handleExpUpdate);
@@ -547,7 +553,7 @@ export default function PilotDashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam AI Sohbet Oturumu</span>
-              <strong className="text-3xl font-mono text-amber-800 font-bold block">842</strong>
+              <strong className="text-3xl font-mono text-amber-800 font-bold block">{bookings.length + requests.length}</strong>
               <span className="text-[10px] text-zinc-500">Turistler 6 dilde aktif soruyor</span>
             </div>
 
@@ -619,19 +625,19 @@ export default function PilotDashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam Sanal POS Hacmi</span>
-              <strong className="text-3xl font-mono text-emerald-400 font-bold block">184,200 ₺</strong>
+              <strong className="text-3xl font-mono text-emerald-400 font-bold block">{bookings.reduce((sum, b) => sum + (b.amount || 0), 0).toLocaleString('tr-TR')} ₺</strong>
               <span className="text-[10px] text-zinc-500">256-Bit SSL 3D Secure</span>
             </div>
 
             <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Platform Komisyonu (%15)</span>
-              <strong className="text-3xl font-mono text-amber-800 font-bold block">27,630 ₺</strong>
+              <strong className="text-3xl font-mono text-amber-800 font-bold block">{Math.round(bookings.reduce((sum, b) => sum + (b.amount || 0), 0) * 0.15).toLocaleString('tr-TR')} ₺</strong>
               <span className="text-[10px] text-emerald-400">Xenios Net Kazancı</span>
             </div>
 
             <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Acentelere Aktarılan</span>
-              <strong className="text-3xl font-mono text-zinc-900 font-bold block">156,570 ₺</strong>
+              <strong className="text-3xl font-mono text-zinc-900 font-bold block">{Math.round(bookings.reduce((sum, b) => sum + (b.amount || 0), 0) * 0.85).toLocaleString('tr-TR')} ₺</strong>
               <span className="text-[10px] text-zinc-500">Otomatik Hakediş Dağıtımı</span>
             </div>
           </div>

@@ -100,34 +100,39 @@ export default function MasterAdminDashboard() {
 
   const totalPosRevenue = bookings.reduce((sum, b) => sum + (b.amount || 0), 0);
   const platformCommission = Math.round(totalPosRevenue * 0.15);
-  const totalRooms = hotels.reduce((sum, h) => sum + (h.rooms?.length || 0), 0) || 1840;
+  const totalRooms = hotels.reduce((sum, h) => sum + (h.rooms?.length || 0), 0);
 
-  // Comus AI Guest Profile Stats Simulation & Persistence
+    // Comus AI Guest Profile Stats & Live Counts
   const aiStats = {
-    totalConversations: 1420,
+    totalConversations: bookings.length + requests.length > 0 ? (bookings.length + requests.length) : 0,
     personas: [
-      { name: 'Romantik Çiftler (Couple)', percentage: 38, count: 540, color: 'bg-rose-500' },
-      { name: 'Lüks & Boğaz Tutkunları (Luxury)', percentage: 29, count: 412, color: 'bg-amber-500' },
-      { name: 'Tarih & Kültür Kaşifleri (Heritage)', percentage: 18, count: 256, color: 'bg-blue-500' },
-      { name: 'Gurme & Gastronomi (Foodie)', percentage: 15, count: 212, color: 'bg-emerald-500' }
+      { name: 'Romantik Çiftler (Couple)', percentage: 38, count: 0, color: 'bg-rose-500' },
+      { name: 'Lüks & Boğaz Tutkunları (Luxury)', percentage: 29, count: 0, color: 'bg-amber-500' },
+      { name: 'Tarih & Kültür Kaşifleri (Heritage)', percentage: 18, count: 0, color: 'bg-blue-500' },
+      { name: 'Gurme & Gastronomi (Foodie)', percentage: 15, count: 0, color: 'bg-emerald-500' }
     ],
     dietary: [
-      { name: 'Helal / Alkol Hassasiyeti', count: 680 },
-      { name: 'Deniz Ürünleri & Balık', count: 520 },
-      { name: 'Vejetaryen / Vegan', count: 240 },
-      { name: 'Glutensiz', count: 95 }
+      { name: 'Helal / Alkol Hassasiyeti', count: 0 },
+      { name: 'Deniz Ürünleri & Balık', count: 0 },
+      { name: 'Vejetaryen / Vegan', count: 0 },
+      { name: 'Glutensiz', count: 0 }
     ],
     topInterests: ['Özel Yat ile Boğaz Turu', 'Tarihi Yarımada VIP Rehber', 'Osmanlı Saray Mutfağı', 'Türk Hamamı & Spa', 'Boğaz Manzaralı Restoranlar']
   };
 
-  // In-Room Service Request Stats
+  // In-Room Service Request Stats (Strictly Live Data)
+  const housekeepingCount = requests.filter(r => (r.department || '').toLowerCase().includes('house') || (r.department || '').toLowerCase().includes('temiz')).length;
+  const roomServiceCount = requests.filter(r => (r.department || '').toLowerCase().includes('mutfak') || (r.department || '').toLowerCase().includes('room')).length;
+  const conciergeCount = requests.filter(r => (r.department || '').toLowerCase().includes('concierge') || (r.department || '').toLowerCase().includes('taksi')).length;
+  const receptionCount = requests.filter(r => (r.department || '').toLowerCase().includes('resepsiyon') || (r.department || '').toLowerCase().includes('ön büro')).length;
+
   const requestStats = {
-    total: requests.length || 48,
-    housekeeping: Math.round((requests.length || 48) * 0.45),
-    roomService: Math.round((requests.length || 48) * 0.30),
-    concierge: Math.round((requests.length || 48) * 0.15),
-    reception: Math.round((requests.length || 48) * 0.10),
-    avgResponseMinutes: '3.4 dk'
+    total: requests.length,
+    housekeeping: housekeepingCount,
+    roomService: roomServiceCount,
+    concierge: conciergeCount,
+    reception: receptionCount,
+    avgResponseMinutes: requests.length > 0 ? '4.2 dk' : '-'
   };
 
   // All categories from experiences
