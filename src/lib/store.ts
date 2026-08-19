@@ -66,6 +66,7 @@ export const XeniosStore = {
     this.setUser(null);
   },
 
+  // Hotels Management & Live Inventory
   getHotels(): Hotel[] {
     try {
       const stored = safeGet('xenios_custom_hotels');
@@ -101,12 +102,36 @@ export const XeniosStore = {
     return this.getHotels().find(h => h.id === id) || this.getHotels()[0];
   },
 
+  getHotelManagerProfile(hotelId?: string) {
+    const key = `xenios_manager_profile_${hotelId || this.getActiveHotelId()}`;
+    try {
+      const stored = safeGet(key);
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return {
+      managerName: 'Ahmet Yılmaz',
+      managerTitle: 'Genel Müdür / Ön Büro Direktörü',
+      managerPhone: '+90 532 555 44 33',
+      contactEmail: 'heritage@xenios.istanbul',
+      notificationEmail: 'concierge@heritagehotel.com',
+      notifyOnNewBooking: true,
+      notifyOnRoomRequest: true
+    };
+  },
+
+  saveHotelManagerProfile(hotelId: string, profile: any) {
+    const key = `xenios_manager_profile_${hotelId}`;
+    safeSet(key, JSON.stringify(profile));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_manager_profile_updated'));
+    }
+  },
+
   addRoomToHotel(hotelId: string, room: Room) {
     const hotels = this.getHotels();
     const h = hotels.find(item => item.id === hotelId);
     if (h) {
       if (!h.rooms) h.rooms = [];
-      // Prevent duplicate room numbers
       if (!h.rooms.some(r => r.number === room.number)) {
         h.rooms.push(room);
         this.saveHotels(hotels);

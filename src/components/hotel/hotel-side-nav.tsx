@@ -17,7 +17,8 @@ import {
   ArrowLeft,
   X,
   ChevronDown,
-  Building2
+  Building2,
+  UserCog
 } from "lucide-react";
 
 interface HotelSideNavProps {
@@ -66,6 +67,7 @@ export function HotelSideNav({ isOpen, onClose }: HotelSideNavProps) {
     { href: "/hotel-portal/channels", label: "iCal & OTA Kanalları", icon: CalendarSync },
     { href: "/hotel-portal/bookings", label: "Misafir Rezervasyon & Gelir", icon: CreditCard },
     { href: "/hotel-portal/qr-generator", label: "Oda QR Kodları", icon: QrCode },
+    { href: "/hotel-portal/profile", label: "Otel & Profil Ayarları", icon: UserCog },
   ];
 
   const content = (

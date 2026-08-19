@@ -5,7 +5,7 @@ import { HotelSideNav } from "@/components/hotel/hotel-side-nav";
 import { HotelAuthGuard } from "@/components/hotel/hotel-auth-guard";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
-import { Menu, ArrowLeft, Building2, BellRing, QrCode, LogOut } from "lucide-react";
+import { Menu, ArrowLeft, Building2, BellRing, QrCode, LogOut, UserCog } from "lucide-react";
 import { XeniosStore } from "@/lib/store";
 import { toast } from "sonner";
 
@@ -76,6 +76,13 @@ export default function HotelPortalLayout({
             </div>
 
             <div className="flex items-center gap-3">
+              <Link
+                href="/hotel-portal/profile"
+                className="px-3.5 py-1.5 bg-white hover:bg-amber-50 text-amber-900 border border-amber-200 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs"
+              >
+                <UserCog className="w-3.5 h-3.5 text-amber-700" />
+                <span>Profil & Ayarlar</span>
+              </Link>
               <Link
                 href="/hotel-portal/requests"
                 className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs"
