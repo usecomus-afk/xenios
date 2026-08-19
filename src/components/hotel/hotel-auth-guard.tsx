@@ -135,9 +135,6 @@ export function HotelAuthGuard({ children }: { children: React.ReactNode }) {
               <span>Partner Otel Yönetim Paneli Girişi</span>
             </div>
             <h3 className="text-sm font-bold text-zinc-900">{currentHotel.name}</h3>
-            <p className="text-xs text-zinc-500 max-w-xs mx-auto">
-              Oda talepleri, iCal & OTA kanalları ve otel içi hizmet menüsü yönetimi için giriş yapınız.
-            </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
