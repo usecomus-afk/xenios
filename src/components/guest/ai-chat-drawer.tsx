@@ -121,21 +121,33 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => setShowSurvey(true)}
-              className={`p-2 rounded-xl border transition text-xs font-semibold flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-xl border transition text-xs font-bold flex items-center gap-1.5 shadow-2xs cursor-pointer ${
                 profile.kvkkConsent
-                  ? 'bg-white border-amber-200 text-zinc-700 hover:bg-amber-50'
-                  : 'bg-amber-500 border-amber-500 text-white hover:bg-amber-600'
+                  ? 'bg-white border-amber-300 text-zinc-800 hover:bg-amber-50'
+                  : 'bg-gradient-to-r from-amber-500 to-amber-600 border-amber-400 text-zinc-950 hover:brightness-105'
               }`}
               title="Misafir Tercihleri & Kişisel Rehberlik Anketi"
             >
-              {profile.kvkkConsent ? <SlidersHorizontal className="w-3.5 h-3.5 text-amber-700" /> : <UserCog className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">{profile.kvkkConsent ? 'Tercihlerim' : 'Beni Tanı'}</span>
+              {profile.kvkkConsent ? (
+                <SlidersHorizontal className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+              ) : (
+                <UserCog className="w-3.5 h-3.5 text-zinc-950 shrink-0" />
+              )}
+              <span className="inline-block whitespace-nowrap font-bold">
+                {profile.kvkkConsent ? 'Tercihlerim' : 'Beni Tanı'}
+              </span>
             </button>
-            <button onClick={onClose} className="p-2 text-zinc-400 hover:text-zinc-800 font-bold">
-              <X className="w-5 h-5" />
+
+            <button 
+              type="button"
+              onClick={onClose} 
+              className="w-8 h-8 rounded-full bg-white hover:bg-amber-50 border border-amber-200 text-zinc-500 hover:text-zinc-900 flex items-center justify-center transition cursor-pointer"
+            >
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -233,13 +245,22 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
 
             {/* Quick Suggestion Chips */}
             <div className="px-4 py-2 bg-white border-t border-amber-100 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              <button
+                type="button"
+                onClick={() => setShowSurvey(true)}
+                className="text-[10px] px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 border border-amber-400 shrink-0 font-bold transition flex items-center gap-1 shadow-2xs cursor-pointer"
+              >
+                <Sparkles className="w-2.5 h-2.5" />
+                <span>Beni Tanı (Kişisel Öneriler)</span>
+              </button>
+
               {quickQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => {
                     setInput(q);
                   }}
-                  className="text-[10px] px-2.5 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 shrink-0 font-medium transition"
+                  className="text-[10px] px-2.5 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 shrink-0 font-medium transition cursor-pointer"
                 >
                   {q}
                 </button>
