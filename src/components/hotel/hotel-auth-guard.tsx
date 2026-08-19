@@ -202,12 +202,9 @@ export function HotelAuthGuard({ children }: { children: React.ReactNode }) {
             </button>
           </form>
 
-          <div className="pt-2 text-center border-t border-zinc-100 flex items-center justify-between text-xs text-zinc-500">
-            <Link href="/" className="hover:text-amber-800 font-semibold transition">
-              ← Misafir Ekranı
-            </Link>
-            <Link href="/dashboard" className="hover:text-amber-800 font-semibold transition">
-              Admin Masası →
+          <div className="pt-2 text-center border-t border-zinc-100">
+            <Link href="/" className="text-xs text-zinc-500 hover:text-amber-800 font-semibold transition">
+              ← Misafir Ekranına Geri Dön
             </Link>
           </div>
         </div>

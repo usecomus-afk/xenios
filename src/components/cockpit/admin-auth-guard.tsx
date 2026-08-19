@@ -33,7 +33,7 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
       toast.success("Master Proje Yöneticisi girişi başarılı!");
       setError('');
     } else {
-      setError("Hatalı kullanıcı adı veya şifre! (Demo: admin / xenios2026)");
+      setError("Hatalı yönetici kullanıcı adı veya şifre! Lütfen bilgilerinizi kontrol ediniz.");
       toast.error("Giriş başarısız. Lütfen bilgilerinizi kontrol ediniz.");
     }
   };
@@ -71,14 +71,14 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
             )}
 
             <div className="space-y-1.5">
-              <label className="font-bold text-zinc-700 block">Kullanıcı Adı</label>
+              <label className="font-bold text-zinc-700 block">Kullanıcı Adı / E-Posta</label>
               <div className="relative">
                 <input
                   type="text"
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin"
+                  placeholder="Yönetici kullanıcı adınız"
                   className="w-full p-3 bg-amber-50/30 border border-amber-200 rounded-xl font-medium text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
                 />
               </div>
@@ -98,14 +98,9 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
               </div>
             </div>
 
-            <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-100 text-[11px] text-amber-900 flex items-center justify-between">
-              <span>Demo Giriş:</span>
-              <strong className="font-mono text-zinc-800">admin / xenios2026</strong>
-            </div>
-
             <button
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-zinc-950 font-bold rounded-xl shadow-md shadow-amber-500/20 text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-zinc-950 font-bold rounded-xl shadow-md shadow-amber-500/20 text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
             >
               <Lock className="w-3.5 h-3.5" />
               <span>Güvenli Giriş Yap</span>
