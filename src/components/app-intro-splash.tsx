@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { ArrowRight } from 'lucide-react';
 
 export function AppIntroSplash() {
   const [isMobile, setIsMobile] = useState(false);
@@ -50,7 +49,8 @@ export function AppIntroSplash() {
 
   return (
     <div
-      className={`md:hidden fixed inset-0 z-[99999] w-screen h-[100dvh] bg-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out select-none ${
+      onClick={handleDismiss}
+      className={`md:hidden fixed inset-0 z-[99999] w-screen h-[100dvh] bg-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out select-none cursor-pointer ${
         isFadingOut ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
@@ -66,17 +66,6 @@ export function AppIntroSplash() {
         onError={handleDismiss}
         className="w-full h-full object-cover"
       />
-
-      {/* Top Safe-Area Floating Skip Button */}
-      <div className="absolute top-4 right-4 z-20 pt-safe">
-        <button
-          onClick={handleDismiss}
-          className="px-3.5 py-1.5 rounded-full bg-black/60 hover:bg-black/80 text-white/90 hover:text-white border border-white/20 backdrop-blur-md text-[11px] font-bold flex items-center gap-1.5 transition shadow-lg cursor-pointer active:scale-95"
-        >
-          <span>Geç</span>
-          <ArrowRight className="w-3 h-3 text-amber-400" />
-        </button>
-      </div>
 
       {/* Bottom Subtle Brand Watermark */}
       <div className="absolute bottom-6 left-0 right-0 z-20 flex flex-col items-center text-center px-4 pb-safe pointer-events-none">
