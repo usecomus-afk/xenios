@@ -28,8 +28,8 @@ export function LanguageSelector({ currentLang, onSelect }: { currentLang: Langu
 
       {isOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-36 bg-white rounded-2xl shadow-2xl border-2 border-amber-300 p-1.5 z-50 animate-in fade-in zoom-in-95 text-zinc-900">
+          <div className="fixed inset-0 z-[90] bg-transparent" onClick={() => setIsOpen(false)} />
+          <div className="absolute right-0 top-full mt-2 w-36 bg-white rounded-2xl shadow-2xl border-2 border-amber-300 p-1.5 z-[100] animate-in fade-in zoom-in-95 text-zinc-900">
             {langs.map(l => (
               <button
                 key={l.code}

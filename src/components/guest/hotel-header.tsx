@@ -92,13 +92,13 @@ export function HotelHeader({
     <header className="bg-gradient-to-b from-amber-500/10 via-amber-100/20 to-transparent pt-3 pb-3 px-3.5 sm:px-4 border-b border-amber-200/50 w-full relative z-40 overflow-visible">
       <div className="max-w-4xl mx-auto space-y-2.5">
         {/* Top Bar: Brand Logo + Compact Unified Action Pill (Bell, Lang, User) */}
-        <div className="flex items-center justify-between gap-2 relative z-30">
+        <div className="flex items-center justify-between gap-2 relative z-50">
           <div className="shrink-0">
             <BrandMark size={32} showText={true} theme="light" />
           </div>
           
-          {/* Unified Compact Action Pill to ensure 100% symmetric margins */}
-          <div className="flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-full border border-amber-200/90 shadow-xs shrink-0 relative z-50">
+          {/* Unified Compact Action Pill to ensure 100% symmetric margins without backdrop-blur trapping */}
+          <div className="flex items-center gap-1 bg-white p-1 rounded-full border border-amber-200/90 shadow-xs shrink-0 relative z-50">
             {/* 1. PWA Notification Bell */}
             <button
               type="button"
@@ -141,10 +141,10 @@ export function HotelHeader({
                 {showUserDropdown && (
                   <>
                     <div 
-                      className="fixed inset-0 z-40 bg-transparent" 
+                      className="fixed inset-0 z-[90] bg-transparent" 
                       onClick={() => setShowUserDropdown(false)} 
                     />
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl p-3.5 shadow-2xl border-2 border-amber-300 z-50 space-y-2 animate-in fade-in zoom-in-95 text-zinc-900">
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl p-3.5 shadow-2xl border-2 border-amber-300 z-[100] space-y-2 animate-in fade-in zoom-in-95 text-zinc-900">
                       <div className="border-b border-zinc-100 pb-2">
                         <strong className="text-xs text-zinc-900 block truncate">{user.name}</strong>
                         <span className="text-[10px] text-zinc-500 block truncate">{user.email}</span>
@@ -199,7 +199,7 @@ export function HotelHeader({
         {/* SINGLE-LINE SLEEK HOTEL BAR (Tıklanınca Açılır Pencere) */}
         <div 
           onClick={() => setShowHotelModal(true)}
-          className="bg-white/95 hover:bg-white rounded-2xl px-3.5 py-2.5 shadow-xs hover:shadow-sm border border-amber-200/80 backdrop-blur-md flex items-center justify-between gap-2.5 cursor-pointer transition group relative z-10"
+          className="bg-white/95 hover:bg-white rounded-2xl px-3.5 py-2.5 shadow-xs hover:shadow-sm border border-amber-200/80 flex items-center justify-between gap-2.5 cursor-pointer transition group relative z-0"
         >
           <div className="flex items-center gap-2 min-w-0">
             <Building2 className="w-4 h-4 text-amber-700 shrink-0" />
