@@ -1,24 +1,34 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export function AppIntroSplash() {
+  const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Check if splash was already shown in this session
-    const hasSeenIntro = sessionStorage.getItem('xenios_has_seen_intro_v1');
-    if (!hasSeenIntro) {
-      setIsVisible(true);
-      sessionStorage.setItem('xenios_has_seen_intro_v1', '1');
+    // Determine if user is on mobile (width < 768px or touch device)
+    const checkMobile = () => {
+      const isMobileScreen = window.innerWidth < 768;
+      const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+      return isMobileScreen || (isTouch && window.innerWidth < 1024);
+    };
+
+    if (checkMobile()) {
+      setIsMobile(true);
+      const hasSeenIntro = sessionStorage.getItem('xenios_has_seen_intro_mobile_v1');
+      if (!hasSeenIntro) {
+        setIsVisible(true);
+        sessionStorage.setItem('xenios_has_seen_intro_mobile_v1', '1');
+      }
     }
   }, []);
 
   useEffect(() => {
-    if (isVisible && videoRef.current) {
+    if (isVisible && isMobile && videoRef.current) {
       const playPromise = videoRef.current.play();
       if (playPromise !== undefined) {
         playPromise.catch((error) => {
@@ -26,68 +36,61 @@ export function AppIntroSplash() {
         });
       }
     }
-  }, [isVisible]);
+  }, [isVisible, isMobile]);
 
   const handleDismiss = () => {
     setIsFadingOut(true);
     setTimeout(() => {
       setIsVisible(false);
-    }, 600);
+    }, 500);
   };
 
-  if (!isVisible) return null;
+  // Only render on mobile devices
+  if (!isMobile || !isVisible) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-[99999] bg-[#0c0a09] flex flex-col items-center justify-center transition-all duration-700 ease-in-out ${
+      className={`md:hidden fixed inset-0 z-[99999] w-screen h-[100dvh] bg-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out select-none ${
         isFadingOut ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
-      {/* Background ambient lighting */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-amber-950/20 pointer-events-none" />
+      {/* 100% Fullscreen Mobile Video */}
+      <video
+        ref={videoRef}
+        src="/xenios1618.mp4"
+        autoPlay
+        muted
+        playsInline
+        webkit-playsinline="true"
+        onEnded={handleDismiss}
+        onError={handleDismiss}
+        className="w-full h-full object-cover"
+      />
 
-      {/* Top Bar with Skip Button */}
-      <div className="absolute top-6 right-6 z-20">
+      {/* Top Safe-Area Floating Skip Button */}
+      <div className="absolute top-4 right-4 z-20 pt-safe">
         <button
           onClick={handleDismiss}
-          className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/15 backdrop-blur-md text-xs font-semibold flex items-center gap-1.5 transition shadow-lg cursor-pointer active:scale-95"
+          className="px-3.5 py-1.5 rounded-full bg-black/60 hover:bg-black/80 text-white/90 hover:text-white border border-white/20 backdrop-blur-md text-[11px] font-bold flex items-center gap-1.5 transition shadow-lg cursor-pointer active:scale-95"
         >
           <span>Geç</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <ArrowRight className="w-3 h-3 text-amber-400" />
         </button>
       </div>
 
-      {/* Main Video Presentation */}
-      <div className="relative z-10 max-w-2xl w-full px-4 flex flex-col items-center justify-center">
-        <div className="relative w-full aspect-video max-h-[70vh] rounded-3xl overflow-hidden shadow-2xl border border-amber-500/20 bg-black flex items-center justify-center">
-          <video
-            ref={videoRef}
-            src="/xenios1618.mp4"
-            autoPlay
-            muted
-            playsInline
-            onEnded={handleDismiss}
-            onError={handleDismiss}
-            className="w-full h-full object-contain"
-          />
-        </div>
-
-        {/* Brand Subtext */}
-        <div className="mt-6 flex flex-col items-center text-center space-y-1.5 animate-in fade-in duration-1000">
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] uppercase tracking-[0.25em] text-amber-400/90 font-bold font-mono">
-              XENIOS ISTANBUL
-            </span>
-          </div>
-          <p className="text-xs text-zinc-400 font-serif italic">
-            Digital Guest Directory & Personalized City Concierge
-          </p>
-        </div>
+      {/* Bottom Subtle Brand Watermark */}
+      <div className="absolute bottom-6 left-0 right-0 z-20 flex flex-col items-center text-center px-4 pb-safe pointer-events-none">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-amber-300/90 font-mono font-bold drop-shadow-md">
+          XENIOS ISTANBUL
+        </span>
+        <span className="text-[9px] text-white/70 font-serif italic drop-shadow-sm mt-0.5">
+          Digital Guest Directory & Concierge
+        </span>
       </div>
 
-      {/* Subtle Bottom Loading Line */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-900">
-        <div className="h-full bg-gradient-to-r from-amber-500 to-amber-300 animate-[pulse_2s_ease-in-out_infinite]" />
+      {/* Bottom Loading Progress Bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black/50 z-20">
+        <div className="h-full bg-gradient-to-r from-amber-500 via-amber-300 to-amber-500 animate-[pulse_1.5s_ease-in-out_infinite]" />
       </div>
     </div>
   );
