@@ -1,5 +1,8 @@
 "use client";
 
+import { NotificationService } from "@/lib/notification-service";
+import { FirestoreService } from "@/lib/firestore-service";
+
 import { Experience, Hotel, Language, Booking } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { formatPrice, generateCalendarUrl } from '@/lib/utils';
@@ -66,6 +69,8 @@ export function VirtualPosModal({ experience, hotel, roomNumber, lang, onClose }
       });
 
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+      FirestoreService.addBooking(booking);
+      NotificationService.notifyBookingCreated(booking);
       setCreatedBooking(booking);
       setIsProcessing(false);
       toast.success(t.posSuccess);

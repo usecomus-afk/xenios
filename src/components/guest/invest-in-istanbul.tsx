@@ -1,5 +1,8 @@
 "use client";
 
+import { NotificationService } from "@/lib/notification-service";
+import { FirestoreService } from "@/lib/firestore-service";
+
 import { useState, useEffect } from 'react';
 import { PropertyListing, InvestorPersona, Hotel } from '@/lib/types';
 import { XeniosStore } from '@/lib/store';
@@ -89,7 +92,7 @@ export function InvestInIstanbul({ hotel, roomNumber }: InvestInIstanbulProps) {
     setIsSubmitting(true);
     setTimeout(() => {
       const profile = XeniosStore.getGuestProfile();
-      XeniosStore.addInvestmentLead({
+      const newLead = XeniosStore.addInvestmentLead({
         propertyId: tourProperty.id,
         propertyTitle: tourProperty.title,
         hotelId: hotel.id,
@@ -100,6 +103,9 @@ export function InvestInIstanbul({ hotel, roomNumber }: InvestInIstanbulProps) {
         note: `[VIP Keşif Turu Talebi] Tarih: ${tourDate} | Transfer: ${tourVehicle} | Dil: ${tourLanguage} | Not: ${tourNote.trim() || 'Yok'}`,
         personaGuess: profile.investPersonaGuess
       });
+
+      FirestoreService.addInvestmentLead(newLead);
+      NotificationService.notifyInvestmentLead(newLead, tourProperty);
       toast.success('VIP Keşif Turu Rezervasyonunuz Alındı!', {
         description: `${hotel.name} Oda ${roomNumber} için VIP transfer ve danışman ekibimiz sizinle en kısa sürede irtibata geçecektir.`
       });

@@ -31,5 +31,20 @@ service cloud.firestore {
     match /complaints/{complaintId} {
       allow read, write: if true;
     }
+
+    // Real Estate Investment Leads: Guest can create, Xenios & Partners can read
+    match /investment_leads/{leadId} {
+      allow read, write: if true;
+    }
+
+    // Central Notifications Log: Dispatched to hi@usecomus.com
+    match /notifications_log/{logId} {
+      allow read, write: if true;
+    }
+
+    // AI Concierge Conversation Logs & Insights
+    match /ai_logs/{logId} {
+      allow read, write: if true;
+    }
   }
 }

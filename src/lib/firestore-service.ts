@@ -25,7 +25,10 @@ export const COLLECTIONS = {
   PROPERTIES: 'properties',
   BOOKINGS: 'bookings',
   COMPLAINTS: 'complaints',
-  REQUESTS: 'service_requests'
+  REQUESTS: 'service_requests',
+  INVESTMENT_LEADS: 'investment_leads',
+  NOTIFICATIONS: 'notifications_log',
+  AI_LOGS: 'ai_logs'
 };
 
 export const FirestoreService = {
@@ -105,6 +108,53 @@ export const FirestoreService = {
       console.warn("Firestore add booking error:", e);
     }
     return local;
+  },
+
+
+  // 🏢 INVESTMENT LEADS
+  async addInvestmentLead(lead: any): Promise<any> {
+    const local = XeniosStore.addInvestmentLead(lead);
+    if (!db || !isFirebaseConfigured) return local;
+
+    try {
+      const colRef = collection(db, COLLECTIONS.INVESTMENT_LEADS);
+      await setDoc(doc(colRef, local.id), {
+        ...local,
+        notifiedTo: 'hi@usecomus.com',
+        updatedAt: new Date().toISOString()
+      });
+    } catch (e) {
+      console.warn("Firestore add investment lead error:", e);
+    }
+    return local;
+  },
+
+  // 📬 NOTIFICATIONS LOG QUEUE
+  async addNotificationLog(logData: any): Promise<void> {
+    if (!db || !isFirebaseConfigured) return;
+    try {
+      const colRef = collection(db, COLLECTIONS.NOTIFICATIONS);
+      const logId = `log-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+      await setDoc(doc(colRef, logId), logData);
+    } catch (e) {
+      console.warn("Firestore notification log error:", e);
+    }
+  },
+
+  // 🤖 AI CONCIERGE LOGS
+  async addAiLog(logData: any): Promise<void> {
+    if (!db || !isFirebaseConfigured) return;
+    try {
+      const colRef = collection(db, COLLECTIONS.AI_LOGS);
+      const logId = `ai-${Date.now()}`;
+      await setDoc(doc(colRef, logId), {
+        ...logData,
+        notifiedTo: 'hi@usecomus.com',
+        createdAt: new Date().toISOString()
+      });
+    } catch (e) {
+      console.warn("Firestore AI log error:", e);
+    }
   },
 
   // ⚖️ COMPLAINTS / DISPUTE DESK

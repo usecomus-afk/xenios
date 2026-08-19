@@ -1,5 +1,8 @@
 "use client";
 
+import { NotificationService } from "@/lib/notification-service";
+import { FirestoreService } from "@/lib/firestore-service";
+
 import { useState } from 'react';
 import { Experience, Hotel } from '@/lib/types';
 import { XeniosStore } from '@/lib/store';
@@ -44,7 +47,7 @@ export function RestaurantReservationModal({
     setIsSubmitting(true);
     setTimeout(() => {
       const code = 'RES-' + Math.floor(100000 + Math.random() * 900000);
-      XeniosStore.addBooking({
+      const newBooking = XeniosStore.addBooking({
         hotelId: hotel.id,
         hotelName: hotel.name,
         roomNumber,
@@ -62,6 +65,9 @@ export function RestaurantReservationModal({
         currency: 'TRY',
         status: 'confirmed'
       });
+
+      FirestoreService.addBooking(newBooking);
+      NotificationService.notifyRestaurantReservation(newBooking, specialNotes);
 
       // Also create a service request so the hotel cockpit concierge is alerted
       XeniosStore.addRequest({
