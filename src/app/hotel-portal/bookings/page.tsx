@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { XeniosStore } from '@/lib/store';
 import { Booking } from '@/lib/types';
 import { CreditCard, ArrowUpRight, DollarSign, Calendar, EyeOff } from 'lucide-react';
-import { DemoBadge } from '@/components/demo-badge';
+
 import { toast } from 'sonner';
 
 export default function HotelBookingsPage() {
@@ -89,7 +89,7 @@ export default function HotelBookingsPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <strong className="text-zinc-900 block text-sm font-bold">{b.experienceTitle}</strong>
-                    {b.isDemo && <DemoBadge />}
+                    
                   </div>
                   <span className="text-[11px] text-zinc-500">{b.guestName} • Oda {b.roomNumber || '101'}</span>
                 </div>

@@ -6,7 +6,7 @@ import { ServiceRequest, ServiceStatus, ModuleAdminSettingsMap } from '@/lib/typ
 import { SERVICE_MODULES, getModuleConfig, deriveStatus, nextStage, formatFieldValue, resolvePricing, deriveRequestStatus as displayStatus, isToday } from '@/lib/service-modules';
 import { BellRing, CheckCircle2, Clock, AlertTriangle, Building2, ArrowRight, LayoutGrid } from 'lucide-react';
 import { toast } from 'sonner';
-import { DemoBadge } from '@/components/demo-badge';
+
 
 const STATUS_LABEL: Record<ServiceStatus, string> = {
   pending: 'Bekliyor',
@@ -191,7 +191,7 @@ export default function LiveRequestsPage() {
                         Oda {req.roomNumber}
                       </span>
                       <strong className="text-sm text-zinc-900 truncate">{req.serviceTitle}</strong>
-                      {req.isDemo && <DemoBadge />}
+                      
                       {req.priority === 'acil' && (
                         <span className="px-2 py-0.5 rounded-lg bg-red-500/20 text-red-400 font-bold text-[10px] flex items-center gap-1 shrink-0">
                           <AlertTriangle className="w-3 h-3" /> ACİL

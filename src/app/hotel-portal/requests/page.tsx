@@ -16,7 +16,7 @@ import {
   EyeOff
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { DemoBadge } from '@/components/demo-badge';
+
 
 export default function HotelLiveRequestsPage() {
   const hotels = XeniosStore.getHotels();
@@ -192,7 +192,7 @@ export default function HotelLiveRequestsPage() {
                     Oda {req.roomNumber}
                   </span>
                   <strong className="text-sm font-bold text-zinc-900">{req.serviceTitle}</strong>
-                  {req.isDemo && <DemoBadge />}
+                  
                   {req.priority === 'acil' && (
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-800 font-bold border border-red-200 flex items-center gap-1">
                       <AlertTriangle className="w-3 h-3 text-red-600" /> ACİL

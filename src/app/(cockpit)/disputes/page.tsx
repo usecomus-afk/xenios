@@ -20,7 +20,7 @@ import {
   EyeOff
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { DemoBadge } from '@/components/demo-badge';
+
 
 export default function CockpitComplaintsPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
@@ -173,7 +173,7 @@ export default function CockpitComplaintsPage() {
                     <span className="text-[10px] text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full border border-zinc-200">
                       {comp.businessCategory}
                     </span>
-                    {comp.isDemo && <DemoBadge />}
+                    
                   </div>
 
                   <p className="text-xs text-zinc-600 flex items-center gap-2">

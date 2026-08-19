@@ -20,7 +20,7 @@ import {
   ArrowUpRight,
   ShieldAlert
 } from 'lucide-react';
-import { DemoBadge } from '@/components/demo-badge';
+
 
 export default function HotelPortalDashboard() {
   const hotels = XeniosStore.getHotels();
@@ -254,7 +254,7 @@ export default function HotelPortalDashboard() {
                       Oda {req.roomNumber}
                     </span>
                     <strong className="text-zinc-900 truncate font-bold">{req.serviceTitle}</strong>
-                    {req.isDemo && <DemoBadge />}
+                    
                     {req.department && (
                       <span className="text-zinc-500 text-[10px] truncate">• {req.department}</span>
                     )}

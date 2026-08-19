@@ -296,17 +296,19 @@ export const XeniosStore = {
     safeSet(STORAGE_KEYS.LANG, lang);
   },
 
-    // In-Room Service Requests
+      // In-Room Service Requests (Pure Real Data)
   getRequests(): ServiceRequest[] {
-    const isHidden = this.isDemoDataHidden();
     try {
       const stored = safeGet(STORAGE_KEYS.REQUESTS);
       if (stored) {
         const list: ServiceRequest[] = JSON.parse(stored);
-        return isHidden ? list.filter(r => !r.isDemo) : list;
+        const realList = list.filter(r => !r.isDemo && !r.id?.includes('demo'));
+        if (realList.length !== list.length) {
+          safeSet(STORAGE_KEYS.REQUESTS, JSON.stringify(realList));
+        }
+        return realList;
       }
     } catch (e) {}
-
     return [];
   },
 
@@ -485,12 +487,17 @@ export const XeniosStore = {
     }
   },
 
-    // Bookings & Virtual POS
+      // Bookings & Virtual POS (Pure Real Data)
   getBookings(): Booking[] {
     try {
       const stored = safeGet(STORAGE_KEYS.BOOKINGS);
       if (stored) {
-        return JSON.parse(stored);
+        const list: Booking[] = JSON.parse(stored);
+        const realList = list.filter(b => !b.isDemo && !b.id?.includes('demo'));
+        if (realList.length !== list.length) {
+          safeSet(STORAGE_KEYS.BOOKINGS, JSON.stringify(realList));
+        }
+        return realList;
       }
     } catch (e) {}
     return [];
@@ -563,12 +570,17 @@ export const XeniosStore = {
     safeSet('xenios_ai_intro_dismissed', v ? '1' : '0');
   },
 
-      // Tourist Complaints & Fraud Dispute Desk
+        // Tourist Complaints & Fraud Dispute Desk (Pure Real Data)
   getComplaints(): Complaint[] {
     try {
       const stored = safeGet(STORAGE_KEYS.COMPLAINTS);
       if (stored) {
-        return JSON.parse(stored);
+        const list: Complaint[] = JSON.parse(stored);
+        const realList = list.filter(c => !c.isDemo && !c.id?.includes('demo'));
+        if (realList.length !== list.length) {
+          safeSet(STORAGE_KEYS.COMPLAINTS, JSON.stringify(realList));
+        }
+        return realList;
       }
     } catch (e) {}
     return [];

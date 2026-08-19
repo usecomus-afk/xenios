@@ -38,7 +38,6 @@ import {
   Layers,
   ChevronRight
 } from 'lucide-react';
-import { DemoBadge } from '@/components/demo-badge';
 import { toast } from 'sonner';
 
 export default function MasterAdminDashboard() {
