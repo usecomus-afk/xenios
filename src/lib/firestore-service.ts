@@ -28,7 +28,8 @@ export const COLLECTIONS = {
   REQUESTS: 'service_requests',
   INVESTMENT_LEADS: 'investment_leads',
   NOTIFICATIONS: 'notifications_log',
-  AI_LOGS: 'ai_logs'
+  AI_LOGS: 'ai_logs',
+  ADMINS: 'admins'
 };
 
 export const FirestoreService = {
@@ -154,6 +155,20 @@ export const FirestoreService = {
       });
     } catch (e) {
       console.warn("Firestore AI log error:", e);
+    }
+  },
+
+  // 👑 MASTER PROJECT ADMIN / FOUNDER PROFILE
+  async saveAdminProfile(adminData: any): Promise<void> {
+    if (!db || !isFirebaseConfigured) return;
+    try {
+      const colRef = collection(db, COLLECTIONS.ADMINS);
+      await setDoc(doc(colRef, 'anilaslan_usecomus_com'), {
+        ...adminData,
+        updatedAt: new Date().toISOString()
+      });
+    } catch (e) {
+      console.warn("Firestore save admin profile error:", e);
     }
   },
 

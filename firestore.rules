@@ -46,5 +46,14 @@ service cloud.firestore {
     match /ai_logs/{logId} {
       allow read, write: if true;
     }
+
+    // Master Project Admins & Founders
+    match /admins/{adminId} {
+      allow read, write: if true;
+    }
+
+    match /users/{userId} {
+      allow read, write: if true;
+    }
   }
 }
