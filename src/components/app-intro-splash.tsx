@@ -3,54 +3,47 @@
 import { useState, useEffect, useRef } from 'react';
 
 export function AppIntroSplash() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  // Start with true so mobile paints the black splash screen on the very first frame with 0 flicker
+  const [isVisible, setIsVisible] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Determine if user is on mobile (width < 768px or touch device)
-    const checkMobile = () => {
-      const isMobileScreen = window.innerWidth < 768;
-      const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-      return isMobileScreen || (isTouch && window.innerWidth < 1024);
-    };
+    // Check if on desktop or if already viewed in this session
+    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
+    const hasSeen = typeof window !== 'undefined' && sessionStorage.getItem('xenios_has_seen_intro_mobile_v2');
 
-    if (checkMobile()) {
-      setIsMobile(true);
-      const hasSeenIntro = sessionStorage.getItem('xenios_has_seen_intro_mobile_v1');
-      if (!hasSeenIntro) {
-        setIsVisible(true);
-        sessionStorage.setItem('xenios_has_seen_intro_mobile_v1', '1');
+    if (isDesktop || hasSeen) {
+      setIsVisible(false);
+      return;
+    }
+
+    if (videoRef.current) {
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.log("Intro video autoplay waiting for user interaction:", err);
+        });
       }
     }
   }, []);
 
-  useEffect(() => {
-    if (isVisible && isMobile && videoRef.current) {
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.log("Intro video auto-play prevented or waiting for interaction:", error);
-        });
-      }
-    }
-  }, [isVisible, isMobile]);
-
   const handleDismiss = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('xenios_has_seen_intro_mobile_v2', '1');
+    }
     setIsFadingOut(true);
     setTimeout(() => {
       setIsVisible(false);
     }, 500);
   };
 
-  // Only render on mobile devices
-  if (!isMobile || !isVisible) return null;
+  if (!isVisible) return null;
 
   return (
     <div
       onClick={handleDismiss}
-      className={`md:hidden fixed inset-0 z-[99999] w-screen h-[100dvh] bg-black flex flex-col items-center justify-center transition-all duration-500 ease-in-out select-none cursor-pointer ${
+      className={`hidden max-md:flex fixed inset-0 z-[999999] w-screen h-[100dvh] bg-black flex-col items-center justify-center transition-all duration-500 ease-in-out select-none cursor-pointer ${
         isFadingOut ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
@@ -61,6 +54,7 @@ export function AppIntroSplash() {
         autoPlay
         muted
         playsInline
+        preload="auto"
         webkit-playsinline="true"
         onEnded={handleDismiss}
         onError={handleDismiss}
@@ -84,3 +78,4 @@ export function AppIntroSplash() {
     </div>
   );
 }
+
