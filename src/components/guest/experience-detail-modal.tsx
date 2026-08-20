@@ -3,7 +3,7 @@
 import { Experience, Hotel, Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   X, Star, MapPin, Clock, ShieldCheck, Heart, Share2, 
   Check, ArrowLeft, Phone, Globe, ExternalLink,
@@ -34,6 +34,14 @@ export function ExperienceDetailModal({
   onOpenRestaurantReserve
 }: ExperienceDetailModalProps) {
   const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
 
   if (!experience) return null;
 
@@ -87,7 +95,10 @@ export function ExperienceDetailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-white overflow-y-auto animate-in slide-in-from-bottom-5 duration-300">
+    <div 
+      className="fixed inset-0 z-50 bg-white overflow-y-auto overscroll-contain touch-pan-y min-h-screen h-[100dvh] pb-32 animate-in slide-in-from-bottom-5 duration-300"
+      style={{ WebkitOverflowScrolling: 'touch' }}
+    >
       
       {/* Top Floating Airbnb Navigation Bar */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-zinc-200/80 px-4 py-3 flex items-center justify-between shadow-xs">
@@ -245,10 +256,17 @@ export function ExperienceDetailModal({
                 title="Google Maps Buluşma Noktası"
                 width="100%"
                 height="100%"
-                style={{ border: 0 }}
+                style={{ border: 0, pointerEvents: 'none' }}
                 loading="lazy"
                 allowFullScreen
                 src={`https://maps.google.com/maps?q=${encodeURIComponent(experience.location + ', Istanbul, Turkey')}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              />
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(experience.location + ', Istanbul, Turkey')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-0 z-10"
+                aria-label="Google Maps"
               />
             </div>
 

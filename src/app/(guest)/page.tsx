@@ -416,8 +416,17 @@ export default function GuestPage() {
 
       {/* In-Room Requests Modal (Triggered from Top Hotel Card) */}
       {showRequestsModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-amber-200 max-h-[85vh] overflow-y-auto space-y-4 animate-in zoom-in-95">
+        <div 
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowRequestsModal(false);
+          }}
+        >
+          <div 
+            className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-amber-100 pb-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-700">

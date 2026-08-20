@@ -43,6 +43,16 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if (selected || tourProperty) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [selected, tourProperty]);
+
+  useEffect(() => {
     const refresh = () => setProperties(XeniosStore.getPropertyListings());
     refresh();
     window.addEventListener('xenios_properties_updated', refresh);
@@ -256,8 +266,17 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
 
       {/* Property Details Modal */}
       {selected && selectedLoc && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-amber-200 max-h-[90vh] overflow-y-auto space-y-4 animate-in zoom-in-95 text-zinc-900 relative">
+        <div 
+        className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+        style={{ WebkitOverflowScrolling: 'touch' }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) setSelected(null);
+        }}
+      >
+          <div 
+            className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             
             {/* Top Right Prominent Close Button */}
             <button
@@ -386,8 +405,17 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
 
       {/* VIP Discovery Tour Modal */}
       {tourProperty && tourLoc && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-200 animate-in zoom-in-95 space-y-4 text-zinc-900 relative">
+        <div 
+        className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+        style={{ WebkitOverflowScrolling: 'touch' }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) closeTourModal();
+        }}
+      >
+          <div 
+            className="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 text-zinc-900 relative animate-in zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
             
             {/* Top Right Prominent Close Button */}
             <button

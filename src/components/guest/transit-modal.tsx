@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from 'react';
 import { Experience, Hotel, Language } from '@/lib/types';
 import { calculateTransitOptions } from '@/lib/transit';
 import { getT } from '@/lib/i18n';
@@ -14,14 +15,30 @@ interface TransitModalProps {
 }
 
 export function TransitModal({ experience, hotel, lang, onClose }: TransitModalProps) {
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
   const t = getT(lang);
   const transit = calculateTransitOptions(hotel.coords, experience.coords, hotel.district, experience.location);
 
   const googleMapsRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(hotel.name + ', ' + hotel.address)}&destination=${encodeURIComponent(experience.location + ', Istanbul')}&travelmode=transit`;
 
   return (
-    <div className="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
-      <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-amber-200 max-h-[90vh] overflow-y-auto space-y-4 animate-in zoom-in-95">
+    <div 
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+      style={{ WebkitOverflowScrolling: 'touch' }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        className="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-amber-100 pb-3">
           <div>

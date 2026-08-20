@@ -3,7 +3,7 @@
 import { NotificationService } from "@/lib/notification-service";
 import { FirestoreService } from "@/lib/firestore-service";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Experience, Hotel, Language } from '@/lib/types';
 import { XeniosStore } from '@/lib/store';
 import { getT } from '@/lib/i18n';
@@ -38,6 +38,14 @@ export function RestaurantReservationModal({
   const [guestName, setGuestName] = useState<string>('');
   const [specialNotes, setSpecialNotes] = useState<string>('Boğaz / Manzaralı masa tercihi');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
 
   const timeSlots = ['12:30', '13:30', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00'];
 
@@ -95,8 +103,17 @@ export function RestaurantReservationModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
-      <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-amber-200 max-h-[92vh] overflow-y-auto animate-in zoom-in-95 flex flex-col">
+    <div 
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+      style={{ WebkitOverflowScrolling: 'touch' }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-amber-200 my-auto animate-in zoom-in-95 flex flex-col overflow-hidden text-zinc-900"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="bg-gradient-to-r from-zinc-900 to-amber-950 p-5 text-white relative rounded-t-3xl shrink-0">
           <button

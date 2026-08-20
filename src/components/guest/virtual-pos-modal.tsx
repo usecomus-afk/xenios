@@ -7,7 +7,7 @@ import { Experience, Hotel, Language, Booking } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { formatPrice, generateCalendarUrl } from '@/lib/utils';
 import { XeniosStore } from '@/lib/store';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { CreditCard, Lock, ShieldCheck, CheckCircle2, Calendar, Phone, Mail, User } from 'lucide-react';
@@ -21,6 +21,13 @@ interface VirtualPosModalProps {
 }
 
 export function VirtualPosModal({ experience, hotel, roomNumber, lang, onClose }: VirtualPosModalProps) {
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
   const t = getT(lang);
   const [guestName, setGuestName] = useState('Alex Mercer');
   const [guestPhone, setGuestPhone] = useState('+90 532 555 44 33');
@@ -78,8 +85,17 @@ export function VirtualPosModal({ experience, hotel, roomNumber, lang, onClose }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-amber-200 max-h-[92vh] overflow-y-auto space-y-4 animate-in zoom-in-95">
+    <div 
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+      style={{ WebkitOverflowScrolling: 'touch' }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {createdBooking ? (
           /* Success Screen */
