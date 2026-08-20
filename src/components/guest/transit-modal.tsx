@@ -15,13 +15,7 @@ interface TransitModalProps {
 }
 
 export function TransitModal({ experience, hotel, lang, onClose }: TransitModalProps) {
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, []);
+  
   const t = getT(lang);
   const transit = calculateTransitOptions(hotel.coords, experience.coords, hotel.district, experience.location);
 
@@ -29,16 +23,17 @@ export function TransitModal({ experience, hotel, lang, onClose }: TransitModalP
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-3 sm:p-6"
       style={{ WebkitOverflowScrolling: 'touch' }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div 
-        className="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="min-h-full flex items-center justify-center py-6">
+        <div 
+          className="relative w-full max-w-xl bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900"
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-amber-100 pb-3">
           <div>
@@ -164,6 +159,7 @@ export function TransitModal({ experience, hotel, lang, onClose }: TransitModalP
           >
             Kapat
           </button>
+        </div>
         </div>
       </div>
     </div>

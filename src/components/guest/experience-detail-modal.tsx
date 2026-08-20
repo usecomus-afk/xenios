@@ -35,13 +35,7 @@ export function ExperienceDetailModal({
 }: ExperienceDetailModalProps) {
   const [isLiked, setIsLiked] = useState(false);
 
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, []);
+  
 
   if (!experience) return null;
 
@@ -96,7 +90,7 @@ export function ExperienceDetailModal({
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-white overflow-y-auto overscroll-contain touch-pan-y min-h-screen h-[100dvh] pb-32 animate-in slide-in-from-bottom-5 duration-300"
+      className="fixed inset-0 z-50 bg-white overflow-y-auto overflow-x-hidden text-zinc-900"
       style={{ WebkitOverflowScrolling: 'touch' }}
     >
       

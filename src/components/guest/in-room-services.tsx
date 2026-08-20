@@ -188,16 +188,17 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
       {/* Modal for In-Room Request Confirmation */}
       {selectedService && (
         <div 
-          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-3 sm:p-6"
           style={{ WebkitOverflowScrolling: 'touch' }}
           onClick={(e) => {
             if (e.target === e.currentTarget) setSelectedService(null);
           }}
         >
-          <div 
-            className="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-amber-200 animate-in zoom-in-95 space-y-4 my-auto text-zinc-900"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="min-h-full flex items-center justify-center py-6">
+            <div 
+              className="relative w-full max-w-md bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-amber-200 animate-in zoom-in-95 space-y-4 text-zinc-900"
+              onClick={(e) => e.stopPropagation()}
+            >
             <div className="flex items-center justify-between border-b border-amber-100 pb-3">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-amber-50 p-1.5 border border-amber-200 flex items-center justify-center shrink-0 overflow-hidden">
@@ -332,6 +333,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
                 </form>
               );
             })()}
+            </div>
           </div>
         </div>
       )}

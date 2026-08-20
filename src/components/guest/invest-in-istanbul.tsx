@@ -42,15 +42,7 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
   const [tourNote, setTourNote] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (selected || tourProperty) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = prev;
-      };
-    }
-  }, [selected, tourProperty]);
+  
 
   useEffect(() => {
     const refresh = () => setProperties(XeniosStore.getPropertyListings());
@@ -267,16 +259,17 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
       {/* Property Details Modal */}
       {selected && selectedLoc && (
         <div 
-        className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
-        style={{ WebkitOverflowScrolling: 'touch' }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) setSelected(null);
-        }}
-      >
-          <div 
-            className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-3 sm:p-6"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelected(null);
+          }}
+        >
+          <div className="min-h-full flex items-center justify-center py-6">
+            <div 
+              className="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-amber-200 text-zinc-900 space-y-4 animate-in zoom-in-95"
+              onClick={(e) => e.stopPropagation()}
+            >
             
             {/* Top Right Prominent Close Button */}
             <button
@@ -400,22 +393,24 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
               </button>
             </div>
           </div>
+          </div>
         </div>
       )}
 
       {/* VIP Discovery Tour Modal */}
       {tourProperty && tourLoc && (
         <div 
-        className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
-        style={{ WebkitOverflowScrolling: 'touch' }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) closeTourModal();
-        }}
-      >
-          <div 
-            className="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 text-zinc-900 relative animate-in zoom-in-95"
-            onClick={(e) => e.stopPropagation()}
-          >
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-3 sm:p-6"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeTourModal();
+          }}
+        >
+          <div className="min-h-full flex items-center justify-center py-6">
+            <div 
+              className="relative w-full max-w-md bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-amber-200 space-y-4 text-zinc-900 animate-in zoom-in-95"
+              onClick={(e) => e.stopPropagation()}
+            >
             
             {/* Top Right Prominent Close Button */}
             <button
@@ -485,6 +480,7 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
                 </button>
               </div>
             </form>
+          </div>
           </div>
         </div>
       )}

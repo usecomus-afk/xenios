@@ -21,13 +21,7 @@ interface VirtualPosModalProps {
 }
 
 export function VirtualPosModal({ experience, hotel, roomNumber, lang, onClose }: VirtualPosModalProps) {
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, []);
+  
   const t = getT(lang);
   const [guestName, setGuestName] = useState('Alex Mercer');
   const [guestPhone, setGuestPhone] = useState('+90 532 555 44 33');
@@ -86,16 +80,17 @@ export function VirtualPosModal({ experience, hotel, roomNumber, lang, onClose }
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-3 sm:p-6"
       style={{ WebkitOverflowScrolling: 'touch' }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div 
-        className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="min-h-full flex items-center justify-center py-6">
+        <div 
+          className="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900"
+          onClick={(e) => e.stopPropagation()}
+        >
         
         {createdBooking ? (
           /* Success Screen */
@@ -259,6 +254,7 @@ export function VirtualPosModal({ experience, hotel, roomNumber, lang, onClose }
             </div>
           </>
         )}
+        </div>
       </div>
     </div>
   );
