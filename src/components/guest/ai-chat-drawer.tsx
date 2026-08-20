@@ -6,7 +6,8 @@ import { XeniosStore } from '@/lib/store';
 import { askGeminiConcierge, ChatMessage } from '@/lib/gemini';
 import { GuestPreferenceSurvey } from './guest-preference-survey';
 import { useState, useEffect, useRef } from 'react';
-import { Sparkles, Send, Bot, User, X, UserCog } from 'lucide-react';
+import { Send, User, X, UserCog } from 'lucide-react';
+import Image from 'next/image';
 
 interface AiChatDrawerProps {
   hotel: Hotel;
@@ -15,6 +16,8 @@ interface AiChatDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const DEFAULT_GREETING_TR = "Merhaba! Ben comus, Sizin kişisel İstanbul rehberinizim. Gün batımı tekne turları, Tarihi Yarımada'nın gizli lezzetleri, İstanbul’da yatırım veya size özel rotalar hakkında dilediğinizi sorabilirsiniz.";
 
 export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiChatDrawerProps) {
   const t = getT(lang);
@@ -27,7 +30,7 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
     {
       id: 'init-1',
       sender: 'assistant',
-      text: t.aiGreeting || "Merhaba! Ben comusAI, oteliniz için kişisel İstanbul rehberinizim.",
+      text: t.aiGreeting || DEFAULT_GREETING_TR,
       time: 'Now',
       recommendations: [
         { title: "Bosphorus Sunset & Dinner Cruise", category: "Boğaz & Tekne", location: "Kabataş" },
@@ -44,6 +47,16 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
 
   useEffect(() => {
     if (isOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
       setProfile(XeniosStore.getGuestProfile());
       setIntroDismissed(XeniosStore.getAiIntroDismissed());
       setShowSurvey(false);
@@ -51,7 +64,7 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
         {
           id: 'init-1',
           sender: 'assistant',
-          text: t.aiGreeting || "Merhaba! Ben comusAI, oteliniz için kişisel İstanbul rehberinizim.",
+          text: t.aiGreeting || DEFAULT_GREETING_TR,
           time: 'Now',
           recommendations: [
             { title: "Bosphorus Sunset & Dinner Cruise", category: "Boğaz & Tekne", location: "Kabataş" },
@@ -101,18 +114,33 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-white w-full sm:max-w-lg h-[92vh] sm:h-[82vh] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-amber-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-6 sm:zoom-in-95">
+    <div 
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/65 backdrop-blur-sm animate-in fade-in"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        className="bg-white w-full sm:max-w-lg h-[92vh] sm:h-[82vh] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-amber-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-6 sm:zoom-in-95 text-zinc-900"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* Header */}
         <div className="p-4 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white flex items-center justify-between shadow-md">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xs">
-              <Bot className="w-5 h-5 text-amber-200" />
+            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xs overflow-hidden p-1.5">
+              <Image
+                src="/icons/menu/aiGuide.png"
+                alt="comus AI"
+                width={26}
+                height={26}
+                className="object-contain"
+                priority
+              />
             </div>
             <div>
               <h3 className="text-sm font-bold flex items-center gap-1.5">
-                <span>{t.aiTitle}</span>
+                <span>{t.aiTitle || 'comus AI'}</span>
                 <span className="px-1.5 py-0.5 bg-white/20 rounded text-[9px] font-mono">Gemini</span>
               </h3>
               <p className="text-[10px] text-amber-100">{hotel.name} · {t.room} {roomNumber}</p>
@@ -139,9 +167,10 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
 
         {/* Survey Drawer Overlay if open */}
         {showSurvey ? (
-          <div className="flex-1 overflow-y-auto p-4 bg-[#fbf8f1]">
+          <div className="flex-1 overflow-y-auto p-4 bg-[#fbf8f1] overscroll-contain">
             <GuestPreferenceSurvey
               initialProfile={profile}
+              lang={lang}
               onSave={handleSaveProfile}
               onClear={handleClearProfile}
               onCancel={() => setShowSurvey(false)}
@@ -150,7 +179,7 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
         ) : (
           <>
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-[#fbf8f1]">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-[#fbf8f1] overscroll-contain">
               {messages.map((msg) => {
                 const isUser = msg.sender === 'user';
                 return (
@@ -159,8 +188,14 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
                     className={`flex gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
                     {!isUser && (
-                      <div className="w-7 h-7 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 text-xs shadow-xs mt-0.5">
-                        <Bot className="w-4 h-4" />
+                      <div className="w-8 h-8 rounded-2xl bg-amber-100 border border-amber-300 p-1 flex items-center justify-center shrink-0 shadow-xs mt-0.5 overflow-hidden">
+                        <Image
+                          src="/icons/menu/aiGuide.png"
+                          alt="comus"
+                          width={22}
+                          height={22}
+                          className="object-contain"
+                        />
                       </div>
                     )}
 
@@ -178,7 +213,7 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
                     </div>
 
                     {isUser && (
-                      <div className="w-7 h-7 rounded-xl bg-zinc-800 text-white flex items-center justify-center shrink-0 text-xs shadow-xs mt-0.5">
+                      <div className="w-8 h-8 rounded-2xl bg-zinc-800 text-white flex items-center justify-center shrink-0 text-xs shadow-xs mt-0.5">
                         <User className="w-4 h-4" />
                       </div>
                     )}
@@ -187,9 +222,17 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
               })}
 
               {isLoading && (
-                <div className="flex gap-2 items-center text-xs text-amber-800 bg-amber-100/70 p-3 rounded-2xl border border-amber-200 w-fit">
-                  <Sparkles className="w-4 h-4 animate-spin text-amber-600" />
-                  <span>comusAI...</span>
+                <div className="flex gap-2 items-center text-xs text-amber-900 bg-amber-100/90 p-2.5 rounded-2xl border border-amber-300 w-fit shadow-xs">
+                  <div className="w-5 h-5 relative flex items-center justify-center shrink-0">
+                    <Image
+                      src="/icons/menu/aiGuide.png"
+                      alt="comus"
+                      width={18}
+                      height={18}
+                      className="object-contain animate-pulse"
+                    />
+                  </div>
+                  <span className="font-medium text-amber-950">comus yanıt hazırlıyor...</span>
                 </div>
               )}
               <div ref={chatBottomRef} />

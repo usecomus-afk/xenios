@@ -238,7 +238,7 @@ export const translations = {
     "knowMeBtn": "Beni Tanı",
     "myPreferencesBtn": "Tercihlerim",
     "knowMeChip": "✨ Beni Tanı (Kişisel Öneriler)",
-    "aiGreeting": "Merhaba! Ben comusAI, oteliniz için kişisel İstanbul rehberinizim. Gün batımı tekne turları, Tarihi Yarımada'nın gizli lezzetleri, müze sıralarını atlama veya size özel rotalar hakkında dilediğinizi sorabilirsiniz.",
+    "aiGreeting": "Merhaba! Ben comus, Sizin kişisel İstanbul rehberinizim. Gün batımı tekne turları, Tarihi Yarımada'nın gizli lezzetleri, İstanbul’da yatırım veya size özel rotalar hakkında dilediğinizi sorabilirsiniz.",
     "quickChips": [
       "Sultanahmet'te 3 saatim var, ne yapmalıyım?",
       "En iyi Boğaz manzaralı akşam yemeği nerede?",
@@ -516,7 +516,7 @@ export const translations = {
     "knowMeBtn": "Get to Know Me",
     "myPreferencesBtn": "My Preferences",
     "knowMeChip": "✨ Get to Know Me (Personalized Tips)",
-    "aiGreeting": "Hello! I am comusAI, your personal Istanbul concierge. Ask me anything about sunset boat tours, hidden historic culinary spots, skipping museum queues, or custom itineraries.",
+    "aiGreeting": "Hello! I am comus, your personal Istanbul guide. Feel free to ask about sunset boat tours, hidden culinary gems of the Historic Peninsula, investing in Istanbul, or tailored itineraries just for you.",
     "quickChips": [
       "I have 3 hours in Sultanahmet, what should I do?",
       "Where is the best sunset dinner with Bosphorus view?",
@@ -794,7 +794,7 @@ export const translations = {
     "knowMeBtn": "Get to Know Me",
     "myPreferencesBtn": "My Preferences",
     "knowMeChip": "✨ Get to Know Me (Personalized Tips)",
-    "aiGreeting": "Hello! I am comusAI, your personal Istanbul concierge. Ask me anything about sunset boat tours, hidden historic culinary spots, skipping museum queues, or custom itineraries.",
+    "aiGreeting": "مرحبًا! أنا comus، مرشدكم الشخصي في إسطنبول. لا تترددوا في السؤال عن جولات القوارب وقت الغروب، أو المأكولات الخفية في شبه الجزيرة التاريخية، أو الاستثمار في إسطنبول، أو مسارات مخصصة لكم.",
     "quickChips": [
       "I have 3 hours in Sultanahmet, what should I do?",
       "Where is the best sunset dinner with Bosphorus view?",
@@ -1072,7 +1072,7 @@ export const translations = {
     "knowMeBtn": "Get to Know Me",
     "myPreferencesBtn": "My Preferences",
     "knowMeChip": "✨ Get to Know Me (Personalized Tips)",
-    "aiGreeting": "Hello! I am comusAI, your personal Istanbul concierge. Ask me anything about sunset boat tours, hidden historic culinary spots, skipping museum queues, or custom itineraries.",
+    "aiGreeting": "Здравствуйте! Я comus, ваш персональный гид по Стамбулу. Спрашивайте меня о прогулках на катере на закате, скрытых гастрономических жемчужинах Исторического полуострова, инвестициях в Стамбуле или индивидуальных маршрутах.",
     "quickChips": [
       "I have 3 hours in Sultanahmet, what should I do?",
       "Where is the best sunset dinner with Bosphorus view?",
@@ -1350,7 +1350,7 @@ export const translations = {
     "knowMeBtn": "Get to Know Me",
     "myPreferencesBtn": "My Preferences",
     "knowMeChip": "✨ Get to Know Me (Personalized Tips)",
-    "aiGreeting": "Hello! I am comusAI, your personal Istanbul concierge. Ask me anything about sunset boat tours, hidden historic culinary spots, skipping museum queues, or custom itineraries.",
+    "aiGreeting": "Hallo! Ich bin comus, Ihr persönlicher Istanbul-Guide. Fragen Sie mich gerne nach Bootstouren zum Sonnenuntergang, versteckten kulinarischen Schätzen der Historischen Halbinsel, Immobilieninvestitionen in Istanbul oder maßgeschneiderten Routen.",
     "quickChips": [
       "I have 3 hours in Sultanahmet, what should I do?",
       "Where is the best sunset dinner with Bosphorus view?",
@@ -1628,7 +1628,7 @@ export const translations = {
     "knowMeBtn": "Get to Know Me",
     "myPreferencesBtn": "My Preferences",
     "knowMeChip": "✨ Get to Know Me (Personalized Tips)",
-    "aiGreeting": "Hello! I am comusAI, your personal Istanbul concierge. Ask me anything about sunset boat tours, hidden historic culinary spots, skipping museum queues, or custom itineraries.",
+    "aiGreeting": "Bonjour ! Je suis comus, votre guide personnel d'Istanbul. N'hésitez pas à me poser des questions sur les croisières au coucher du soleil, les secrets culinaires de la Péninsule Historique, les investissements à Istanbul ou des itinéraires sur mesure.",
     "quickChips": [
       "I have 3 hours in Sultanahmet, what should I do?",
       "Where is the best sunset dinner with Bosphorus view?",

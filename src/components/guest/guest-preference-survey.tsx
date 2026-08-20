@@ -29,7 +29,7 @@ const DICTS: Record<string, any> = {
       { value: 'luxury', label: 'Lüks & VIP' }
     ],
     interestsTitle: "İlgi Alanları",
-    interests: ['Tarih & Kültür', 'Boğaz & Deniz', 'Gastronomi', 'Gece Hayatı', 'Alışveriş', 'Sanat & Müzeler', 'Doğa & Yürüyüş', 'Fotoğrafçılık'],
+    interests: ['Tarih & Kültür', 'Boğaz & Deniz', 'Gastronomi', 'Gece Hayatı', 'Alışveriş', 'Sanat & Müzeler', 'Doğa & Yürüyüş', 'Fotoğrafçılık', 'Yatırım'],
     healthTitle: "Sağlık & Alerjiler",
     allergies: ['Fıstık / Kuruyemiş', 'Deniz Ürünleri', 'Laktoz / Süt', 'Gluten', 'Polen / Toz'],
     dietaryRestrictions: ['Helal', 'Vejetaryen', 'Vegan', 'Glutensiz', 'Diyabetik'],
@@ -55,7 +55,7 @@ const DICTS: Record<string, any> = {
       { value: 'luxury', label: 'Luxury & VIP' }
     ],
     interestsTitle: "Interests & Passions",
-    interests: ['History & Culture', 'Bosphorus & Sea', 'Gastronomy', 'Nightlife', 'Shopping', 'Art & Museums', 'Nature & Outdoors', 'Photography'],
+    interests: ['History & Culture', 'Bosphorus & Sea', 'Gastronomy', 'Nightlife', 'Shopping', 'Art & Museums', 'Nature & Outdoors', 'Photography', 'Investment'],
     healthTitle: "Health & Allergies",
     allergies: ['Peanuts / Nuts', 'Seafood / Shellfish', 'Dairy / Lactose', 'Gluten', 'Pollen / Dust'],
     dietaryRestrictions: ['Halal', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Diabetic'],
@@ -81,7 +81,7 @@ const DICTS: Record<string, any> = {
       { value: 'luxury', label: 'فاخر وVIP' }
     ],
     interestsTitle: "الاهتمامات والهوايات",
-    interests: ['التاريخ والثقافة', 'البوسفور والبحر', 'تذوق الطعام', 'الحياة الليلية', 'التسوق', 'الفنون والمتاحف', 'الطبيعة', 'التصوير'],
+    interests: ['التاريخ والثقافة', 'البوسفور والبحر', 'تذوق الطعام', 'الحياة الليلية', 'التسوق', 'الفنون والمتاحف', 'الطبيعة', 'التصوير', 'الاستثمار العقاري'],
     healthTitle: "الصحة والحساسية",
     allergies: ['الفول السوداني والمكسرات', 'المأكولات البحرية', 'اللاكتوز والحليب', 'الغلوتين', 'الغبار'],
     dietaryRestrictions: ['حلال', 'نباتي', 'نباتي صرف', 'خال من الغلوتين', 'حمية السكري'],
@@ -107,7 +107,7 @@ const DICTS: Record<string, any> = {
       { value: 'luxury', label: 'Люкс и VIP' }
     ],
     interestsTitle: "Интересы",
-    interests: ['История и культура', 'Босфор и море', 'Гастрономия', 'Ночная жизнь', 'Шопинг', 'Музеи и искусство', 'Природа', 'Фотография'],
+    interests: ['История и культура', 'Босфор и море', 'Гастрономия', 'Ночная жизнь', 'Шопинг', 'Музеи и искусство', 'Природа', 'Фотография', 'Инвестиции'],
     healthTitle: "Здоровье и аллергии",
     allergies: ['Орехи / Арахис', 'Морепродукты', 'Лактоза / Молоко', 'Глютен', 'Пыльца'],
     dietaryRestrictions: ['Халяль', 'Вегетарианское', 'Веганское', 'Без глютена', 'Диабетическое'],
@@ -133,7 +133,7 @@ const DICTS: Record<string, any> = {
       { value: 'luxury', label: 'Luxus & VIP' }
     ],
     interestsTitle: "Interessen",
-    interests: ['Geschichte & Kultur', 'Bosporus & Meer', 'Gastronomie', 'Nachtleben', 'Shopping', 'Kunst & Museen', 'Natur', 'Fotografie'],
+    interests: ['Geschichte & Kultur', 'Bosporus & Meer', 'Gastronomie', 'Nachtleben', 'Shopping', 'Kunst & Museen', 'Natur', 'Fotografie', 'Investition'],
     healthTitle: "Gesundheit & Allergien",
     allergies: ['Erdnüsse / Nüsse', 'Meeresfrüchte', 'Laktose / Milch', 'Gluten', 'Pollen / Staub'],
     dietaryRestrictions: ['Halal', 'Vegetarisch', 'Vegan', 'Glutenfrei', 'Diabetisch'],
