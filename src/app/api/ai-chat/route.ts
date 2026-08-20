@@ -52,22 +52,34 @@ Kurallar:
    uygun rota ve mekanlar seç; asla göz ardı etme.
 5. Çıktıyı Türkçe / seçilen dilde doğal bir sohbet metni olarak döndür.`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          { role: 'user', parts: [{ text: `${systemPrompt}\n\nMisafirin Sorusu: ${message}` }] }
-        ]
-      })
-    });
+    const modelList = ['gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-3.5-flash'];
+    let candidateText = '';
 
-    if (!response.ok) {
-      throw new Error(`Gemini API error ${response.status}`);
+    for (const model of modelList) {
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              { role: 'user', parts: [{ text: `${systemPrompt}\n\nMisafirin Sorusu: ${message}` }] }
+            ]
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          if (candidateText) break;
+        }
+      } catch (e) {
+        console.warn(`Model ${model} attempt failed:`, e);
+      }
     }
 
-    const data = await response.json();
-    const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Size bu konuda yardımcı olmaktan mutluluk duyarım.";
+    if (!candidateText) {
+      candidateText = `Merhaba! ${hotelName} (${hotelDistrict}) misafirimiz olarak size yardımcı olmaktan mutluluk duyarım. "${message}" talebiniz için İstanbul'un seçkin noktalarını, gurme mekanlarını ve Boğaz rotalarını concierge masamızla koordineli olarak sizin için organize edebiliriz.`;
+    }
 
     return NextResponse.json({
       reply: candidateText,
