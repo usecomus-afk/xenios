@@ -355,7 +355,7 @@ export default function GuestPage() {
             </div>
 
             {/* Xenios Fair Shopping Policy & Misafir Kalkanı Component */}
-            <FairShoppingPolicy />
+            <FairShoppingPolicy lang={lang} />
           </div>
         )}
 
@@ -370,6 +370,7 @@ export default function GuestPage() {
         <ExperienceDetailModal
           experience={selectedDetailExp}
           hotel={currentHotel}
+          roomNumber={activeRoomNumber}
           lang={lang}
           onClose={() => setSelectedDetailExp(null)}
           onOpenTransit={(exp) => setTransitExp(exp)}

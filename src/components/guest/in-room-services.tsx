@@ -5,10 +5,9 @@ import { getT } from '@/lib/i18n';
 import { XeniosStore } from '@/lib/store';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import Image from 'next/image';
 import { getModuleConfig, deriveStatus, formatFieldValue, resolvePricing } from '@/lib/service-modules';
 import { ServiceRequestForm } from './service-request-form';
-import { Sparkles, Clock, Send, CheckCircle2 } from 'lucide-react';
+import { Clock, CheckCircle2 } from 'lucide-react';
 
 interface InRoomServicesProps {
   hotel: Hotel;
@@ -26,7 +25,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
   // Custom Service Form State
   const [customOption, setCustomOption] = useState('');
   const [customNote, setCustomNote] = useState('');
-  const [customTime, setCustomTime] = useState('Hemen (En Kısa Sürede)');
+  const [customTime, setCustomTime] = useState(t.serviceForm?.asap || 'Hemen');
   const [customCount, setCustomCount] = useState(1);
 
   useEffect(() => {
@@ -43,9 +42,18 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
     };
   }, []);
 
+  const getLocalizedTitle = (item: InRoomServiceItem) => {
+    return (t.servicesLabels as any)?.[item.key]?.title || (t as any)[item.key] || item.label;
+  };
+
+  const getLocalizedDesc = (item: InRoomServiceItem) => {
+    return (t.servicesLabels as any)?.[item.key]?.desc || item.desc;
+  };
+
   const handleStandardRequestSubmit = (details: Record<string, any>) => {
     if (!selectedService) return;
     const config = getModuleConfig(selectedService.key);
+    const serviceTitle = getLocalizedTitle(selectedService);
     setIsSubmitting(true);
 
     setTimeout(() => {
@@ -61,7 +69,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
         hotelName: hotel.name,
         roomNumber: roomNumber,
         serviceKey: selectedService.key,
-        serviceTitle: selectedService.label,
+        serviceTitle: serviceTitle,
         notes: notesSummary,
         status: config ? deriveStatus(config, firstStage) : 'pending',
         details,
@@ -70,8 +78,8 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
         priority: isUrgent ? 'acil' : 'standart'
       });
 
-      toast.success(`Oda ${roomNumber} için "${selectedService.label}" talebiniz ${selectedService.department || 'kat hizmetleri'} ekibine iletildi.`, {
-        description: "En kısa sürede odanıza yönlendirilecektir."
+      toast.success(t.serviceForm?.requestSent || 'Talebiniz Alındı!', {
+        description: `${hotel.name} ${t.room} ${roomNumber} · ${serviceTitle}`
       });
 
       setIsSubmitting(false);
@@ -82,39 +90,33 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
   const handleCustomRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedService) return;
+    const serviceTitle = getLocalizedTitle(selectedService);
     setIsSubmitting(true);
 
     setTimeout(() => {
       const notesArr: string[] = [];
-      if (customOption) notesArr.push(`Seçim: ${customOption}`);
-      if (customCount > 1) notesArr.push(`Adet: ${customCount}`);
-      if (customTime) notesArr.push(`Zaman: ${customTime}`);
-      if (customNote) notesArr.push(`Not: ${customNote}`);
+      if (customOption) notesArr.push(`${t.serviceForm?.optionChoice || 'Seçenek'}: ${customOption}`);
+      if (customCount > 1) notesArr.push(`${t.serviceForm?.quantity || 'Adet'}: ${customCount}`);
+      if (customTime) notesArr.push(`${t.serviceForm?.deliveryTime || 'Zaman'}: ${customTime}`);
+      if (customNote) notesArr.push(`${t.serviceForm?.specialNote || 'Not'}: ${customNote}`);
 
-      const summary = notesArr.join(' · ') || 'Standart talep';
+      const summary = notesArr.join(' · ') || 'Standart';
 
       XeniosStore.addRequest({
         hotelId: hotel.id,
         hotelName: hotel.name,
         roomNumber: roomNumber,
         serviceKey: selectedService.key || selectedService.id,
-        serviceTitle: selectedService.label,
+        serviceTitle: serviceTitle,
         notes: summary,
         status: 'pending',
-        details: {
-          option: customOption,
-          count: customCount,
-          time: customTime,
-          note: customNote,
-          price: selectedService.price ?? 0
-        },
-        department: selectedService.department || 'Resepsiyon & Kat Hizmetleri',
-        stage: 'Beklemede',
+        department: selectedService.department || 'Housekeeping',
+        stage: 'pending',
         priority: 'standart'
       });
 
-      toast.success(`Oda ${roomNumber} için "${selectedService.label}" talebiniz iletildi.`, {
-        description: "İlgili departman en kısa sürede odanıza yönlendirecektir."
+      toast.success(t.serviceForm?.requestSent || 'Talebiniz Alındı!', {
+        description: `${hotel.name} ${t.room} ${roomNumber} · ${serviceTitle}`
       });
 
       setIsSubmitting(false);
@@ -125,27 +127,33 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
     }, 400);
   };
 
-  const visibleServices = services.filter((item) => !item.hidden);
-
   return (
-    <section className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold font-serif text-zinc-900">{t.servicesTitle}</h2>
-        <p className="text-xs text-zinc-500">{t.servicesSubtitle}</p>
+    <div className="space-y-4">
+      {/* Top Section Header */}
+      <div className="space-y-1">
+        <h2 className="text-xl font-bold font-serif text-zinc-900 flex items-center gap-2">
+          <span>{t.servicesTitle}</span>
+        </h2>
+        <p className="text-xs text-zinc-500 max-w-xl font-medium">
+          {t.servicesSubtitle}
+        </p>
       </div>
 
-      {/* Grid of In-Room Services (Mobile 2 cols, Desktop 4 cols) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {visibleServices.map((item) => {
-          const isEnabled = item.enabled ?? true;
+      {/* Grid of In-Room Services */}
+      <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+        {services.map((item) => {
+          const settings = moduleSettings[item.key];
+          const isEnabled = settings ? settings.enabled : item.enabled !== false;
+          const serviceTitle = getLocalizedTitle(item);
+          const serviceDesc = getLocalizedDesc(item);
+
           return (
             <button
               key={item.id || item.key}
+              type="button"
+              disabled={!isEnabled}
               onClick={() => {
-                if (!isEnabled) {
-                  toast.error(`"${item.label}" hizmeti şu anda kullanım dışı.`, { description: 'Lütfen resepsiyonu arayın veya daha sonra tekrar deneyin.' });
-                  return;
-                }
+                if (!isEnabled) return;
                 setSelectedService(item);
                 if (item.options && item.options.length > 0) {
                   setCustomOption(item.options[0]);
@@ -157,29 +165,19 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
                   : 'cursor-not-allowed border-zinc-200 opacity-50 grayscale'
               }`}
             >
-              {!isEnabled && (
-                <span className="absolute top-2 right-2 text-[9px] px-1.5 py-0.5 rounded-full bg-zinc-800 text-white font-bold">
-                  Kullanım Dışı
-                </span>
-              )}
-              {item.isCustom && isEnabled && (
-                <span className="absolute top-2 right-2 text-[8px] px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-800 font-bold border border-amber-300">
-                  Özel
-                </span>
-              )}
               <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-[#fbf8f1] p-2 flex items-center justify-center group-hover:scale-105 transition-transform border border-amber-100/60 shadow-inner overflow-hidden">
                 <img
                   src={item.icon}
-                  alt={item.label}
+                  alt={serviceTitle}
                   className="object-contain w-full h-full drop-shadow-sm"
                 />
               </div>
               <div className="w-full">
                 <span className="text-xs sm:text-sm font-bold text-zinc-800 leading-tight block">
-                  {item.label}
+                  {serviceTitle}
                 </span>
                 <span className="text-[10px] text-zinc-400 line-clamp-1 mt-0.5">
-                  {item.desc}
+                  {serviceDesc}
                 </span>
               </div>
             </button>
@@ -196,13 +194,13 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
                 <div className="w-12 h-12 rounded-2xl bg-amber-50 p-1.5 border border-amber-200 flex items-center justify-center shrink-0 overflow-hidden">
                   <img
                     src={selectedService.icon}
-                    alt={selectedService.label}
+                    alt={getLocalizedTitle(selectedService)}
                     className="object-contain w-full h-full"
                   />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-zinc-900">{selectedService.label}</h3>
-                  <p className="text-xs text-zinc-500">{hotel.name} - Oda {roomNumber}</p>
+                  <h3 className="text-base font-bold text-zinc-900">{getLocalizedTitle(selectedService)}</h3>
+                  <p className="text-xs text-zinc-500">{hotel.name} - {t.room} {roomNumber}</p>
                 </div>
               </div>
               <button
@@ -232,16 +230,16 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
               // Generic Dynamic Form for Custom In-Room Services
               return (
                 <form onSubmit={handleCustomRequestSubmit} className="space-y-4 text-xs">
-                  {selectedService.desc && (
+                  {getLocalizedDesc(selectedService) && (
                     <div className="p-3 bg-amber-50/70 rounded-2xl border border-amber-200/60 text-zinc-700 text-xs">
-                      {selectedService.desc}
+                      {getLocalizedDesc(selectedService)}
                     </div>
                   )}
 
                   {/* Options Selection */}
                   {selectedService.options && selectedService.options.length > 0 && (
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-zinc-800">Seçenek / Tercih</label>
+                      <label className="text-xs font-bold text-zinc-800">{t.serviceForm?.optionChoice || 'Seçenek'}</label>
                       <select
                         value={customOption}
                         onChange={(e) => setCustomOption(e.target.value)}
@@ -256,7 +254,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
 
                   {/* Count / Quantity */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-800">Miktar / Adet</label>
+                    <label className="text-xs font-bold text-zinc-800">{t.serviceForm?.quantity || 'Adet'}</label>
                     <div className="flex items-center gap-2">
                       {[1, 2, 3, 4, 5].map((num) => (
                         <button
@@ -278,64 +276,48 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
                   {/* Time Preference */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-zinc-800 flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-amber-600" /> Teslimat / Uygulama Zamanı
+                      <Clock className="w-3.5 h-3.5 text-amber-600" /> {t.serviceForm?.deliveryTime || 'Zaman'}
                     </label>
                     <select
                       value={customTime}
                       onChange={(e) => setCustomTime(e.target.value)}
                       className="w-full text-xs p-2.5 rounded-xl border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-zinc-900 font-medium"
                     >
-                      <option value="Hemen (En Kısa Sürede)">Hemen (En Kısa Sürede)</option>
-                      <option value="30 Dakika İçinde">30 Dakika İçinde</option>
-                      <option value="1 Saat Sonra">1 Saat Sonra</option>
-                      <option value="Akşam Saatlerinde">Akşam Saatlerinde</option>
-                      <option value="Yarın Sabah">Yarın Sabah</option>
+                      <option value={t.serviceForm?.asap || 'Hemen'}>{t.serviceForm?.asap || 'Hemen'}</option>
+                      <option value={t.serviceForm?.in30Min || '30 Dakika'}>{t.serviceForm?.in30Min || '30 Dakika'}</option>
+                      <option value={t.serviceForm?.in1Hour || '1 Saat'}>{t.serviceForm?.in1Hour || '1 Saat'}</option>
+                      <option value={t.serviceForm?.tonight || 'Akşam'}>{t.serviceForm?.tonight || 'Akşam'}</option>
+                      <option value={t.serviceForm?.tomorrowMorning || 'Yarın Sabah'}>{t.serviceForm?.tomorrowMorning || 'Yarın Sabah'}</option>
                     </select>
                   </div>
 
                   {/* Special Note */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-800">Özel Not / Açıklama</label>
+                    <label className="text-xs font-bold text-zinc-800">{t.serviceForm?.specialNote || 'Not'}</label>
                     <textarea
                       value={customNote}
                       onChange={(e) => setCustomNote(e.target.value)}
-                      placeholder="Eklemek istediğiniz özel detay veya istekler..."
-                      rows={3}
+                      rows={2}
+                      placeholder={t.serviceForm?.notePlaceholder || 'Özel istekleriniz...'}
                       className="w-full text-xs p-2.5 rounded-xl border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-zinc-900"
                     />
                   </div>
 
-                  {/* Price display if set */}
-                  {selectedService.price ? (
-                    <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center justify-between">
-                      <span className="text-xs text-emerald-900 font-bold">Hizmet Bedeli:</span>
-                      <strong className="text-sm font-mono font-bold text-emerald-900">
-                        {selectedService.price * customCount} {selectedService.currency || '₺'}
-                      </strong>
-                    </div>
-                  ) : null}
-
-                  {/* Action Buttons */}
+                  {/* Submit Button */}
                   <div className="flex items-center gap-2 pt-2">
                     <button
                       type="button"
                       onClick={() => setSelectedService(null)}
-                      className="flex-1 py-2.5 rounded-xl border border-zinc-200 text-xs font-bold text-zinc-700 hover:bg-zinc-50 transition cursor-pointer"
+                      className="flex-1 py-3 rounded-2xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold transition text-xs cursor-pointer"
                     >
-                      Vazgeç
+                      {t.serviceForm?.cancel || 'Vazgeç'}
                     </button>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-amber-500/25 transition cursor-pointer flex items-center justify-center gap-1.5"
+                      className="flex-2 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold transition shadow-md text-xs cursor-pointer disabled:opacity-50"
                     >
-                      {isSubmitting ? (
-                        'Gönderiliyor...'
-                      ) : (
-                        <>
-                          <Send className="w-3.5 h-3.5" /> Talebi İlet
-                        </>
-                      )}
+                      {isSubmitting ? '...' : (t.serviceForm?.submitRequest || 'Talebi Gönder')}
                     </button>
                   </div>
                 </form>
@@ -344,6 +326,6 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

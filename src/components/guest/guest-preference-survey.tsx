@@ -1,218 +1,349 @@
-"use client";
-
 import { useState } from 'react';
-import { GuestProfile } from '@/lib/types';
-import { ShieldCheck, HeartPulse, ShoppingBag, Compass, Briefcase, UtensilsCrossed, Sparkles, Trash2 } from 'lucide-react';
+import { GuestProfile, Language } from '@/lib/types';
+import { ShieldCheck, HeartPulse, ShoppingBag, Compass, Briefcase, UtensilsCrossed, Sparkles, Trash2, X } from 'lucide-react';
 
 interface GuestPreferenceSurveyProps {
   initialProfile: GuestProfile;
+  lang?: Language;
   onSave: (profile: GuestProfile) => void;
   onClear: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
+  onClose?: () => void;
 }
 
-const OPTIONS = {
-  travelStyle: [
-    { value: 'solo', label: 'Yalnız Gezgin' },
-    { value: 'couple', label: 'Çift / Romantik' },
-    { value: 'family', label: 'Aile (Çocuklu)' },
-    { value: 'business', label: 'İş Seyahati' }
-  ] as const,
-  budgetLevel: [
-    { value: 'economy', label: 'Ekonomik & Pratik' },
-    { value: 'moderate', label: 'Dengeli / Standart' },
-    { value: 'luxury', label: 'Lüks & VIP' }
-  ] as const,
-  tourPace: [
-    { value: 'sakin', label: 'Sakin (Az Program)' },
-    { value: 'dengeli', label: 'Dengeli' },
-    { value: 'yogun', label: 'Yoğun (Maksimum Program)' }
-  ] as const,
-  interests: ['Tarih & Kültür', 'Boğaz & Deniz', 'Gastronomi', 'Gece Hayatı', 'Alışveriş', 'Sanat & Müzeler', 'Doğa & Yürüyüş', 'Spor & Aktivite', 'Fotoğrafçılık', 'Yerel Yaşam'],
-  allergies: ['Fıstık / Kuruyemiş', 'Deniz Ürünleri', 'Süt Ürünleri (Laktoz)', 'Gluten', 'Arı Sokması', 'İlaç Alerjisi (Penisilin vb.)', 'Polen / Toz'],
-  dietaryRestrictions: ['Helal', 'Vejetaryen', 'Vegan', 'Glutensiz', 'Şeker / Diyabetik', 'Deniz Ürünü Yemem'],
-  gastronomyPreferences: ['Türk Mutfağı', 'Deniz Ürünleri', 'Sokak Lezzetleri', 'Fine Dining / Michelin', 'Kahve & Pastane Kültürü', 'Vegan / Vejetaryen Mekanlar'],
-  shoppingInterests: ['Halı & Kilim', 'Deri Ürünleri', 'Kuyumcu & Mücevher', 'Tekstil & Kumaş', 'El Sanatları', 'Marka Mağazalar / AVM', 'Antika & Koleksiyon', 'Baharat & Yerel Ürünler'],
-  cityTourInterests: ['Tarihi Yarımada', 'Boğaz Turu', 'Adalar', 'Gece Hayatı & Rooftop', 'Doğa & Orman', 'Sanat & Müzeler', 'Yerel Pazarlar', 'Dini / Kutsal Mekanlar'],
-  businessNeeds: ['Toplantı Odası', 'İş Merkezi / Yazıcı', 'Hızlı & Kesintisiz WiFi', 'Havalimanı VIP Transfer', 'Kuru Temizleme / Ütü Servisi', 'Sessiz Çalışma Alanı']
+const DICTS: Record<string, any> = {
+  tr: {
+    title: "Misafir Profil Tercihleri",
+    subtitle: "Size özel İstanbul önerileri ve güvenliğiniz için tercihlerinizi belirleyin.",
+    travelStyle: "Seyahat Tarzı",
+    travelStyles: [
+      { value: 'solo', label: 'Yalnız Gezgin' },
+      { value: 'couple', label: 'Çift / Romantik' },
+      { value: 'family', label: 'Aile (Çocuklu)' },
+      { value: 'business', label: 'İş Seyahati' }
+    ],
+    budgetLevel: "Bütçe Tercihi",
+    budgetLevels: [
+      { value: 'economy', label: 'Ekonomik' },
+      { value: 'moderate', label: 'Standart / Dengeli' },
+      { value: 'luxury', label: 'Lüks & VIP' }
+    ],
+    interestsTitle: "İlgi Alanları",
+    interests: ['Tarih & Kültür', 'Boğaz & Deniz', 'Gastronomi', 'Gece Hayatı', 'Alışveriş', 'Sanat & Müzeler', 'Doğa & Yürüyüş', 'Fotoğrafçılık'],
+    healthTitle: "Sağlık & Alerjiler",
+    allergies: ['Fıstık / Kuruyemiş', 'Deniz Ürünleri', 'Laktoz / Süt', 'Gluten', 'Polen / Toz'],
+    dietaryRestrictions: ['Helal', 'Vejetaryen', 'Vegan', 'Glutensiz', 'Diyabetik'],
+    kvkkConsent: "Kişisel tercihlerimin ve sağlık/alerji notlarımın bana özel rehberlik için AI concierge tarafından işlenmesine onay veriyorum.",
+    saveBtn: "Tercihleri Kaydet",
+    clearBtn: "Sıfırla",
+    cancelBtn: "Vazgeç"
+  },
+  en: {
+    title: "Guest Profile & Preferences",
+    subtitle: "Customize your preferences for tailored Istanbul itineraries and recommendations.",
+    travelStyle: "Travel Style",
+    travelStyles: [
+      { value: 'solo', label: 'Solo Traveler' },
+      { value: 'couple', label: 'Couple / Romantic' },
+      { value: 'family', label: 'Family with Kids' },
+      { value: 'business', label: 'Business Trip' }
+    ],
+    budgetLevel: "Budget Level",
+    budgetLevels: [
+      { value: 'economy', label: 'Economy' },
+      { value: 'moderate', label: 'Standard / Balanced' },
+      { value: 'luxury', label: 'Luxury & VIP' }
+    ],
+    interestsTitle: "Interests & Passions",
+    interests: ['History & Culture', 'Bosphorus & Sea', 'Gastronomy', 'Nightlife', 'Shopping', 'Art & Museums', 'Nature & Outdoors', 'Photography'],
+    healthTitle: "Health & Allergies",
+    allergies: ['Peanuts / Nuts', 'Seafood / Shellfish', 'Dairy / Lactose', 'Gluten', 'Pollen / Dust'],
+    dietaryRestrictions: ['Halal', 'Vegetarian', 'Vegan', 'Gluten-Free', 'Diabetic'],
+    kvkkConsent: "I consent to the processing of my travel preferences and allergy notes by the AI concierge for tailored recommendations.",
+    saveBtn: "Save Preferences",
+    clearBtn: "Reset",
+    cancelBtn: "Cancel"
+  },
+  ar: {
+    title: "تفضيلات وملف النزيل",
+    subtitle: "حدد تفضيلاتك للحصول على اقتراحات مخصصة وآمنة في إسطنبول.",
+    travelStyle: "نمط السفر",
+    travelStyles: [
+      { value: 'solo', label: 'مسافر بمفردي' },
+      { value: 'couple', label: 'زوجان / رومانسي' },
+      { value: 'family', label: 'عائلة مع أطفال' },
+      { value: 'business', label: 'رحلة عمل' }
+    ],
+    budgetLevel: "مستوى الميزانية",
+    budgetLevels: [
+      { value: 'economy', label: 'اقتصادي' },
+      { value: 'moderate', label: 'متوسط / متوازن' },
+      { value: 'luxury', label: 'فاخر وVIP' }
+    ],
+    interestsTitle: "الاهتمامات والهوايات",
+    interests: ['التاريخ والثقافة', 'البوسفور والبحر', 'تذوق الطعام', 'الحياة الليلية', 'التسوق', 'الفنون والمتاحف', 'الطبيعة', 'التصوير'],
+    healthTitle: "الصحة والحساسية",
+    allergies: ['الفول السوداني والمكسرات', 'المأكولات البحرية', 'اللاكتوز والحليب', 'الغلوتين', 'الغبار'],
+    dietaryRestrictions: ['حلال', 'نباتي', 'نباتي صرف', 'خال من الغلوتين', 'حمية السكري'],
+    kvkkConsent: "أوافق على معالجة تفضيلاتي وملاحظات الحساسية بواسطة المساعد الذكي لتقديم توصيات مخصصة.",
+    saveBtn: "حفظ التفضيلات",
+    clearBtn: "إعادة ضبط",
+    cancelBtn: "إلغاء"
+  },
+  ru: {
+    title: "Предпочтения гостя",
+    subtitle: "Настройте предпочтения для персональных рекомендаций по Стамбулу.",
+    travelStyle: "Стиль поездки",
+    travelStyles: [
+      { value: 'solo', label: 'Один' },
+      { value: 'couple', label: 'Пара / Романтика' },
+      { value: 'family', label: 'Семья с детьми' },
+      { value: 'business', label: 'Деловая поездка' }
+    ],
+    budgetLevel: "Бюджет",
+    budgetLevels: [
+      { value: 'economy', label: 'Эконом' },
+      { value: 'moderate', label: 'Стандарт' },
+      { value: 'luxury', label: 'Люкс и VIP' }
+    ],
+    interestsTitle: "Интересы",
+    interests: ['История и культура', 'Босфор и море', 'Гастрономия', 'Ночная жизнь', 'Шопинг', 'Музеи и искусство', 'Природа', 'Фотография'],
+    healthTitle: "Здоровье и аллергии",
+    allergies: ['Орехи / Арахис', 'Морепродукты', 'Лактоза / Молоко', 'Глютен', 'Пыльца'],
+    dietaryRestrictions: ['Халяль', 'Вегетарианское', 'Веганское', 'Без глютена', 'Диабетическое'],
+    kvkkConsent: "Я согласен на обработку моих предпочтений и заметок об аллергиях для персональных рекомендаций.",
+    saveBtn: "Сохранить",
+    clearBtn: "Сбросить",
+    cancelBtn: "Отмена"
+  },
+  de: {
+    title: "Gästeprofil & Vorlieben",
+    subtitle: "Passen Sie Ihre Vorlieben für personalisierte Istanbul-Tipps an.",
+    travelStyle: "Reisestil",
+    travelStyles: [
+      { value: 'solo', label: 'Alleinreisend' },
+      { value: 'couple', label: 'Paar / Romantisch' },
+      { value: 'family', label: 'Familie mit Kindern' },
+      { value: 'business', label: 'Geschäftsreise' }
+    ],
+    budgetLevel: "Budget",
+    budgetLevels: [
+      { value: 'economy', label: 'Günstig' },
+      { value: 'moderate', label: 'Standard / Ausgewogen' },
+      { value: 'luxury', label: 'Luxus & VIP' }
+    ],
+    interestsTitle: "Interessen",
+    interests: ['Geschichte & Kultur', 'Bosporus & Meer', 'Gastronomie', 'Nachtleben', 'Shopping', 'Kunst & Museen', 'Natur', 'Fotografie'],
+    healthTitle: "Gesundheit & Allergien",
+    allergies: ['Erdnüsse / Nüsse', 'Meeresfrüchte', 'Laktose / Milch', 'Gluten', 'Pollen / Staub'],
+    dietaryRestrictions: ['Halal', 'Vegetarisch', 'Vegan', 'Glutenfrei', 'Diabetisch'],
+    kvkkConsent: "Ich stimme der Verarbeitung meiner Reisevorlieben und Allergiehinweise für personalisierte Empfehlungen zu.",
+    saveBtn: "Speichern",
+    clearBtn: "Zurücksetzen",
+    cancelBtn: "Abbrechen"
+  },
+  fr: {
+    title: "Profil & Préférences Invité",
+    subtitle: "Personnalisez vos préférences pour des conseils sur mesure à Istanbul.",
+    travelStyle: "Style de voyage",
+    travelStyles: [
+      { value: 'solo', label: 'Voyageur Solo' },
+      { value: 'couple', label: 'Couple / Romantique' },
+      { value: 'family', label: 'Famille avec enfants' },
+      { value: 'business', label: 'Affaires' }
+    ],
+    budgetLevel: "Budget",
+    budgetLevels: [
+      { value: 'economy', label: 'Économique' },
+      { value: 'moderate', label: 'Standard / Équilibré' },
+      { value: 'luxury', label: 'Luxe & VIP' }
+    ],
+    interestsTitle: "Centres d'intérêt",
+    interests: ['Histoire & Culture', 'Bosphore & Mer', 'Gastronomie', 'Vie nocturne', 'Shopping', 'Art & Musées', 'Nature', 'Photographie'],
+    healthTitle: "Santé & Allergies",
+    allergies: ['Arachides / Fruits à coque', 'Fruits de mer', 'Lactose / Lait', 'Gluten', 'Pollen'],
+    dietaryRestrictions: ['Halal', 'Végétarien', 'Végétalien', 'Sans gluten', 'Diabétique'],
+    kvkkConsent: "J'accepte le traitement de mes préférences de voyage et allergies par l'assistant pour des recommandations personnalisées.",
+    saveBtn: "Enregistrer",
+    clearBtn: "Réinitialiser",
+    cancelBtn: "Annuler"
+  }
 };
 
-function ChipMultiSelect({ options, value, onChange }: { options: string[]; value: string[]; onChange: (v: string[]) => void }) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((opt) => {
-        const active = value.includes(opt);
-        return (
-          <button
-            type="button"
-            key={opt}
-            onClick={() => onChange(active ? value.filter((v) => v !== opt) : [...value, opt])}
-            className={`px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border transition ${
-              active ? 'bg-amber-500 border-amber-500 text-white' : 'bg-white border-amber-200 text-zinc-600 hover:border-amber-400'
-            }`}
-          >
-            {opt}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function RadioRow<T extends string>({ options, value, onChange }: { options: readonly { value: T; label: string }[]; value: T | undefined; onChange: (v: T) => void }) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((opt) => (
-        <button
-          type="button"
-          key={opt.value}
-          onClick={() => onChange(opt.value)}
-          className={`px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border transition ${
-            value === opt.value ? 'bg-zinc-900 border-zinc-900 text-white' : 'bg-white border-amber-200 text-zinc-600 hover:border-amber-400'
-          }`}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function Section({ icon, title, hint, children }: { icon: React.ReactNode; title: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <div className="space-y-2 py-3 border-b border-amber-100 last:border-0">
-      <div className="flex items-center gap-1.5">
-        <span className="text-amber-600">{icon}</span>
-        <h4 className="text-xs font-bold text-zinc-800">{title}</h4>
-        <span className="text-[10px] text-zinc-400 font-normal">(İsteğe Bağlı)</span>
-      </div>
-      {hint && <p className="text-[10px] text-zinc-500">{hint}</p>}
-      {children}
-    </div>
-  );
-}
-
-export function GuestPreferenceSurvey({ initialProfile, onSave, onClear, onCancel }: GuestPreferenceSurveyProps) {
+export function GuestPreferenceSurvey({ initialProfile, lang = 'tr', onSave, onClear, onCancel, onClose }: GuestPreferenceSurveyProps) {
+  const t = DICTS[lang] || DICTS.en;
   const [profile, setProfile] = useState<GuestProfile>(initialProfile);
   const [consent, setConsent] = useState<boolean>(!!initialProfile.kvkkConsent);
 
-  const set = <K extends keyof GuestProfile>(key: K, val: GuestProfile[K]) => setProfile((p) => ({ ...p, [key]: val }));
+  const toggleInterest = (item: string) => {
+    const curr = profile.interests || [];
+    const next = curr.includes(item) ? curr.filter(i => i !== item) : [...curr, item];
+    setProfile(p => ({ ...p, interests: next }));
+  };
+
+  const toggleAllergy = (item: string) => {
+    const curr = profile.allergies || [];
+    const next = curr.includes(item) ? curr.filter(i => i !== item) : [...curr, item];
+    setProfile(p => ({ ...p, allergies: next }));
+  };
 
   const handleSave = () => {
-    if (!consent) return;
-    onSave({ ...profile, kvkkConsent: true, consentTimestamp: new Date().toISOString() });
+    onSave({
+      ...profile,
+      kvkkConsent: consent,
+      consentTimestamp: new Date().toISOString()
+    });
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto px-1">
-        <Section icon={<Compass className="w-3.5 h-3.5" />} title="Seyahat Tarzı & Bütçe">
-          <div className="space-y-2">
-            <RadioRow options={OPTIONS.travelStyle} value={profile.travelStyle} onChange={(v) => set('travelStyle', v)} />
-            <RadioRow options={OPTIONS.budgetLevel} value={profile.budgetLevel} onChange={(v) => set('budgetLevel', v)} />
-          </div>
-        </Section>
-
-        <Section icon={<Sparkles className="w-3.5 h-3.5" />} title="Genel İlgi Alanları">
-          <ChipMultiSelect options={OPTIONS.interests} value={profile.interests ?? []} onChange={(v) => set('interests', v)} />
-        </Section>
-
-        <Section
-          icon={<HeartPulse className="w-3.5 h-3.5" />}
-          title="Sağlık & Alerjiler"
-          hint="Otel ekibinin acil bir durumda bilmesi faydalı olacak bilgiler."
-        >
-          <div className="space-y-2">
-            <ChipMultiSelect options={OPTIONS.allergies} value={profile.allergies ?? []} onChange={(v) => set('allergies', v)} />
-            <textarea
-              value={profile.healthNotes ?? ''}
-              onChange={(e) => set('healthNotes', e.target.value)}
-              placeholder="Kronik rahatsızlık, hareket kısıtlılığı veya bilinmesini istediğiniz başka bir sağlık notu..."
-              className="w-full h-16 text-xs rounded-xl border border-amber-200 p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500/40 bg-amber-50/20"
-            />
-          </div>
-        </Section>
-
-        <Section icon={<UtensilsCrossed className="w-3.5 h-3.5" />} title="Gastronomi & Beslenme">
-          <div className="space-y-2">
-            <ChipMultiSelect options={OPTIONS.dietaryRestrictions} value={profile.dietaryRestrictions ?? []} onChange={(v) => set('dietaryRestrictions', v)} />
-            <ChipMultiSelect options={OPTIONS.gastronomyPreferences} value={profile.gastronomyPreferences ?? []} onChange={(v) => set('gastronomyPreferences', v)} />
-          </div>
-        </Section>
-
-        <Section icon={<ShoppingBag className="w-3.5 h-3.5" />} title="Alışveriş İlgi Alanları">
-          <ChipMultiSelect options={OPTIONS.shoppingInterests} value={profile.shoppingInterests ?? []} onChange={(v) => set('shoppingInterests', v)} />
-        </Section>
-
-        <Section icon={<Compass className="w-3.5 h-3.5" />} title="Şehir Gezisi Tercihleri">
-          <div className="space-y-2">
-            <ChipMultiSelect options={OPTIONS.cityTourInterests} value={profile.cityTourInterests ?? []} onChange={(v) => set('cityTourInterests', v)} />
-            <RadioRow options={OPTIONS.tourPace} value={profile.tourPace} onChange={(v) => set('tourPace', v)} />
-          </div>
-        </Section>
-
-        <Section icon={<Briefcase className="w-3.5 h-3.5" />} title="İş Seyahati İhtiyaçları">
-          <ChipMultiSelect options={OPTIONS.businessNeeds} value={profile.businessNeeds ?? []} onChange={(v) => set('businessNeeds', v)} />
-        </Section>
-
-        <div className="space-y-2 py-3">
-          <h4 className="text-xs font-bold text-zinc-800">Paylaşmak İstediğiniz Başka Bir Şey</h4>
-          <textarea
-            value={profile.notes ?? ''}
-            onChange={(e) => set('notes', e.target.value)}
-            placeholder="comusAI'ın bilmesini istediğiniz her şeyi buraya yazabilirsiniz..."
-            className="w-full h-16 text-xs rounded-xl border border-amber-200 p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500/40 bg-amber-50/20"
-          />
+    <div className="space-y-4 text-xs">
+      <div className="flex items-center justify-between border-b border-amber-100 pb-2">
+        <div>
+          <h3 className="text-sm font-bold text-zinc-900">{t.title}</h3>
+          <p className="text-[11px] text-zinc-500">{t.subtitle}</p>
         </div>
+        {(onClose || onCancel) && (
+          <button
+            onClick={onClose || onCancel}
+            className="w-7 h-7 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-600 font-bold cursor-pointer"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
 
-        {/* KVKK Consent */}
-        <div className="bg-amber-50/80 border border-amber-300 rounded-2xl p-3.5 space-y-2.5 mt-2">
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-amber-700" />
-            <span className="text-xs font-bold text-amber-950">KVKK Aydınlatma & Açık Rıza Onayı</span>
-          </div>
-          <label className="flex items-start gap-2 text-[11px] text-zinc-700 leading-relaxed cursor-pointer">
-            <input
-              type="checkbox"
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              className="mt-0.5 w-4 h-4 accent-amber-600 shrink-0"
-            />
-            <span>
-              6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında; sağlık, alerji ve diğer kişisel tercihlerime dair
-              paylaştığım bilgilerin, yalnızca bana özel rehberlik ve öneri sunmak amacıyla Xenios ve konakladığım otel ekibi
-              (concierge, mutfak, güvenlik gibi ilgili birimler) tarafından işlenmesini kabul ediyorum. Bu onayı istediğim zaman
-              geri çekebilir, bilgilerimi güncelleyebilir veya tamamen silebilirim.
-            </span>
-          </label>
+      {/* Travel Style */}
+      <div className="space-y-1.5">
+        <label className="text-xs font-bold text-zinc-800 flex items-center gap-1.5">
+          <Compass className="w-3.5 h-3.5 text-amber-600" /> {t.travelStyle}
+        </label>
+        <div className="grid grid-cols-2 gap-1.5">
+          {t.travelStyles.map((item: any) => (
+            <button
+              type="button"
+              key={item.value}
+              onClick={() => setProfile(p => ({ ...p, travelStyle: item.value }))}
+              className={`p-2.5 rounded-xl font-semibold text-xs border text-left transition cursor-pointer ${
+                profile.travelStyle === item.value
+                  ? 'bg-amber-500 border-amber-500 text-white shadow-xs'
+                  : 'bg-white border-amber-200 text-zinc-700 hover:bg-amber-50'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="flex items-center gap-2 pt-3 mt-1 border-t border-amber-100">
+      {/* Budget Level */}
+      <div className="space-y-1.5">
+        <label className="text-xs font-bold text-zinc-800">{t.budgetLevel}</label>
+        <div className="grid grid-cols-3 gap-1.5">
+          {t.budgetLevels.map((item: any) => (
+            <button
+              type="button"
+              key={item.value}
+              onClick={() => setProfile(p => ({ ...p, budgetLevel: item.value }))}
+              className={`py-2 px-1 text-center rounded-xl font-semibold text-xs border transition cursor-pointer ${
+                profile.budgetLevel === item.value
+                  ? 'bg-amber-500 border-amber-500 text-white shadow-xs'
+                  : 'bg-white border-amber-200 text-zinc-700 hover:bg-amber-50'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Interests */}
+      <div className="space-y-1.5">
+        <label className="text-xs font-bold text-zinc-800 flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-amber-600" /> {t.interestsTitle}
+        </label>
+        <div className="flex flex-wrap gap-1.5">
+          {t.interests.map((item: string) => {
+            const active = (profile.interests || []).includes(item);
+            return (
+              <button
+                type="button"
+                key={item}
+                onClick={() => toggleInterest(item)}
+                className={`px-2.5 py-1.5 rounded-xl font-medium text-xs border transition cursor-pointer ${
+                  active
+                    ? 'bg-amber-500 border-amber-500 text-white'
+                    : 'bg-white border-amber-200 text-zinc-700 hover:bg-amber-50'
+                }`}
+              >
+                {item}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Health & Allergies */}
+      <div className="space-y-1.5">
+        <label className="text-xs font-bold text-zinc-800 flex items-center gap-1.5">
+          <HeartPulse className="w-3.5 h-3.5 text-rose-600" /> {t.healthTitle}
+        </label>
+        <div className="flex flex-wrap gap-1.5">
+          {t.allergies.map((item: string) => {
+            const active = (profile.allergies || []).includes(item);
+            return (
+              <button
+                type="button"
+                key={item}
+                onClick={() => toggleAllergy(item)}
+                className={`px-2.5 py-1.5 rounded-xl font-medium text-xs border transition cursor-pointer ${
+                  active
+                    ? 'bg-rose-500 border-rose-500 text-white'
+                    : 'bg-white border-rose-200 text-zinc-700 hover:bg-rose-50'
+                }`}
+              >
+                {item}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Consent Checkbox */}
+      <div className="p-3 bg-amber-50/80 rounded-2xl border border-amber-200/70 flex items-start gap-2">
+        <input
+          type="checkbox"
+          id="kvkkConsent"
+          checked={consent}
+          onChange={(e) => setConsent(e.target.checked)}
+          className="mt-0.5 rounded text-amber-600 focus:ring-amber-500 cursor-pointer"
+        />
+        <label htmlFor="kvkkConsent" className="text-[11px] text-zinc-700 leading-snug cursor-pointer">
+          {t.kvkkConsent}
+        </label>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-2 pt-2">
         <button
           type="button"
           onClick={onClear}
-          title="Tüm tercihlerimi ve onayımı sil"
-          className="p-2.5 rounded-xl border border-zinc-200 text-zinc-500 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition shrink-0"
+          title={t.clearBtn}
+          className="px-3.5 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold flex items-center gap-1.5 cursor-pointer"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-3.5 h-3.5 text-zinc-500" />
+          <span>{t.clearBtn}</span>
         </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="flex-1 py-2.5 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-600 hover:bg-zinc-50 transition"
-        >
-          Vazgeç
-        </button>
+
         <button
           type="button"
           onClick={handleSave}
           disabled={!consent}
-          className="flex-[2] py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold shadow-md shadow-amber-500/30 transition"
+          className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold transition shadow-md disabled:opacity-50 cursor-pointer"
         >
-          Tercihlerimi Kaydet & Rehberliği Kişiselleştir
+          {t.saveBtn}
         </button>
       </div>
     </div>
   );
 }
+

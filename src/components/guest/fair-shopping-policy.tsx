@@ -21,8 +21,15 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Language } from '@/lib/types';
+import { getT } from '@/lib/i18n';
 
-export function FairShoppingPolicy() {
+interface FairShoppingPolicyProps {
+  lang?: Language;
+}
+
+export function FairShoppingPolicy({ lang = 'tr' }: FairShoppingPolicyProps) {
+  const t = getT(lang);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [openTrap, setOpenTrap] = useState<number | null>(null);
 
