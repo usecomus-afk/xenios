@@ -6,10 +6,11 @@ import { useState, useEffect } from 'react';
 import { PropertyListing, InvestorPersona, Hotel, Language } from '@/lib/types';
 import { XeniosStore } from '@/lib/store';
 import { getT } from '@/lib/i18n';
+import { getLocalizedProperty, INVEST_MODAL_I18N } from '@/lib/invest-i18n';
 import { toast } from 'sonner';
 import {
   Building2, MapPin, BedDouble, Maximize2, ShieldCheck,
-  Search, Bath
+  Search, Bath, X, Sparkles, TrendingUp, Calendar, CheckCircle2
 } from 'lucide-react';
 
 interface InvestInIstanbulProps {
@@ -24,6 +25,8 @@ function formatUSD(amount: number) {
 
 export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIstanbulProps) {
   const t = getT(lang);
+  const modalT = INVEST_MODAL_I18N[lang] || INVEST_MODAL_I18N.en;
+
   const [properties, setProperties] = useState<PropertyListing[]>([]);
   const [personaFilter, setPersonaFilter] = useState<'all' | InvestorPersona>('all');
   const [search, setSearch] = useState('');
@@ -33,7 +36,7 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
   const [tourProperty, setTourProperty] = useState<PropertyListing | null>(null);
   const [tourName, setTourName] = useState('');
   const [tourContact, setTourContact] = useState('');
-  const [tourDate, setTourDate] = useState('Yarın (10:30)');
+  const [tourDate, setTourDate] = useState('10:30');
   const [tourVehicle, setTourVehicle] = useState('VIP Mercedes Vito');
   const [tourLanguage, setTourLanguage] = useState('English / Türkçe');
   const [tourNote, setTourNote] = useState('');
@@ -48,12 +51,14 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
 
   const visible = properties.filter((p) => {
     if (p.status === 'suspended') return false;
+    const loc = getLocalizedProperty(p, lang);
     const matchesPersona = personaFilter === 'all' || p.personas?.includes(personaFilter);
     const matchesSearch = !search ||
       p.title.toLowerCase().includes(search.toLowerCase()) ||
+      loc.title.toLowerCase().includes(search.toLowerCase()) ||
       p.district.toLowerCase().includes(search.toLowerCase()) ||
-      p.propertyType?.toLowerCase().includes(search.toLowerCase()) ||
-      (p.agency && p.agency.toLowerCase().includes(search.toLowerCase()));
+      loc.district.toLowerCase().includes(search.toLowerCase()) ||
+      (p.developer && p.developer.toLowerCase().includes(search.toLowerCase()));
     return matchesPersona && matchesSearch;
   });
 
@@ -93,13 +98,13 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
         roomNumber,
         guestName: tourName.trim(),
         guestContact: tourContact.trim(),
-        note: `[VIP Keşif Turu Talebi] Tarih: ${tourDate} | Transfer: ${tourVehicle} | Dil: ${tourLanguage} | Not: ${tourNote.trim() || 'Yok'}`,
+        note: `[VIP Keşif Turu Talebi] Saat: ${tourDate} | Transfer: ${tourVehicle} | Dil: ${tourLanguage} | Not: ${tourNote.trim() || 'Yok'}`,
         personaGuess: profile.investPersonaGuess
       });
 
       FirestoreService.addInvestmentLead(newLead);
       NotificationService.notifyInvestmentLead(newLead, tourProperty);
-      toast.success(t.bookDiscoveryTour, {
+      toast.success(modalT.tourSuccess, {
         description: `${hotel.name} ${t.room} ${roomNumber} · VIP Transfer`
       });
       setIsSubmitting(false);
@@ -107,6 +112,9 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
       if (selected) setSelected(null);
     }, 500);
   };
+
+  const selectedLoc = selected ? getLocalizedProperty(selected, lang) : null;
+  const tourLoc = tourProperty ? getLocalizedProperty(tourProperty, lang) : null;
 
   return (
     <div className="space-y-6">
@@ -175,6 +183,7 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
       {/* Properties Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {visible.map((p) => {
+          const loc = getLocalizedProperty(p, lang);
           return (
             <div
               key={p.id}
@@ -184,8 +193,8 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
               <div>
                 <div className="relative h-44 w-full overflow-hidden bg-zinc-900">
                   <img
-                    src={(p as any).images?.[0] || p.image || '/images/realestate/vadi-1.jpg'}
-                    alt={p.title}
+                    src={p.image || '/images/realestate/vadi-1.jpg'}
+                    alt={loc.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -199,10 +208,10 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
 
                   <div className="absolute bottom-3 left-3 right-3 text-white">
                     <span className="text-[11px] text-amber-300 font-semibold flex items-center gap-1">
-                      <MapPin className="w-3 h-3" /> {p.district}
+                      <MapPin className="w-3 h-3" /> {loc.district}
                     </span>
                     <h3 className="text-sm font-bold font-serif truncate group-hover:text-amber-300 transition-colors">
-                      {p.title}
+                      {loc.title}
                     </h3>
                   </div>
                 </div>
@@ -211,7 +220,7 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
                   <div className="flex items-center justify-between text-xs text-zinc-600">
                     <div className="flex items-center gap-1">
                       <BedDouble className="w-3.5 h-3.5 text-amber-600" />
-                      <span>{p.bedrooms} {t.bedrooms}</span>
+                      <span>{p.bedrooms} {modalT.bedrooms}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Maximize2 className="w-3.5 h-3.5 text-amber-600" />
@@ -219,9 +228,13 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
                     </div>
                   </div>
 
+                  <p className="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">
+                    {loc.description}
+                  </p>
+
                   <div className="flex items-center justify-between pt-2 border-t border-amber-100">
                     <div>
-                      <span className="text-[10px] text-zinc-400 block uppercase font-semibold">{t.priceRange}</span>
+                      <span className="text-[10px] text-zinc-400 block uppercase font-semibold">{modalT.priceRange}</span>
                       <strong className="text-base font-bold text-amber-800 font-mono">
                         {formatUSD(p.priceUSD)}
                       </strong>
@@ -242,57 +255,129 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
       </div>
 
       {/* Property Details Modal */}
-      {selected && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-amber-200 max-h-[88vh] overflow-y-auto space-y-4 animate-in zoom-in-95 text-zinc-900 relative">
+      {selected && selectedLoc && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-amber-200 max-h-[90vh] overflow-y-auto space-y-4 animate-in zoom-in-95 text-zinc-900 relative">
+            
+            {/* Top Right Prominent Close Button */}
             <button
+              type="button"
               onClick={() => setSelected(null)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center text-sm font-bold cursor-pointer"
+              aria-label={modalT.close}
+              className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center shadow-xl backdrop-blur-md transition-all duration-200 cursor-pointer border border-white/20 active:scale-95"
             >
-              ✕
+              <X className="w-5 h-5" />
             </button>
 
-            <div className="relative h-56 rounded-2xl overflow-hidden bg-zinc-900">
+            {/* Image Header with Badge */}
+            <div className="relative h-60 rounded-2xl overflow-hidden bg-zinc-900 shadow-inner">
               <img
                 src={selected.image || '/images/realestate/vadi-1.jpg'}
-                alt={selected.title}
+                alt={selectedLoc.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
-                {selected.district}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+              
+              <div className="absolute top-3.5 left-3.5 flex items-center gap-1.5">
+                <span className="bg-amber-500/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                  {selectedLoc.district}
+                </span>
+                {selected.citizenshipEligible && (
+                  <span className="bg-emerald-600/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>{t.citizenshipEligible}</span>
+                  </span>
+                )}
+              </div>
+
+              <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                <span className="text-xs text-amber-300 font-semibold uppercase tracking-wider block">
+                  {selectedLoc.propertyType}
+                </span>
+                <h2 className="text-lg font-bold font-serif text-white drop-shadow-md">
+                  {selectedLoc.title}
+                </h2>
               </div>
             </div>
 
-            <div className="space-y-1">
-              <h2 className="text-lg font-bold font-serif">{selected.title}</h2>
-              <p className="text-xs text-zinc-500">{selected.developer || 'Xenios Prime Real Estate'}</p>
+            {/* Agency Info */}
+            <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
+              <span>{modalT.agency}: <strong className="text-zinc-800 font-semibold">{selected.developer || selected.agency || 'Xenios Prime Real Estate'}</strong></span>
+              <span className="font-mono text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">ID: {selected.id}</span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 text-center p-3 bg-amber-50/60 rounded-2xl border border-amber-200 text-xs">
+            {/* Specifications Grid */}
+            <div className="grid grid-cols-3 gap-2 text-center p-3.5 bg-amber-50/70 rounded-2xl border border-amber-200 text-xs">
               <div>
-                <span className="text-[10px] text-zinc-400 block">{t.bedrooms}</span>
-                <strong className="text-zinc-900">{selected.bedrooms}</strong>
+                <span className="text-[10px] text-zinc-400 block uppercase font-semibold">{modalT.bedrooms}</span>
+                <strong className="text-zinc-900 text-sm font-bold">{selected.bedrooms}</strong>
               </div>
               <div>
-                <span className="text-[10px] text-zinc-400 block">{t.grossArea}</span>
-                <strong className="text-zinc-900">{selected.areaM2} m²</strong>
+                <span className="text-[10px] text-zinc-400 block uppercase font-semibold">{modalT.grossArea}</span>
+                <strong className="text-zinc-900 text-sm font-bold">{selected.areaM2} m²</strong>
               </div>
               <div>
-                <span className="text-[10px] text-zinc-400 block">{t.priceRange}</span>
-                <strong className="text-amber-800 font-mono">{formatUSD(selected.priceUSD)}</strong>
+                <span className="text-[10px] text-zinc-400 block uppercase font-semibold">{modalT.priceRange}</span>
+                <strong className="text-amber-800 font-mono text-sm font-bold">{formatUSD(selected.priceUSD)}</strong>
               </div>
             </div>
 
-            <p className="text-xs text-zinc-600 leading-relaxed bg-[#fbf8f1] p-3.5 rounded-2xl border border-amber-200/60">
-              {selected.description}
-            </p>
+            {/* Localized Description */}
+            <div className="space-y-1.5">
+              <h4 className="text-xs font-bold text-zinc-800 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>{modalT.specs}</span>
+              </h4>
+              <p className="text-xs text-zinc-700 leading-relaxed bg-[#fbf8f1] p-4 rounded-2xl border border-amber-200/70">
+                {selectedLoc.description}
+              </p>
+            </div>
 
-            <div className="flex items-center gap-2 pt-2">
+            {/* Highlights Chips */}
+            {selectedLoc.highlights && selectedLoc.highlights.length > 0 && (
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedLoc.highlights.map((h: string, idx: number) => (
+                    <span
+                      key={idx}
+                      className="px-2.5 py-1 rounded-xl bg-amber-100/60 text-amber-900 text-[11px] font-semibold border border-amber-200 flex items-center gap-1"
+                    >
+                      <CheckCircle2 className="w-3 h-3 text-amber-700" />
+                      <span>{h}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ROI & Citizenship Status Box */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200/70 text-emerald-950 space-y-0.5">
+                <span className="text-[10px] text-emerald-700 font-bold uppercase block">{modalT.citizenship}</span>
+                <p className="text-[11px] font-semibold leading-tight">{selectedLoc.citizenshipStatus}</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/70 text-amber-950 space-y-0.5">
+                <span className="text-[10px] text-amber-700 font-bold uppercase block">{modalT.roi}</span>
+                <p className="text-[11px] font-semibold leading-tight">{selectedLoc.roiEstimate}</p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2 pt-2 border-t border-amber-100">
               <button
-                onClick={(e) => openTourModal(selected, e)}
-                className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl font-bold text-xs shadow-md transition cursor-pointer"
+                type="button"
+                onClick={() => setSelected(null)}
+                className="py-3 px-4 rounded-2xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold text-xs transition cursor-pointer"
               >
-                {t.bookDiscoveryTour}
+                {modalT.close}
+              </button>
+              <button
+                type="button"
+                onClick={(e) => openTourModal(selected, e)}
+                className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl font-bold text-xs shadow-md shadow-amber-500/25 transition cursor-pointer flex items-center justify-center gap-2"
+              >
+                <Calendar className="w-4 h-4" />
+                <span>{t.bookDiscoveryTour}</span>
               </button>
             </div>
           </div>
@@ -300,64 +385,77 @@ export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIst
       )}
 
       {/* VIP Discovery Tour Modal */}
-      {tourProperty && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
+      {tourProperty && tourLoc && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-200 animate-in zoom-in-95 space-y-4 text-zinc-900 relative">
+            
+            {/* Top Right Prominent Close Button */}
             <button
+              type="button"
               onClick={closeTourModal}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center text-sm font-bold cursor-pointer"
+              aria-label={modalT.close}
+              className="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center text-sm font-bold cursor-pointer transition border border-zinc-200 active:scale-95"
             >
-              ✕
+              <X className="w-4 h-4" />
             </button>
 
-            <div className="space-y-1 pr-6">
-              <h3 className="text-base font-bold font-serif">{t.bookDiscoveryTour}</h3>
-              <p className="text-xs text-zinc-500">{tourProperty.title}</p>
+            <div className="space-y-1 pr-8">
+              <h3 className="text-base font-bold font-serif text-zinc-900">{modalT.tourTitle}</h3>
+              <p className="text-xs text-amber-800 font-semibold">{tourLoc.title}</p>
             </div>
 
             <form onSubmit={handleTourSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="text-zinc-700 font-bold block mb-1">Ad Soyad / Full Name</label>
+                <label className="text-zinc-700 font-bold block mb-1">{modalT.fullName}</label>
                 <input
                   type="text"
                   value={tourName}
                   onChange={(e) => setTourName(e.target.value)}
-                  placeholder="İsminiz"
+                  placeholder={modalT.fullNamePlaceholder}
                   className="w-full p-2.5 bg-white rounded-xl border border-amber-200 focus:ring-2 focus:ring-amber-500/40 outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-zinc-700 font-bold block mb-1">Telefon / WhatsApp</label>
+                <label className="text-zinc-700 font-bold block mb-1">{modalT.phone}</label>
                 <input
                   type="text"
                   value={tourContact}
                   onChange={(e) => setTourContact(e.target.value)}
-                  placeholder="+90 5XX XXX XX XX"
-                  className="w-full p-2.5 bg-white rounded-xl border border-amber-200 focus:ring-2 focus:ring-amber-500/40 outline-none"
+                  placeholder={modalT.phonePlaceholder}
+                  className="w-full p-2.5 bg-white rounded-xl border border-amber-200 focus:ring-2 focus:ring-amber-500/40 outline-none font-mono"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-zinc-700 font-bold block mb-1">Not / Tercihler</label>
+                <label className="text-zinc-700 font-bold block mb-1">{modalT.notes}</label>
                 <textarea
                   value={tourNote}
                   onChange={(e) => setTourNote(e.target.value)}
-                  placeholder="Vatandaşlık, yatırım amacı vb."
+                  placeholder={modalT.notesPlaceholder}
                   rows={2}
                   className="w-full p-2.5 bg-white rounded-xl border border-amber-200 focus:ring-2 focus:ring-amber-500/40 outline-none"
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl font-bold text-xs shadow-md transition disabled:opacity-50 cursor-pointer"
-              >
-                {isSubmitting ? '...' : t.bookDiscoveryTour}
-              </button>
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={closeTourModal}
+                  className="py-3 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold rounded-2xl transition cursor-pointer"
+                >
+                  {modalT.close}
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl font-bold text-xs shadow-md shadow-amber-500/25 transition disabled:opacity-50 cursor-pointer"
+                >
+                  {isSubmitting ? '...' : modalT.bookTourBtn}
+                </button>
+              </div>
             </form>
           </div>
         </div>
