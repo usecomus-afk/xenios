@@ -15,12 +15,12 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
   const t = getT(lang);
 
   const tabs = [
-    { id: 'services', label: 'Otel', iconType: 'lucide', icon: Home },
-    { id: 'experiences', label: 'Deneyimler', iconType: 'lucide', icon: Compass },
-    { id: 'categories', label: 'Kategoriler', iconType: 'lucide', icon: LayoutGrid },
-    { id: 'ai', label: 'comusAI', iconType: 'image', imgSrc: '/icons/menu/aiGuide.png' },
-    { id: 'practical', label: 'Rehber', iconType: 'image', imgSrc: '/icons/menu/practical.png' },
-    { id: 'invest', label: 'Invest', iconType: 'lucide', icon: Building2 }
+    { id: 'services', label: t.tabs.services, iconType: 'lucide', icon: Home },
+    { id: 'experiences', label: t.tabs.experiences, iconType: 'lucide', icon: Compass },
+    { id: 'categories', label: t.tabs.categories, iconType: 'lucide', icon: LayoutGrid },
+    { id: 'ai', label: t.tabs.aiGuide, iconType: 'image', imgSrc: '/icons/menu/aiGuide.png' },
+    { id: 'practical', label: t.tabs.practical, iconType: 'image', imgSrc: '/icons/menu/practical.png' },
+    { id: 'invest', label: t.tabs.invest, iconType: 'lucide', icon: Building2 }
   ];
 
   return (

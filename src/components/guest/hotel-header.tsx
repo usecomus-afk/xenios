@@ -177,7 +177,7 @@ export function HotelHeader({
                         className="w-full py-1.5 px-2 text-left text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <LogOut className="w-3.5 h-3.5" />
-                        <span>Çıkış Yap</span>
+                        <span>{t.logout}</span>
                       </button>
                     </div>
                   </>
@@ -188,7 +188,7 @@ export function HotelHeader({
                 type="button"
                 onClick={onOpenAuth}
                 className="w-7 h-7 rounded-full bg-zinc-900 hover:bg-black text-amber-400 flex items-center justify-center text-xs shadow-2xs transition cursor-pointer"
-                title="Giriş Yap"
+                title={t.loginRegister}
               >
                 <User className="w-3.5 h-3.5" />
               </button>
@@ -209,7 +209,7 @@ export function HotelHeader({
             <span className="text-zinc-300">|</span>
             <div className="flex items-center gap-1 px-2 py-0.5 bg-amber-500 text-white rounded-lg text-[11px] font-bold shrink-0 shadow-2xs">
               <DoorOpen className="w-3 h-3" />
-              <span>Oda {roomNumber}</span>
+              <span>{t.room} {roomNumber}</span>
             </div>
           </div>
 
@@ -224,13 +224,13 @@ export function HotelHeader({
                 className="flex items-center gap-1 px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[11px] font-bold shadow-xs animate-pulse cursor-pointer"
               >
                 <BellRing className="w-3 h-3" />
-                <span>Taleplerim ({activeRequestsCount})</span>
+                <span>{t.myRequests} ({activeRequestsCount})</span>
               </button>
             )}
 
             <div className="flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-50 group-hover:bg-amber-100 px-2.5 py-1 rounded-xl border border-amber-200 transition">
               <Wifi className="w-3.5 h-3.5 text-amber-700" />
-              <span className="hidden sm:inline">Otel & Wi-Fi Bilgisi</span>
+              <span className="hidden sm:inline">{t.wifiTitle}</span>
               <ChevronDown className="w-3.5 h-3.5 text-amber-700 group-hover:translate-y-0.5 transition" />
             </div>
           </div>
@@ -256,7 +256,7 @@ export function HotelHeader({
                   {hotel.type}
                 </span>
                 <span className="px-2.5 py-0.5 bg-amber-500 text-white rounded-full text-xs font-bold">
-                  Oda {roomNumber}
+                  {t.room} {roomNumber}
                 </span>
               </div>
               <h2 className="text-xl font-bold font-serif text-zinc-900">{hotel.name}</h2>
@@ -274,7 +274,7 @@ export function HotelHeader({
                     <Wifi className="w-4 h-4" />
                   </div>
                   <div>
-                    <strong className="text-xs text-zinc-900 block">Misafir Wi-Fi Ağı</strong>
+                    <strong className="text-xs text-zinc-900 block">{t.wifiNetwork}</strong>
                     <span className="text-[11px] text-zinc-600 font-mono">{wifiSsid}</span>
                   </div>
                 </div>
@@ -290,7 +290,7 @@ export function HotelHeader({
               </div>
 
               <div className="pt-2 border-t border-amber-200/60 flex items-center justify-between text-xs">
-                <span className="text-zinc-500">Wi-Fi Şifresi:</span>
+                <span className="text-zinc-500">{t.wifiPassword}:</span>
                 <code className="bg-white px-2.5 py-1 rounded-lg text-amber-900 font-mono font-bold border border-amber-200 text-xs">
                   {wifiPass}
                 </code>
@@ -318,7 +318,7 @@ export function HotelHeader({
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-amber-700" />
                   <div>
-                    <strong className="text-zinc-900 block">Resepsiyon Dahili</strong>
+                    <strong className="text-zinc-900 block">{t.receptionExt}</strong>
                     <span className="text-[10px] text-zinc-500">Oda telefonundan tuşlayın</span>
                   </div>
                 </div>
@@ -337,7 +337,7 @@ export function HotelHeader({
                   className="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <BellRing className="w-4 h-4" />
-                  <span>Oda Taleplerimi Görüntüle ({activeRequestsCount})</span>
+                  <span>{t.activeRequests} ({activeRequestsCount})</span>
                 </button>
               )}
             </div>

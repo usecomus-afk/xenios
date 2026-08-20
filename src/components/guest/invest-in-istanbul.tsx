@@ -4,8 +4,9 @@ import { NotificationService } from "@/lib/notification-service";
 import { FirestoreService } from "@/lib/firestore-service";
 
 import { useState, useEffect } from 'react';
-import { PropertyListing, InvestorPersona, Hotel } from '@/lib/types';
+import { PropertyListing, InvestorPersona, Hotel, Language } from '@/lib/types';
 import { XeniosStore } from '@/lib/store';
+import { getT } from '@/lib/i18n';
 import { toast } from 'sonner';
 import {
   Building2, MapPin, BedDouble, Maximize2, TrendingUp, ShieldCheck, Phone, Globe,
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 
 interface InvestInIstanbulProps {
+  lang?: Language;
   hotel: Hotel;
   roomNumber: string;
 }
@@ -28,7 +30,8 @@ function formatUSD(amount: number) {
   return `$${amount.toLocaleString('en-US')}`;
 }
 
-export function InvestInIstanbul({ hotel, roomNumber }: InvestInIstanbulProps) {
+export function InvestInIstanbul({ hotel, roomNumber, lang = "tr" }: InvestInIstanbulProps) {
+  const t = getT(lang);
   const [properties, setProperties] = useState<PropertyListing[]>([]);
   const [personaFilter, setPersonaFilter] = useState<'all' | InvestorPersona>('all');
   const [search, setSearch] = useState('');

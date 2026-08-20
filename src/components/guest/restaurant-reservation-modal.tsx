@@ -4,14 +4,16 @@ import { NotificationService } from "@/lib/notification-service";
 import { FirestoreService } from "@/lib/firestore-service";
 
 import { useState } from 'react';
-import { Experience, Hotel } from '@/lib/types';
+import { Experience, Hotel, Language } from '@/lib/types';
 import { XeniosStore } from '@/lib/store';
+import { getT } from '@/lib/i18n';
 import { toast } from 'sonner';
 import {
   Utensils, Users, Calendar, Clock, Phone, User, Sparkles, X, CheckCircle2, ShieldCheck, MapPin
 } from 'lucide-react';
 
 interface RestaurantReservationModalProps {
+  lang?: Language;
   restaurant: Experience;
   hotel: Hotel;
   roomNumber: string;
@@ -19,11 +21,13 @@ interface RestaurantReservationModalProps {
 }
 
 export function RestaurantReservationModal({
+  lang = "tr",
   restaurant,
   hotel,
   roomNumber,
   onClose
 }: RestaurantReservationModalProps) {
+  const t = getT(lang);
   const [guestCount, setGuestCount] = useState<number>(2);
   const [date, setDate] = useState<string>(() => {
     const d = new Date();

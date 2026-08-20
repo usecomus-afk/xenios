@@ -25,16 +25,6 @@ import {
   Bell, 
   X, 
   Compass, 
-  Ship, 
-  Landmark, 
-  Utensils, 
-  Camera, 
-  Trees, 
-  Bath, 
-  ShoppingBag, 
-  Palette, 
-  Scroll, 
-  Car,
   ArrowRight,
   ShieldCheck,
   Clock
@@ -82,20 +72,20 @@ export default function GuestPage() {
   // Extract unique categories
   const categories = ['all', ...Array.from(new Set(allExperiences.map(e => e.category)))];
 
-  // Category Catalog Grid Items with Custom Canva PNG Icons
+  // Dynamic Category Showcase (12 Categories with localized title & description)
   const categoryShowcase = [
-    { key: 'İstanbul\'da Yatırım', iconPath: '/icons/categories/invest.png', count: 20, desc: 'Vatandaşlığa uygun lüks rezidanslar, tarihi yalılar & Airbnb mülkleri', tab: 'invest' },
-    { key: 'Önerdiğimiz Restoranlar', iconPath: '/icons/categories/onerdigimiz-restoranlar.png', count: 20, desc: 'Michelin yıldızlı şefler, tarihi lezzetler & Boğaz manzaralı teraslar' },
-    { key: 'Boğaz Turları & Yat', iconPath: '/icons/categories/bogaz-yatturlari.png', count: 7, desc: 'Akşam yemekli turlar, özel yat kiralama & Adalar rotaları' },
-    { key: 'Tarih & Müzeler', iconPath: '/icons/categories/tarih-muzeler.png', count: 8, desc: 'Ayasofya, Topkapı Sarayı, Yerebatan & Arkeoloji Müzeleri' },
-    { key: 'Gastronomi & Gurme', iconPath: '/icons/categories/gastronomi-gurme.png', count: 6, desc: 'Sokak lezzetleri, Türk kahvesi atölyesi & Boğaz meyhaneleri' },
-    { key: 'Fotoğraf & Kostüm', iconPath: '/icons/categories/fotograf-kostum.png', count: 5, desc: 'Uçuşan elbise çekimi & otantik Osmanlı kaftan çekimleri' },
-    { key: 'Macera & Doğa', iconPath: '/icons/categories/macera-doga.png', count: 4, desc: 'Orman içi zipline, ip parkuru & kano safarileri' },
-    { key: 'Türk Hamamı & Spa', iconPath: '/icons/categories/turk-hamami-spa.png', count: 4, desc: 'Tarihi Kılıç Ali Paşa, Hürrem Sultan & VIP köpük masajı' },
-    { key: 'Alışveriş & Çarşılar', iconPath: '/icons/categories/alisveris-carsilar.png', count: 4, desc: 'Kapalıçarşı, Mısır Çarşısı & el dokuma halı rehberi' },
-    { key: 'Sanat & Semazen', iconPath: '/icons/categories/sanat-semazen.png', count: 4, desc: 'Mevlevi Sema ayini, ebru & mozaik lamba yapımı' },
-    { key: 'Kültürel Miras', iconPath: '/icons/categories/kulturel-miras.png', count: 5, desc: 'Fener-Balat, Musevi Sinagogları & Süryani mirası' },
-    { key: 'Özel VIP Transfer', iconPath: '/icons/categories/ozel-vip-transfer.png', count: 5, desc: 'Havalimanı karşılama, şoförlü lüks Mercedes Vito' }
+    { key: t.categoriesList.invest.title, rawKey: "İstanbul'da Yatırım", iconPath: '/icons/categories/invest.png', count: 20, desc: t.categoriesList.invest.desc, tab: 'invest' },
+    { key: t.categoriesList.restaurants.title, rawKey: "Önerdiğimiz Restoranlar", iconPath: '/icons/categories/onerdigimiz-restoranlar.png', count: 20, desc: t.categoriesList.restaurants.desc },
+    { key: t.categoriesList.bosphorus.title, rawKey: "Boğaz Turları & Yat", iconPath: '/icons/categories/bogaz-yatturlari.png', count: 7, desc: t.categoriesList.bosphorus.desc },
+    { key: t.categoriesList.history.title, rawKey: "Tarih & Müzeler", iconPath: '/icons/categories/tarih-muzeler.png', count: 8, desc: t.categoriesList.history.desc },
+    { key: t.categoriesList.gastronomy.title, rawKey: "Gastronomi & Gurme", iconPath: '/icons/categories/gastronomi-gurme.png', count: 6, desc: t.categoriesList.gastronomy.desc },
+    { key: t.categoriesList.photo.title, rawKey: "Fotoğraf & Kostüm", iconPath: '/icons/categories/fotograf-kostum.png', count: 5, desc: t.categoriesList.photo.desc },
+    { key: t.categoriesList.adventure.title, rawKey: "Macera & Doğa", iconPath: '/icons/categories/macera-doga.png', count: 4, desc: t.categoriesList.adventure.desc },
+    { key: t.categoriesList.hamam.title, rawKey: "Türk Hamamı & Spa", iconPath: '/icons/categories/turk-hamami-spa.png', count: 4, desc: t.categoriesList.hamam.desc },
+    { key: t.categoriesList.shopping.title, rawKey: "Alışveriş & Çarşılar", iconPath: '/icons/categories/alisveris-carsilar.png', count: 4, desc: t.categoriesList.shopping.desc },
+    { key: t.categoriesList.art.title, rawKey: "Sanat & Semazen", iconPath: '/icons/categories/sanat-semazen.png', count: 4, desc: t.categoriesList.art.desc },
+    { key: t.categoriesList.culture.title, rawKey: "Kültürel Miras", iconPath: '/icons/categories/kulturel-miras.png', count: 5, desc: t.categoriesList.culture.desc },
+    { key: t.categoriesList.transfer.title, rawKey: "Özel VIP Transfer", iconPath: '/icons/categories/ozel-vip-transfer.png', count: 5, desc: t.categoriesList.transfer.desc }
   ];
 
   // Filter experiences (admin-suspended listings never reach the guest catalog)
@@ -142,7 +132,6 @@ export default function GuestPage() {
             />
 
             {/* Curated Istanbul Experiences Banner (Kataloğu Keşfet Modülü) */}
-            {/* Curated Istanbul Experiences Banner (Kataloğu Keşfet Modülü) */}
             <div className="bg-white rounded-3xl p-5 sm:p-6 border border-amber-300/80 shadow-md hover:shadow-lg transition space-y-4 relative overflow-hidden bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30">
               
               {/* Decorative subtle ambient light */}
@@ -151,7 +140,7 @@ export default function GuestPage() {
               {/* Centered Top Badge */}
               <div className="flex items-center justify-center w-full">
                 <span className="px-4 py-1.5 rounded-full text-[11px] bg-amber-500 text-white font-extrabold uppercase tracking-widest shadow-xs text-center">
-                  İstanbul Deneyimleri Kataloğu
+                  {t.catalogBadge}
                 </span>
               </div>
 
@@ -168,11 +157,11 @@ export default function GuestPage() {
                   </div>
                   <div className="space-y-1.5 text-left">
                     <h3 className="text-base sm:text-lg font-bold font-serif text-zinc-900 leading-snug">
-                      Boğaz Turları, Seçkin Restoranlar, Hamamlar & VIP Deneyimler
+                      {t.catalogTitle}
                     </h3>
 
                     <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed max-w-xl font-medium">
-                      İstanbul'un 72 seçkin ve doğrulanmış işletme ve restoran ilanını inceleyin; otelinizden ayrılmadan güvenle yerinizi ayırtın.
+                      {t.catalogDesc}
                     </p>
                   </div>
                 </div>
@@ -189,13 +178,11 @@ export default function GuestPage() {
                       height={28} 
                       className="w-6 h-6 sm:w-7 sm:h-7 object-contain brightness-0 invert shrink-0" 
                     />
-                    <span>Kataloğu Keşfet (72 İlan) →</span>
+                    <span>{t.exploreCatalogBtn}</span>
                   </button>
                 </div>
               </div>
             </div>
-
-            
           </div>
         )}
 
@@ -204,8 +191,8 @@ export default function GuestPage() {
           <div className="space-y-4">
             {selectedCategory === 'Önerdiğimiz Restoranlar' || selectedCategory.toLowerCase().includes('restoran') ? (
               <div>
-                <h2 className="text-xl font-bold font-serif text-zinc-900">Önerdiğimiz Restoranlar</h2>
-                <p className="text-xs text-zinc-500">Michelin yıldızlı şefler, tarihi lezzetler ve Boğaz manzaralı teraslar ile 20 seçkin gastronomi adresi.</p>
+                <h2 className="text-xl font-bold font-serif text-zinc-900">{t.categoriesList.restaurants.title}</h2>
+                <p className="text-xs text-zinc-500">{t.categoriesList.restaurants.desc}</p>
               </div>
             ) : (
               <div>
@@ -239,7 +226,7 @@ export default function GuestPage() {
                         : 'bg-white text-zinc-600 hover:bg-amber-50 border border-amber-200/60'
                     }`}
                   >
-                    {cat === 'all' ? t.allCategories : cat.replace(/^[0-9]+\.\s*/, '')}
+                    {cat === 'all' ? t.allCategories : cat.replace(/^[0-9]+.s*/, '')}
                   </button>
                 ))}
               </div>
@@ -253,27 +240,59 @@ export default function GuestPage() {
                   experience={exp}
                   hotel={currentHotel}
                   lang={lang}
-                  onSelect={(e) => setSelectedDetailExp(e)}
-                  onOpenTransit={(e) => setTransitExp(e)}
-                  onOpenCheckout={(e) => setCheckoutExp(e)}
-                  onOpenRestaurantReserve={(e) => setRestaurantReserveExp(e)}
+                  onSelect={(selected) => setSelectedDetailExp(selected)}
+                  onOpenTransit={(exp) => setTransitExp(exp)}
+                  onOpenCheckout={(exp) => setCheckoutExp(exp)}
+                  onOpenRestaurantReserve={(exp) => setRestaurantReserveExp(exp)}
                 />
               ))}
             </div>
+
+            {filteredExperiences.length === 0 && (
+              <div className="text-center py-12 bg-white rounded-3xl border border-amber-200/80 p-6 space-y-2">
+                <Compass className="w-10 h-10 text-amber-500/40 mx-auto" />
+                <h3 className="text-sm font-bold text-zinc-800">{t.noRequests}</h3>
+                <p className="text-xs text-zinc-500 max-w-xs mx-auto">
+                  Arama kriterlerinize uygun ilan bulunamadı. Lütfen filtreyi temizleyiniz.
+                </p>
+                <button
+                  onClick={() => {
+                    setSelectedCategory('all');
+                    setSearchQuery('');
+                  }}
+                  className="mt-2 text-xs font-bold text-amber-700 bg-amber-50 px-4 py-2 rounded-xl border border-amber-200"
+                >
+                  {t.allCategories}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        {/* TAB 3: Categories Showcase (Hizmetler & Kategoriler Vitrini) */}
+        {/* TAB 3: Category Catalog View */}
         {activeTab === 'categories' && (
-          <div className="space-y-5">
+          <div className="space-y-4">
             <div>
-              <h2 className="text-xl font-bold font-serif text-zinc-900">Hizmet & Deneyim Kategorileri</h2>
-              <p className="text-xs text-zinc-500">İstanbul'daki 72 lisanslı deneyim, restoran ve concierge hizmetini tematik kategorilerle keşfedin.</p>
+              <h2 className="text-xl font-bold font-serif text-zinc-900">{t.categoriesTitle}</h2>
+              <p className="text-xs text-zinc-500">{t.categoriesSubtitle}</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
               {categoryShowcase.map((cat, idx) => {
-                const isScaledUp = cat.key.includes('Gastronomi') || cat.key.includes('Macera') || cat.key.includes('Hamam') || cat.key.includes('Spa');
+                const isScaledUp = [
+                  'invest.png',
+                  'onerdigimiz-restoranlar.png',
+                  'bogaz-yatturlari.png',
+                  'tarih-muzeler.png',
+                  'gastronomi-gurme.png',
+                  'fotograf-kostum.png',
+                  'macera-doga.png',
+                  'turk-hamami-spa.png',
+                  'alisveris-carsilar.png',
+                  'sanat-semazen.png',
+                  'kulturel-miras.png',
+                  'ozel-vip-transfer.png'
+                ].some(iconName => cat.iconPath.endsWith(iconName));
 
                 return (
                   <div
@@ -283,11 +302,11 @@ export default function GuestPage() {
                         setActiveTab('invest');
                         return;
                       }
-                      const searchToken = cat.key.toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, ' ');
+                      const searchToken = (cat.rawKey || cat.key).toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, ' ');
                       const matched = categories.find(c => {
                         const cLower = c.toLowerCase();
-                        if (cLower === cat.key.toLowerCase()) return true;
-                        if (cLower.includes(cat.key.toLowerCase())) return true;
+                        if (cLower === (cat.rawKey || cat.key).toLowerCase()) return true;
+                        if (cLower.includes((cat.rawKey || cat.key).toLowerCase())) return true;
                         const tokens = searchToken.split(' ').filter(Boolean);
                         return tokens.some(t => t.length > 3 && cLower.includes(t));
                       }) || 'all';
@@ -316,7 +335,7 @@ export default function GuestPage() {
 
                     <div className="flex items-center gap-1 shrink-0 text-xs font-bold text-amber-600">
                       <span className="px-2 py-0.5 bg-amber-50 rounded-full border border-amber-200 text-[11px]">
-                        {cat.count} İlan
+                        {cat.count} {t.listingsCount}
                       </span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -332,7 +351,7 @@ export default function GuestPage() {
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-bold font-serif text-zinc-900">{t.practicalTitle}</h2>
-              <p className="text-xs text-zinc-500">İstanbul seyahatinizi kolaylaştıracak resmi bilet, kart, güvenlik kalkanı ve acil bilgiler.</p>
+              <p className="text-xs text-zinc-500">{t.practicalSubtitle}</p>
             </div>
 
             {/* Xenios Fair Shopping Policy & Misafir Kalkanı Component */}
@@ -342,7 +361,7 @@ export default function GuestPage() {
 
         {/* TAB 5: Invest & Live in Istanbul */}
         {activeTab === 'invest' && (
-          <InvestInIstanbul hotel={currentHotel} roomNumber={activeRoomNumber} />
+          <InvestInIstanbul hotel={currentHotel} roomNumber={activeRoomNumber} lang={lang} />
         )}
       </main>
 
@@ -368,7 +387,29 @@ export default function GuestPage() {
           restaurant={restaurantReserveExp}
           hotel={currentHotel}
           roomNumber={activeRoomNumber}
+          lang={lang}
           onClose={() => setRestaurantReserveExp(null)}
+        />
+      )}
+
+      {/* Transit Options Modal */}
+      {transitExp && (
+        <TransitModal
+          experience={transitExp}
+          hotel={currentHotel}
+          lang={lang}
+          onClose={() => setTransitExp(null)}
+        />
+      )}
+
+      {/* Virtual POS Checkout Modal */}
+      {checkoutExp && (
+        <VirtualPosModal
+          experience={checkoutExp}
+          hotel={currentHotel}
+          roomNumber={activeRoomNumber}
+          lang={lang}
+          onClose={() => setCheckoutExp(null)}
         />
       )}
 
@@ -382,8 +423,8 @@ export default function GuestPage() {
                   <Bell className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-zinc-900">Oda Taleplerim & İstek Durumu</h3>
-                  <p className="text-[11px] text-zinc-500">{currentHotel.name} - Oda {activeRoomNumber}</p>
+                  <h3 className="text-sm font-bold text-zinc-900">{t.activeRequests}</h3>
+                  <p className="text-[11px] text-zinc-500">{currentHotel.name} - {t.room} {activeRoomNumber}</p>
                 </div>
               </div>
               <button 
@@ -450,28 +491,7 @@ export default function GuestPage() {
         }}
       />
 
-      {/* Transit Calculation Modal */}
-      {transitExp && (
-        <TransitModal
-          experience={transitExp}
-          hotel={currentHotel}
-          lang={lang}
-          onClose={() => setTransitExp(null)}
-        />
-      )}
-
-      {/* Virtual POS Checkout Modal */}
-      {checkoutExp && (
-        <VirtualPosModal
-          experience={checkoutExp}
-          hotel={currentHotel}
-          roomNumber={activeRoomNumber}
-          lang={lang}
-          onClose={() => setCheckoutExp(null)}
-        />
-      )}
-
-      {/* Bottom PWA Tab Bar */}
+      {/* Bottom Sticky Navigation */}
       <GuestTabBar
         activeTab={activeTab}
         onTabChange={(tab) => {

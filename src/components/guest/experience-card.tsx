@@ -20,7 +20,7 @@ export function ExperienceCard({
   experience, 
   hotel, 
   lang, 
-  onSelect,
+  onSelect, 
   onOpenTransit, 
   onOpenCheckout,
   onOpenRestaurantReserve
@@ -28,6 +28,25 @@ export function ExperienceCard({
   const t = getT(lang);
   const imageSrc = experience.image || `/images/experiences/${experience.id}.jpg`;
   const isRestaurant = experience.category.toLowerCase().includes('restoran') || experience.id.startsWith('rest-');
+
+  // Category Tag localization lookup
+  const getLocalizedTag = () => {
+    const raw = experience.categoryTag || (experience.category.includes('.') ? experience.category.split('.')[1].trim() : experience.category);
+    const lower = raw.toLowerCase();
+    if (lower.includes('restoran')) return t.categoriesList.restaurants.title;
+    if (lower.includes('boğaz') || lower.includes('yat')) return t.categoriesList.bosphorus.title;
+    if (lower.includes('tarih') || lower.includes('müze')) return t.categoriesList.history.title;
+    if (lower.includes('gastro') || lower.includes('gurme')) return t.categoriesList.gastronomy.title;
+    if (lower.includes('fotoğraf') || lower.includes('kostüm')) return t.categoriesList.photo.title;
+    if (lower.includes('macera') || lower.includes('doğa')) return t.categoriesList.adventure.title;
+    if (lower.includes('hamam') || lower.includes('spa')) return t.categoriesList.hamam.title;
+    if (lower.includes('alışveriş') || lower.includes('çarşı')) return t.categoriesList.shopping.title;
+    if (lower.includes('semazen') || lower.includes('sanat')) return t.categoriesList.art.title;
+    if (lower.includes('kültür') || lower.includes('miras')) return t.categoriesList.culture.title;
+    if (lower.includes('transfer') || lower.includes('vip')) return t.categoriesList.transfer.title;
+    if (lower.includes('yatırım') || lower.includes('invest')) return t.categoriesList.invest.title;
+    return raw;
+  };
 
   return (
     <div className="bg-white rounded-3xl overflow-hidden border border-amber-200/70 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
@@ -48,7 +67,7 @@ export function ExperienceCard({
           
           <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap max-w-[70%]">
             <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/95 text-amber-900 shadow-sm backdrop-blur-md">
-              {experience.categoryTag || (experience.category.includes('.') ? experience.category.split('.')[1].trim() : experience.category)}
+              {getLocalizedTag()}
             </span>
             {experience.cuisine && (
               <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-amber-500/90 text-white shadow-xs backdrop-blur-md hidden xs:inline-block">
@@ -103,7 +122,7 @@ export function ExperienceCard({
             <div className="space-y-1.5 pt-0.5">
               <div className="flex items-center gap-1 text-[10px] font-bold text-amber-900 uppercase tracking-wider">
                 <Sparkles className="w-3 h-3 text-amber-600" />
-                <span>Öne Çıkan Lezzetler</span>
+                <span>{t.specialties}</span>
               </div>
               <div className="flex flex-wrap gap-1">
                 {experience.specialties.map((item, idx) => (
@@ -122,7 +141,7 @@ export function ExperienceCard({
           <div className="flex items-center justify-between pt-1">
             <div>
               <span className="text-[10px] uppercase tracking-wider text-zinc-400 block font-semibold">
-                {isRestaurant ? 'Fiyat / Seviye' : t.price}
+                {isRestaurant ? t.priceLevel : t.price}
               </span>
               <span className="text-sm sm:text-base font-bold text-zinc-900 font-mono">
                 {experience.priceLevel ? experience.priceLevel : formatPrice(experience.price, experience.currency)}
@@ -138,7 +157,7 @@ export function ExperienceCard({
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 text-xs font-semibold border border-amber-200 transition cursor-pointer"
             >
               <Info className="w-3.5 h-3.5 text-amber-700" />
-              <span>Detaylar</span>
+              <span>{t.details}</span>
             </button>
           </div>
         </div>
@@ -154,7 +173,7 @@ export function ExperienceCard({
             onOpenTransit(experience);
           }}
           className="p-2.5 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-semibold flex items-center justify-center transition cursor-pointer"
-          title="Otelden Ulaşım & Harita"
+          title={t.transitTitle}
         >
           <Navigation className="w-4 h-4 text-amber-700" />
         </button>
@@ -175,7 +194,7 @@ export function ExperienceCard({
               className="flex-1 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
             >
               <Utensils className="w-3.5 h-3.5" />
-              <span>Masa Rezerve Et</span>
+              <span>{t.reserveTable}</span>
             </button>
 
             {/* Website / Menu Button */}
@@ -200,10 +219,10 @@ export function ExperienceCard({
               e.stopPropagation();
               onOpenCheckout(experience);
             }}
-            className="flex-1 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
+            className="flex-1 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 transition transform active:scale-95 cursor-pointer"
           >
             <CreditCard className="w-3.5 h-3.5" />
-            <span>{t.buyNow} ({formatPrice(experience.price, experience.currency)})</span>
+            <span>{t.buyNow}</span>
           </button>
         )}
       </div>
