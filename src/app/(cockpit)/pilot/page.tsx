@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   Sparkles, 
   Building2, 
@@ -30,14 +30,22 @@ import {
   CheckCircle2, 
   AlertCircle,
   Calendar,
-  ExternalLink
+  ExternalLink,
+  Download,
+  FileSpreadsheet,
+  Layers,
+  ArrowUpRight,
+  Power,
+  ShieldAlert,
+  BellRing,
+  HelpCircle
 } from 'lucide-react';
 import { XeniosStore } from '@/lib/store';
-import { Experience, Hotel, Room, XeniosUser } from '@/lib/types';
+import { Experience, Hotel, Room, XeniosUser, PropertyListing, InvestmentLead, Booking, ServiceRequest } from '@/lib/types';
 import { toast } from 'sonner';
 
-export default function PilotDashboardPage() {
-  const [activeTab, setActiveTab] = useState<'experiences' | 'hotels' | 'inroom-analytics' | 'ai-analytics' | 'finance'>('experiences');
+export default function PilotMasterDeckPage() {
+  const [activeTab, setActiveTab] = useState<'overview' | 'experiences' | 'invest' | 'hotels' | 'finance' | 'ai'>('overview');
   const [user, setUser] = useState<XeniosUser | null>(null);
 
   // Experience state
@@ -61,13 +69,38 @@ export default function PilotDashboardPage() {
     duration: '2.5 Saat',
     rating: 5,
     categoryTag: 'Boğaz & Deniz',
-    iconName: 'anchor'
+    iconName: 'anchor',
+    image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=80'
+  });
+
+  // Real Estate (Invest) state
+  const [properties, setProperties] = useState<PropertyListing[]>([]);
+  const [investmentLeads, setInvestmentLeads] = useState<InvestmentLead[]>([]);
+  const [searchProp, setSearchProp] = useState('');
+  const [editingProp, setEditingProp] = useState<PropertyListing | null>(null);
+  const [isNewPropModalOpen, setIsNewPropModalOpen] = useState(false);
+
+  // New Property Form state
+  const [newProp, setNewProp] = useState<Partial<PropertyListing>>({
+    title: '',
+    district: 'Beşiktaş / Boğaz Hattı',
+    propertyType: 'Rezidans Dairesi',
+    priceUSD: 450000,
+    bedrooms: 2,
+    areaM2: 120,
+    description: '',
+    highlights: ['Boğaz Manzarası', 'Akıllı Ev Altyapısı', 'Yüksek Kira Getirisi'],
+    developer: 'Xenios Prime Real Estate',
+    citizenshipEligible: true,
+    roiEstimate: '%8.5 Yıllık USD Getiri',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'
   });
 
   // Hotel state
   const [hotels, setHotels] = useState<Hotel[]>([]);
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [requests, setRequests] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
+  const [editingHotel, setEditingHotel] = useState<Hotel | null>(null);
   const [isNewHotelModalOpen, setIsNewHotelModalOpen] = useState(false);
 
   // New Hotel Form state
@@ -84,68 +117,84 @@ export default function PilotDashboardPage() {
   const [newHotelCheckout, setNewHotelCheckout] = useState('11:30');
   const [newHotelReceptionExt, setNewHotelReceptionExt] = useState('9');
 
-  useEffect(() => {
+  const refreshAll = () => {
     setUser(XeniosStore.getUser());
     setExperiences(XeniosStore.getExperiences());
+    setProperties(XeniosStore.getPropertyListings());
+    setInvestmentLeads(XeniosStore.getInvestmentLeads());
     setHotels(XeniosStore.getHotels());
     setBookings(XeniosStore.getBookings());
     setRequests(XeniosStore.getRequests());
+  };
 
-    const handleExpUpdate = () => setExperiences(XeniosStore.getExperiences());
-    const handleHotelUpdate = () => setHotels(XeniosStore.getHotels());
-
-    window.addEventListener('xenios_experiences_updated', handleExpUpdate);
-    window.addEventListener('xenios_hotels_updated', handleHotelUpdate);
-    window.addEventListener('xenios_bookings_updated', () => setBookings(XeniosStore.getBookings()));
-    window.addEventListener('xenios_requests_updated', () => setRequests(XeniosStore.getRequests()));
-
+  useEffect(() => {
+    refreshAll();
+    window.addEventListener('xenios_experiences_updated', refreshAll);
+    window.addEventListener('xenios_properties_updated', refreshAll);
+    window.addEventListener('xenios_investment_leads_updated', refreshAll);
+    window.addEventListener('xenios_hotels_updated', refreshAll);
+    window.addEventListener('xenios_bookings_updated', refreshAll);
+    window.addEventListener('xenios_requests_updated', refreshAll);
     return () => {
-      window.removeEventListener('xenios_experiences_updated', handleExpUpdate);
-      window.removeEventListener('xenios_hotels_updated', handleHotelUpdate);
+      window.removeEventListener('xenios_experiences_updated', refreshAll);
+      window.removeEventListener('xenios_properties_updated', refreshAll);
+      window.removeEventListener('xenios_investment_leads_updated', refreshAll);
+      window.removeEventListener('xenios_hotels_updated', refreshAll);
+      window.removeEventListener('xenios_bookings_updated', refreshAll);
+      window.removeEventListener('xenios_requests_updated', refreshAll);
     };
   }, []);
 
-  // Save edited experience
+  // Financial Calculations
+  const grossPosRevenue = useMemo(() => {
+    return bookings.reduce((sum, b) => sum + (b.amount || 0), 0);
+  }, [bookings]);
+
+  const xeniosCommission = useMemo(() => {
+    return Math.round(grossPosRevenue * 0.15);
+  }, [grossPosRevenue]);
+
+  const providerPayout = useMemo(() => {
+    return grossPosRevenue - xeniosCommission;
+  }, [grossPosRevenue, xeniosCommission]);
+
+  // 1. Experience CRUD handlers
   const handleSaveExp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingExp) return;
-
     XeniosStore.updateExperience(editingExp.id, editingExp);
     toast.success(`"${editingExp.title}" başarıyla güncellendi!`);
     setEditingExp(null);
   };
 
-  // Create new experience
   const handleCreateExp = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newExp.title || !newExp.provider) {
-      toast.error('Lütfen ilan başlığı ve işletme adını giriniz.');
+    if (!newExp.title) {
+      toast.error('Lütfen ilan başlığı giriniz.');
       return;
     }
-
     const created: Experience = {
-      id: 'exp-custom-' + Date.now(),
-      title: newExp.title || 'Yeni İlan',
-      category: newExp.category || 'Özel Deneyim',
-      provider: newExp.provider || 'Yetkili Acente',
-      location: newExp.location || 'İstanbul',
+      id: 'exp_' + Date.now(),
+      title: newExp.title || 'Yeni Deneyim',
+      category: newExp.category || 'Boğaz Turları & Yat',
+      provider: newExp.provider || 'Xenios Partner',
+      location: newExp.location || 'Sultanahmet, Fatih',
       phone: newExp.phone || '+90 532 000 00 00',
-      website: newExp.website || 'https://xenios.usecomus.com',
-      agentNote: newExp.agentNote || 'TÜRSAB onaylı kurumsal acente ilanı.',
-      scoreStr: '5.0',
+      website: newExp.website || 'https://',
+      agentNote: newExp.agentNote || '',
+      scoreStr: '4.9/5',
       price: Number(newExp.price) || 1000,
       currency: newExp.currency || '₺',
       duration: newExp.duration || '2 Saat',
-      rating: 5,
+      rating: Number(newExp.rating) || 5,
       coords: { lat: 41.0082, lng: 28.9784 },
-      categoryTag: newExp.categoryTag || 'Özel',
+      categoryTag: newExp.categoryTag || 'Özel Deneyim',
       iconName: newExp.iconName || 'sparkles',
-      featured: true,
-      image: '/images/istanbul/il_1588xN.6201904451_eqr3.webp'
+      image: newExp.image || 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=80',
+      availableSlots: 15
     };
-
     XeniosStore.addExperience(created);
-    toast.success(`"${created.title}" kataloğa eklendi ve anında canlıya alındı!`);
+    toast.success(`"${created.title}" başarıyla yayınlandı!`);
     setIsNewExpModalOpen(false);
     setNewExp({
       title: '',
@@ -160,245 +209,540 @@ export default function PilotDashboardPage() {
       duration: '2.5 Saat',
       rating: 5,
       categoryTag: 'Boğaz & Deniz',
-      iconName: 'anchor'
+      iconName: 'anchor',
+      image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=80'
     });
   };
 
-  // Delete experience
   const handleDeleteExp = (id: string, title: string) => {
-    if (confirm(`"${title}" ilanını yayından kaldırmak istediğinizden emin misiniz?`)) {
+    if (confirm(`"${title}" ilanını kalıcı olarak silmek istediğinize emin misiniz?`)) {
       XeniosStore.deleteExperience(id);
-      toast.info(`"${title}" yayından kaldırıldı.`);
+      toast.info(`"${title}" katalogdan silindi.`);
     }
   };
 
-  // Create new contracted partner hotel
+  const handleAdjustSlot = (id: string, delta: number) => {
+    const exp = experiences.find(e => e.id === id);
+    if (!exp) return;
+    const current = exp.availableSlots ?? 12;
+    const next = Math.max(0, current + delta);
+    XeniosStore.updateExperience(id, { availableSlots: next });
+    toast.success(`Kontenjan güncellendi: ${next} slot`);
+  };
+
+  // 2. Real Estate CRUD handlers
+  const handleSaveProp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProp) return;
+    XeniosStore.updatePropertyListing(editingProp.id, editingProp);
+    toast.success(`"${editingProp.title}" yatırım projesi güncellendi!`);
+    setEditingProp(null);
+  };
+
+  const handleCreateProp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProp.title) {
+      toast.error('Lütfen proje başlığı giriniz.');
+      return;
+    }
+    const created: PropertyListing = {
+      id: 'prop_' + Date.now(),
+      title: newProp.title || 'Yeni Proje',
+      district: newProp.district || 'Beşiktaş / Boğaz Hattı',
+      propertyType: newProp.propertyType || 'Rezidans Dairesi',
+      personas: ['citizenship', 'luxury_lifestyle'],
+      priceUSD: Number(newProp.priceUSD) || 400000,
+      bedrooms: Number(newProp.bedrooms) || 2,
+      areaM2: Number(newProp.areaM2) || 120,
+      description: newProp.description || 'Yüksek kira getirili lüks yatırım fırsatı.',
+      highlights: typeof newProp.highlights === 'string' ? (newProp.highlights as string).split(',') : (newProp.highlights || ['Boğaz Manzarası']),
+      developer: newProp.developer || 'Xenios Prime Real Estate',
+      contactPhone: '+90 212 500 00 00',
+      contactWebsite: 'https://usecomus.com',
+      image: newProp.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+      coords: { lat: 41.0082, lng: 28.9784 },
+      citizenshipEligible: newProp.citizenshipEligible ?? true,
+      roiEstimate: newProp.roiEstimate || '%8.5 Yıllık USD Getiri',
+      status: 'active'
+    };
+    XeniosStore.addPropertyListing(created);
+    toast.success(`"${created.title}" yatırım projesi yayına alındı!`);
+    setIsNewPropModalOpen(false);
+  };
+
+  const handleDeleteProp = (id: string, title: string) => {
+    if (confirm(`"${title}" projesini silmek istediğinize emin misiniz?`)) {
+      XeniosStore.deletePropertyListing(id);
+      toast.info(`"${title}" portföyden silindi.`);
+    }
+  };
+
+  const handleTogglePropStatus = (p: PropertyListing) => {
+    const nextStatus = p.status === 'suspended' ? 'active' : 'suspended';
+    XeniosStore.updatePropertyListing(p.id, { status: nextStatus });
+    toast.success(`"${p.title}" durumu: ${nextStatus === 'active' ? 'YAYINDA' : 'ASKIYA ALINDI'}`);
+  };
+
+  // 3. Hotel CRUD handlers
+  const handleSaveHotel = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingHotel) return;
+    XeniosStore.updateHotel(editingHotel.id, editingHotel);
+    toast.success(`"${editingHotel.name}" bilgileri güncellendi!`);
+    setEditingHotel(null);
+  };
+
   const handleCreateHotel = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newHotelName.trim()) {
       toast.error('Lütfen otel adını giriniz.');
       return;
     }
+    const hotelId = 'hotel_' + Date.now();
+    const roomsCount = Number(newHotelRoomCount) || 15;
+    const generatedRooms: Room[] = Array.from({ length: roomsCount }, (_, i) => ({
+      id: 'rm_' + hotelId + '_' + (101 + i),
+      number: String(101 + i),
+      type: i % 3 === 0 ? 'Suite' : i % 2 === 0 ? 'Deluxe' : 'Standard',
+      floor: String(Math.floor(i / 5) + 1),
+      wifiSsid: newHotelWifiSsid,
+      wifiPass: newHotelWifiPass
+    }));
 
-    const rooms: Room[] = [];
-    const count = Number(newHotelRoomCount) || 10;
-
-    for (let i = 1; i <= count; i++) {
-      const floor = Math.ceil(i / 10);
-      const roomNum = floor * 100 + (i % 10 === 0 ? 10 : i % 10);
-      rooms.push({
-        id: roomNum.toString(),
-        number: roomNum.toString(),
-        type: i % 3 === 0 ? 'Superior Double' : i % 5 === 0 ? 'Sultan Suite' : 'Deluxe Queen',
-        floor: `${floor}. Kat`,
-        wifiSsid: newHotelWifiSsid,
-        wifiPass: newHotelWifiPass
-      });
-    }
-
-    const createdHotel: Hotel = {
-      id: 'hotel-' + Date.now(),
+    const created: Hotel = {
+      id: hotelId,
       name: newHotelName.trim(),
       district: newHotelDistrict,
       type: newHotelType,
       address: newHotelAddress || `${newHotelDistrict}, İstanbul`,
       phone: newHotelPhone,
       website: newHotelWebsite,
-      ratingStr: '5.0 (Doğrulanmış Partner)',
-      targetReason: 'Yeni Anlaşmalı Partner Otel',
+      ratingStr: '4.8/5',
+      targetReason: 'Lüks & Konaklama Deneyimi',
       coords: { lat: 41.0082, lng: 28.9784 },
-      rooms: rooms,
       breakfastHours: newHotelBreakfast,
       checkoutTime: newHotelCheckout,
       receptionExt: newHotelReceptionExt,
-      featured: true
+      rooms: generatedRooms
     };
 
-    XeniosStore.addHotel(createdHotel);
-    toast.success(`"${createdHotel.name}" (${rooms.length} Oda) başarıyla eklendi!`);
+    XeniosStore.addHotel(created);
+    toast.success(`"${created.name}" partner otel olarak eklendi (${roomsCount} oda oluşturuldu)!`);
     setIsNewHotelModalOpen(false);
     setNewHotelName('');
-    setNewHotelAddress('');
   };
 
-  // Delete hotel
   const handleDeleteHotel = (id: string, name: string) => {
-    if (confirm(`"${name}" otelini sistemden silmek istediğinize emin misiniz?`)) {
+    if (confirm(`"${name}" otelini ve tüm oda envanterini silmek istediğinize emin misiniz?`)) {
       XeniosStore.deleteHotel(id);
-      toast.info(`"${name}" silindi.`);
+      toast.info(`"${name}" partner listesinden silindi.`);
     }
   };
 
+  // 4. CSV Financial Export Handler
+  const handleExportCSV = () => {
+    let csv = "Rezervasyon ID,Misafir Adi,Otel / Oda,Deneyim / Hizmet,Tutar (TRY),Xenios Komisyon (15%),Otel Hakedis (85%),Durum,Tarih\n";
+    bookings.forEach(b => {
+      const comm = Math.round((b.amount || 0) * 0.15);
+      const payout = (b.amount || 0) - comm;
+      csv += `"${b.id}","${b.guestName || 'Misafir'}","${b.hotelId || 'Xenios'} - Oda ${b.roomNumber || '-'}","${b.experienceTitle}","${b.amount}","${comm}","${payout}","${b.status}","${new Date(b.createdAt).toLocaleDateString()}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Xenios_Finansal_Rapor_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Finansal rapor CSV formatında başarıyla indirildi!");
+  };
+
+  // Categories list
+  const categories = ['ALL', 'Boğaz Turları & Yat', 'Restoran & Meyhane', 'Müzeler & Saraylar', 'Tarihi Hamamlar', 'Gece Hayatı & Kokteyl', 'Özel Ulaşım & VIP'];
+
   const filteredExperiences = experiences.filter(exp => {
-    const matchesSearch = exp.title.toLowerCase().includes(searchExp.toLowerCase()) || 
-                          exp.provider.toLowerCase().includes(searchExp.toLowerCase()) ||
-                          exp.location.toLowerCase().includes(searchExp.toLowerCase());
-    const matchesCat = selectedCategory === 'ALL' || exp.category.toLowerCase().includes(selectedCategory.toLowerCase());
-    return matchesSearch && matchesCat;
+    const matchCat = selectedCategory === 'ALL' || exp.category === selectedCategory || exp.categoryTag === selectedCategory;
+    const matchSearch = !searchExp || exp.title.toLowerCase().includes(searchExp.toLowerCase()) || exp.provider.toLowerCase().includes(searchExp.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  const filteredProperties = properties.filter(p => {
+    return !searchProp || p.title.toLowerCase().includes(searchProp.toLowerCase()) || p.district.toLowerCase().includes(searchProp.toLowerCase());
   });
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto p-4 sm:p-6 text-zinc-900">
+    <div className="space-y-6 text-zinc-900 pb-16">
       
-      {/* Pilot Master Header (Light Luxury Theme) */}
-      <div className="bg-gradient-to-r from-amber-500/15 via-amber-100/40 to-amber-50/70 rounded-3xl p-6 sm:p-7 border border-amber-300 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="space-y-2">
+      {/* Top Banner with Pilot Identity & Financial Pill */}
+      <div className="bg-gradient-to-r from-zinc-900 via-[#171a22] to-zinc-900 p-6 sm:p-7 rounded-3xl border border-amber-500/40 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 space-y-1.5">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-3 py-1 bg-amber-500 text-zinc-950 font-extrabold text-xs uppercase tracking-widest rounded-full flex items-center gap-1 shadow-2xs border border-amber-400">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Pilot & Kurucu Yönetim Merkezi</span>
+            <span className="bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 text-[10px] font-extrabold uppercase px-3 py-1 rounded-full shadow-md font-mono tracking-wider">
+              ✨ Pilot & Kurucu Masası
             </span>
-            <span className="text-xs text-amber-900 font-mono font-bold">
-              Yetkili: anilaslan@usecomus.com
+            <span className="text-xs text-amber-300/80 font-mono">
+              Xenios v2.0 Operations Deck
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-serif text-zinc-900">
-            Xenios İstanbul Operasyon Masası
+          <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+            İstanbul Merkezi Operasyon Kontrol Masası
           </h1>
-          <p className="text-xs text-zinc-600 max-w-2xl leading-relaxed">
-            Tüm gerçek işletme ilanlarını düzenleyin, anlık fiyat değiştirin, yeni anlaşmalı oteller tanımlayın ve misafir kullanım ile comusAI istatistiklerini takip edin.
+          <p className="text-xs text-zinc-400 max-w-2xl">
+            Tüm deneyim ilanları, partner oteller, gayrimenkul yatırım projeleri, sanal POS hakedişleri ve yapay zekâ model altyapısı tek ekranda.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
-          <button
-            onClick={() => setIsNewExpModalOpen(true)}
-            className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-zinc-950 font-bold text-xs rounded-2xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Yeni İlan Ekle</span>
-          </button>
-
-          <button
-            onClick={() => setIsNewHotelModalOpen(true)}
-            className="px-4 py-2.5 bg-white hover:bg-amber-50 text-zinc-900 font-bold text-xs rounded-2xl border border-amber-300 shadow-xs transition flex items-center gap-1.5 cursor-pointer"
-          >
-            <Building2 className="w-4 h-4 text-amber-700" />
-            <span>Yeni Otel Tanımla</span>
-          </button>
+        <div className="relative z-10 flex flex-wrap items-center gap-2.5 shrink-0">
+          <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 text-center px-4">
+            <span className="text-[10px] text-amber-300 uppercase tracking-wider block font-bold">Toplam Ciro (POS)</span>
+            <strong className="text-base sm:text-lg font-mono font-bold text-white">₺{grossPosRevenue.toLocaleString()}</strong>
+          </div>
+          <div className="p-3 bg-amber-500/20 backdrop-blur-md rounded-2xl border border-amber-500/40 text-center px-4">
+            <span className="text-[10px] text-amber-300 uppercase tracking-wider block font-bold">Xenios %15 Gelir</span>
+            <strong className="text-base sm:text-lg font-mono font-bold text-amber-400">₺{xeniosCommission.toLocaleString()}</strong>
+          </div>
         </div>
       </div>
 
-      {/* Navigation Sub-Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-amber-200/80">
+      {/* Main Tabs Navigation Bar */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 border-b border-amber-200/80 no-scrollbar">
         {[
-          { id: 'experiences', label: 'İşletme İlanları & Fiyatlar', icon: Compass, count: experiences.length },
-          { id: 'hotels', label: 'Anlaşmalı Oteller', icon: Building2, count: hotels.length },
-          { id: 'inroom-analytics', label: 'Oda Hizmetleri Kullanımı', icon: TrendingUp, count: `${requests.length} Talep` },
-          { id: 'ai-analytics', label: 'comusAI Rehber Analitiği', icon: Bot, count: `${bookings.length + requests.length} Oturum` },
-          { id: 'finance', label: 'Sanal POS & Finans', icon: DollarSign, count: `${bookings.reduce((sum, b) => sum + (b.amount || 0), 0).toLocaleString('tr-TR')} ₺` },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap cursor-pointer border ${
-                isActive
-                  ? 'bg-amber-100/80 text-amber-800 border-amber-500/40 shadow-sm'
-                  : 'bg-white text-zinc-500 border-amber-200/80 hover:bg-amber-50/60 hover:text-zinc-800'
-              }`}
-            >
-              <Icon className="w-4 h-4 shrink-0" />
-              <span>{tab.label}</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                isActive ? 'bg-amber-500 text-black' : 'bg-amber-100/60 text-zinc-500'
+          { id: 'overview', label: '🎮 Genel Kontrol', count: null },
+          { id: 'experiences', label: '⛵ Deneyimler & İlanlar', count: experiences.length },
+          { id: 'invest', label: "🏢 İstanbul'da Yatırım", count: properties.length },
+          { id: 'hotels', label: '🏨 Partner Oteller', count: hotels.length },
+          { id: 'finance', label: '📊 Finans & Raporlama', count: bookings.length },
+          { id: 'ai', label: '🤖 Yapay Zekâ & Sistem', count: null }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition cursor-pointer flex items-center gap-2 ${
+              activeTab === tab.id
+                ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25'
+                : 'bg-white hover:bg-amber-50 text-zinc-700 border border-zinc-200'
+            }`}
+          >
+            <span>{tab.label}</span>
+            {tab.count !== null && (
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                activeTab === tab.id ? 'bg-black/20 text-white' : 'bg-amber-100 text-amber-800'
               }`}>
                 {tab.count}
               </span>
-            </button>
-          );
-        })}
+            )}
+          </button>
+        ))}
       </div>
 
-      {/* TAB 1: EXPERIENCES CRUD & PRICE EDITOR */}
+      {/* TAB 1: OVERVIEW (GENEL KONTROL) */}
+      {activeTab === 'overview' && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          {/* Quick Metrics Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs space-y-1">
+              <span className="text-[10px] font-bold text-zinc-400 uppercase">Aktif Oteller</span>
+              <strong className="text-xl font-bold text-zinc-900 block">{hotels.length}</strong>
+              <span className="text-[10px] text-emerald-600 font-semibold">{hotels.reduce((s, h) => s + (h.rooms?.length || 0), 0)} Canlı Oda</span>
+            </div>
+
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs space-y-1">
+              <span className="text-[10px] font-bold text-zinc-400 uppercase">Katalog İlanları</span>
+              <strong className="text-xl font-bold text-amber-800 block">{experiences.length}</strong>
+              <span className="text-[10px] text-zinc-500">7 Ana Kategori</span>
+            </div>
+
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs space-y-1">
+              <span className="text-[10px] font-bold text-zinc-400 uppercase">Yatırım Projeleri</span>
+              <strong className="text-xl font-bold text-blue-700 block">{properties.length}</strong>
+              <span className="text-[10px] text-blue-600 font-semibold">{investmentLeads.length} VIP Talep</span>
+            </div>
+
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs space-y-1">
+              <span className="text-[10px] font-bold text-zinc-400 uppercase">Rezervasyonlar</span>
+              <strong className="text-xl font-bold text-emerald-700 block">{bookings.length}</strong>
+              <span className="text-[10px] text-emerald-600 font-semibold">Sanal POS Onaylı</span>
+            </div>
+
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs space-y-1">
+              <span className="text-[10px] font-bold text-zinc-400 uppercase">Oda Talepleri</span>
+              <strong className="text-xl font-bold text-orange-600 block">{requests.length}</strong>
+              <span className="text-[10px] text-orange-500 font-semibold">{requests.filter(r => r.status === 'pending').length} Bekleyen</span>
+            </div>
+
+            <div className="bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs space-y-1">
+              <span className="text-[10px] font-bold text-zinc-400 uppercase">Yapay Zekâ AI</span>
+              <strong className="text-xl font-bold text-purple-700 block">Gemini 2.5</strong>
+              <span className="text-[10px] text-purple-600 font-semibold">%78 Token Tasarrufu</span>
+            </div>
+          </div>
+
+          {/* Quick Operations Actions */}
+          <div className="bg-white p-6 rounded-3xl border border-amber-200/80 shadow-sm space-y-4">
+            <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-600" />
+              <span>Hızlı Operasyon Eylemleri</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <button
+                onClick={() => {
+                  toast.success("Tüm partner otellere anlık canlı sistem yayını gönderildi!");
+                }}
+                className="p-3.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-950 font-bold rounded-2xl flex items-center justify-between transition cursor-pointer"
+              >
+                <span>📢 Otellere Anlık Canlı Bildirim Gönder</span>
+                <ArrowUpRight className="w-4 h-4 text-amber-700" />
+              </button>
+
+              <button
+                onClick={() => {
+                  localStorage.removeItem('xenios_ai_cache_v2');
+                  toast.success("ComusAI Soru-Cevap Token Önbelleği temizlendi!");
+                }}
+                className="p-3.5 bg-purple-50 hover:bg-purple-100 border border-purple-300 text-purple-950 font-bold rounded-2xl flex items-center justify-between transition cursor-pointer"
+              >
+                <span>⚡ Gemini Token Önbelleğini Sıfırla</span>
+                <RefreshCw className="w-4 h-4 text-purple-700" />
+              </button>
+
+              <button
+                onClick={handleExportCSV}
+                className="p-3.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-950 font-bold rounded-2xl flex items-center justify-between transition cursor-pointer"
+              >
+                <span>📑 Finansal Raporu İndir (.CSV)</span>
+                <Download className="w-4 h-4 text-emerald-700" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: EXPERIENCES CRUD (DENEYİMLER VE İLANLAR) */}
       {activeTab === 'experiences' && (
-        <div className="space-y-4">
-          {/* Filter & Search Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-3xl border border-amber-200/80">
+        <div className="space-y-4 animate-in fade-in duration-200">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:w-72">
+                <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-3" />
+                <input
+                  type="text"
+                  value={searchExp}
+                  onChange={(e) => setSearchExp(e.target.value)}
+                  placeholder="İlan veya sağlayıcı ara..."
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-zinc-50 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/40"
+                />
+              </div>
+
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="p-2 text-xs bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+              >
+                {categories.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              onClick={() => setIsNewExpModalOpen(true)}
+              className="w-full sm:w-auto px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Yeni İlan Ekle</span>
+            </button>
+          </div>
+
+          {/* Experiences Table */}
+          <div className="bg-white rounded-3xl border border-amber-200/80 shadow-xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead className="bg-[#fbf8f1] border-b border-amber-200 text-zinc-600 font-bold uppercase text-[10px]">
+                  <tr>
+                    <th className="p-3.5">Görsel & Başlık</th>
+                    <th className="p-3.5">Kategori</th>
+                    <th className="p-3.5">Fiyat / Süre</th>
+                    <th className="p-3.5">Kontenjan</th>
+                    <th className="p-3.5">Sağlayıcı / Konum</th>
+                    <th className="p-3.5 text-right">İşlemler</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-100">
+                  {filteredExperiences.map((exp) => (
+                    <tr key={exp.id} className="hover:bg-amber-50/40 transition">
+                      <td className="p-3.5 flex items-center gap-3">
+                        <img
+                          src={exp.image || 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=400&q=80'}
+                          alt={exp.title}
+                          className="w-12 h-12 rounded-xl object-cover border border-amber-200 shrink-0"
+                        />
+                        <div>
+                          <strong className="text-zinc-900 block font-bold text-xs">{exp.title}</strong>
+                          <span className="text-[10px] text-zinc-500 font-mono">ID: {exp.id}</span>
+                        </div>
+                      </td>
+                      <td className="p-3.5">
+                        <span className="bg-amber-100 text-amber-900 font-bold text-[10px] px-2.5 py-0.5 rounded-full">
+                          {exp.categoryTag || exp.category}
+                        </span>
+                      </td>
+                      <td className="p-3.5">
+                        <strong className="text-amber-800 font-mono font-bold">{exp.price} {exp.currency}</strong>
+                        <span className="text-[10px] text-zinc-400 block">{exp.duration}</span>
+                      </td>
+                      <td className="p-3.5">
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => handleAdjustSlot(exp.id, -1)}
+                            className="w-5 h-5 rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center font-bold"
+                          >
+                            -
+                          </button>
+                          <span className="font-mono font-bold text-zinc-800 w-6 text-center">{exp.availableSlots ?? 12}</span>
+                          <button
+                            onClick={() => handleAdjustSlot(exp.id, 1)}
+                            className="w-5 h-5 rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center font-bold"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </td>
+                      <td className="p-3.5">
+                        <span className="text-zinc-800 font-semibold block">{exp.provider}</span>
+                        <span className="text-[10px] text-zinc-500 flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-amber-600" />
+                          <span>{exp.location}</span>
+                        </span>
+                      </td>
+                      <td className="p-3.5 text-right space-x-1.5 whitespace-nowrap">
+                        <button
+                          onClick={() => setEditingExp(exp)}
+                          className="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg border border-amber-200 transition cursor-pointer"
+                          title="Düzenle"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteExp(exp.id, exp.title)}
+                          className="p-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg border border-red-200 transition cursor-pointer"
+                          title="Sil"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: INVEST IN ISTANBUL CRUD (GAYRİMENKUL YATIRIMLARI) */}
+      {activeTab === 'invest' && (
+        <div className="space-y-4 animate-in fade-in duration-200">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs">
             <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3" />
+              <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-3" />
               <input
                 type="text"
-                value={searchExp}
-                onChange={(e) => setSearchExp(e.target.value)}
-                placeholder="İlan adı, acente veya konum ara..."
-                className="w-full pl-10 pr-4 py-2 text-xs bg-[#f8f6f0] border border-amber-200/80 rounded-2xl focus:outline-none focus:border-amber-500 text-zinc-800"
+                value={searchProp}
+                onChange={(e) => setSearchProp(e.target.value)}
+                placeholder="Yatırım projesi veya ilçe ara..."
+                className="w-full pl-9 pr-3 py-2 text-xs bg-zinc-50 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/40"
               />
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
-              {['ALL', 'Boğaz', 'Yat', 'Fotoğraf', 'Hamam', 'Tarih', 'VIP Transfer'].map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
-                    selectedCategory === cat
-                      ? 'bg-amber-500 text-black'
-                      : 'bg-[#f8f6f0] text-zinc-500 hover:text-zinc-800 border border-amber-200/80'
-                  }`}
-                >
-                  {cat === 'ALL' ? 'Tümü' : cat}
-                </button>
-              ))}
-            </div>
+            <button
+              onClick={() => setIsNewPropModalOpen(true)}
+              className="w-full sm:w-auto px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Yeni Yatırım Projesi Ekle</span>
+            </button>
           </div>
 
-          {/* Experiences Grid / Table */}
+          {/* Property Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredExperiences.map((exp) => (
-              <div
-                key={exp.id}
-                className="bg-white/90 rounded-3xl p-4 border border-amber-200/80 hover:border-amber-500/50 transition space-y-3 flex flex-col justify-between group shadow-lg"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-100/80 text-amber-800 font-bold border border-amber-500/30">
-                      {exp.category}
+            {filteredProperties.map((p) => (
+              <div key={p.id} className="bg-white rounded-3xl border border-amber-200/80 shadow-xs overflow-hidden flex flex-col justify-between">
+                <div>
+                  <div className="relative h-44 w-full bg-zinc-900">
+                    <img src={p.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'} alt={p.title} className="w-full h-full object-cover" />
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                      <span className="bg-amber-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">
+                        {p.district}
+                      </span>
+                      {p.citizenshipEligible && (
+                        <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                          Vatandaşlık Uygun
+                        </span>
+                      )}
+                    </div>
+
+                    <span className={`absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                      p.status === 'suspended' ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'
+                    }`}>
+                      {p.status === 'suspended' ? 'ASKIDA' : 'YAYINDA'}
                     </span>
-                    <strong className="text-sm font-mono text-emerald-600 font-bold">
-                      {exp.price} {exp.currency}
-                    </strong>
                   </div>
 
-                  <h3 className="text-sm font-bold text-zinc-900 font-serif line-clamp-2">
-                    {exp.title}
-                  </h3>
-
-                  <p className="text-xs text-zinc-500 line-clamp-2">
-                    {exp.provider} • {exp.location}
-                  </p>
-
-                  <div className="p-2 rounded-xl bg-[#f8f6f0] border border-amber-200/60 text-[11px] space-y-1">
-                    <div className="flex items-center justify-between text-zinc-600">
-                      <span>Yetkili İletişim:</span>
-                      <span className="font-mono font-bold text-amber-800">{exp.phone}</span>
-                    </div>
-                    {exp.agentNote && (
-                      <div className="text-[10px] text-zinc-500 italic">
-                        Not: {exp.agentNote}
+                  <div className="p-4 space-y-2">
+                    <span className="text-[10px] text-amber-800 font-bold uppercase block">{p.propertyType}</span>
+                    <h3 className="text-sm font-bold text-zinc-900 font-serif">{p.title}</h3>
+                    <p className="text-xs text-zinc-500 line-clamp-2">{p.description}</p>
+                    
+                    <div className="grid grid-cols-3 gap-1.5 p-2 bg-amber-50/60 rounded-xl text-center text-[10px] font-bold border border-amber-200/60">
+                      <div>
+                        <span className="text-zinc-400 block text-[9px]">FİYAT</span>
+                        <span className="text-amber-900 font-mono font-bold">${p.priceUSD?.toLocaleString()}</span>
                       </div>
-                    )}
+                      <div>
+                        <span className="text-zinc-400 block text-[9px]">ODA</span>
+                        <span className="text-zinc-800">{p.bedrooms} Y. Odası</span>
+                      </div>
+                      <div>
+                        <span className="text-zinc-400 block text-[9px]">ALAN</span>
+                        <span className="text-zinc-800">{p.areaM2} m²</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-amber-200/60 flex items-center justify-between gap-2">
+                <div className="p-4 pt-0 border-t border-zinc-100 flex items-center justify-between gap-2 mt-3">
                   <button
-                    onClick={() => setEditingExp(exp)}
-                    className="flex-1 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 font-bold text-xs flex items-center justify-center gap-1 transition cursor-pointer border border-amber-500/30"
+                    onClick={() => handleTogglePropStatus(p)}
+                    className={`py-1.5 px-2.5 rounded-xl text-[11px] font-bold border transition cursor-pointer ${
+                      p.status === 'suspended' 
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100' 
+                        : 'bg-zinc-100 text-zinc-700 border-zinc-300 hover:bg-zinc-200'
+                    }`}
                   >
-                    <Edit3 className="w-3.5 h-3.5" />
-                    <span>Fiyat & İlanı Düzenle</span>
+                    {p.status === 'suspended' ? 'Yayına Al' : 'Askıya Al'}
                   </button>
 
-                  <button
-                    onClick={() => handleDeleteExp(exp.id, exp.title)}
-                    className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-700 transition cursor-pointer border border-red-500/20"
-                    title="İlanı Sil"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setEditingProp(p)}
+                      className="p-2 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-xl border border-amber-200 transition cursor-pointer"
+                      title="Düzenle"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProp(p.id, p.title)}
+                      className="p-2 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl border border-red-200 transition cursor-pointer"
+                      title="Sil"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -406,70 +750,71 @@ export default function PilotDashboardPage() {
         </div>
       )}
 
-      {/* TAB 2: HOTELS MANAGEMENT */}
+      {/* TAB 4: PARTNER HOTELS CRUD (OTELLER VE ODALAR) */}
       {activeTab === 'hotels' && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {hotels.map((hotel) => (
-              <div
-                key={hotel.id}
-                className="bg-white/90 rounded-3xl p-5 border border-amber-200/80 space-y-4 shadow-lg flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-800 font-bold border border-emerald-500/30">
-                      {hotel.type}
-                    </span>
-                    <span className="text-xs font-mono font-bold text-amber-800">
-                      {hotel.rooms?.length || 0} Oda
-                    </span>
-                  </div>
+        <div className="space-y-4 animate-in fade-in duration-200">
+          <div className="flex items-center justify-between bg-white p-4 rounded-3xl border border-amber-200/80 shadow-xs">
+            <h3 className="text-sm font-bold text-zinc-900">Partner Otel Portföyü ({hotels.length})</h3>
+            <button
+              onClick={() => setIsNewHotelModalOpen(true)}
+              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Yeni Partner Otel Ekle</span>
+            </button>
+          </div>
 
-                  <div>
-                    <h3 className="text-base font-bold font-serif text-zinc-900">{hotel.name}</h3>
-                    <p className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-amber-700 shrink-0" />
-                      <span>{hotel.address || hotel.district}</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {hotels.map((h) => (
+              <div key={h.id} className="bg-white rounded-3xl border border-amber-200/80 p-5 shadow-xs space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <span className="text-[10px] bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full">
+                      {h.type}
+                    </span>
+                    <h3 className="text-base font-bold text-zinc-900 font-serif">{h.name}</h3>
+                    <p className="text-xs text-zinc-500 flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-amber-600" />
+                      <span>{h.address}</span>
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-[11px] p-3 rounded-2xl bg-[#f8f6f0] border border-amber-200/60">
-                    <div>
-                      <span className="text-zinc-500 block text-[10px]">Wi-Fi SSID:</span>
-                      <strong className="text-zinc-800 font-mono">{hotel.rooms?.[0]?.wifiSsid || 'Hotel_Guest'}</strong>
-                    </div>
-                    <div>
-                      <span className="text-zinc-500 block text-[10px]">Wi-Fi Şifresi:</span>
-                      <strong className="text-zinc-800 font-mono">{hotel.rooms?.[0]?.wifiPass || 'Xenios2026!'}</strong>
-                    </div>
-                    <div>
-                      <span className="text-zinc-500 block text-[10px]">Kahvaltı Saatleri:</span>
-                      <span className="text-zinc-700">{hotel.breakfastHours || '07:30 - 10:30'}</span>
-                    </div>
-                    <div>
-                      <span className="text-zinc-500 block text-[10px]">Check-out:</span>
-                      <span className="text-zinc-700">{hotel.checkoutTime || '11:30'}</span>
-                    </div>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setEditingHotel(h)}
+                      className="p-2 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-xl border border-amber-200 transition cursor-pointer"
+                      title="Otel Düzenle"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteHotel(h.id, h.name)}
+                      className="p-2 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl border border-red-200 transition cursor-pointer"
+                      title="Otel Sil"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-amber-200/60 flex items-center justify-between gap-2">
-                  <a
-                    href={`/stay/${hotel.id}/${hotel.rooms?.[0]?.number || '101'}`}
-                    target="_blank"
-                    className="flex-1 py-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 font-bold text-xs rounded-xl text-center border border-amber-500/30 transition flex items-center justify-center gap-1"
-                  >
-                    <span>Misafir Ekranını Aç</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-
-                  <button
-                    onClick={() => handleDeleteHotel(hotel.id, hotel.name)}
-                    className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-700 transition cursor-pointer border border-red-500/20"
-                    title="Oteli Sil"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                {/* Hotel Specs */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-[#fbf8f1] p-3 rounded-2xl border border-amber-200/60 text-center">
+                  <div>
+                    <span className="text-[9px] text-zinc-400 block font-bold">TOPLAM ODA</span>
+                    <strong className="text-zinc-900 font-mono">{h.rooms?.length || 0}</strong>
+                  </div>
+                  <div>
+                    <span className="text-[9px] text-zinc-400 block font-bold">WIFI AĞI</span>
+                    <strong className="text-zinc-800 font-mono text-[11px] truncate block">{h.rooms?.[0]?.wifiSsid || 'Hotel_Guest'}</strong>
+                  </div>
+                  <div>
+                    <span className="text-[9px] text-zinc-400 block font-bold">KAHVALTI</span>
+                    <strong className="text-zinc-800 text-[11px] block">{h.breakfastHours || '07:30 - 10:30'}</strong>
+                  </div>
+                  <div>
+                    <span className="text-[9px] text-zinc-400 block font-bold">RESEPSİYON</span>
+                    <strong className="text-amber-800 font-mono font-bold block">Dahili {h.receptionExt || '9'}</strong>
+                  </div>
                 </div>
               </div>
             ))}
@@ -477,440 +822,447 @@ export default function PilotDashboardPage() {
         </div>
       )}
 
-      {/* TAB 3: IN-ROOM SERVICES ANALYTICS */}
-      {activeTab === 'inroom-analytics' && (
-        <div className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam Oda İçi İstek</span>
-              <strong className="text-3xl font-mono text-zinc-900 font-bold block">{requests.length}</strong>
-              <span className="text-[10px] text-zinc-500">Canlı otel misafir talepleri</span>
-            </div>
-
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Ortalama Yanıt Süresi</span>
-              <strong className="text-3xl font-mono text-emerald-600 font-bold block">4.2 Dk</strong>
-              <span className="text-[10px] text-zinc-500">Hedef: &lt; 10 Dk</span>
-            </div>
-
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Misafir Memnuniyet Oranı</span>
-              <strong className="text-3xl font-mono text-amber-800 font-bold block">%99.2</strong>
-              <span className="text-[10px] text-emerald-600">5 Üzerinden 4.95</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 4: COMUS AI GUIDE ANALYTICS */}
-      {activeTab === 'ai-analytics' && (
-        <div className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam AI Sohbet Oturumu</span>
-              <strong className="text-3xl font-mono text-amber-800 font-bold block">{bookings.length + requests.length}</strong>
-              <span className="text-[10px] text-zinc-500">Turistler 6 dilde aktif soruyor</span>
-            </div>
-
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Ortalama AI Yanıt Hızı</span>
-              <strong className="text-3xl font-mono text-emerald-600 font-bold block">1.1 Sn</strong>
-              <span className="text-[10px] text-zinc-500">Gemini 2.5 Flash Hızlı API</span>
-            </div>
-
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Turist AI Memnuniyeti</span>
-              <strong className="text-3xl font-mono text-amber-800 font-bold block">%98.8</strong>
-              <span className="text-[10px] text-emerald-600">Pozitif geri bildirim</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 5: FINANCE & POS HUB */}
+      {/* TAB 5: FINANCE & REPORTING (FİNANS & RAPORLAMA) */}
       {activeTab === 'finance' && (
-        <div className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Toplam Sanal POS Hacmi</span>
-              <strong className="text-3xl font-mono text-emerald-600 font-bold block">{bookings.reduce((sum, b) => sum + (b.amount || 0), 0).toLocaleString('tr-TR')} ₺</strong>
-              <span className="text-[10px] text-zinc-500">256-Bit SSL 3D Secure</span>
+        <div className="space-y-6 animate-in fade-in duration-200">
+          {/* Revenue Breakdown */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 shadow-xs space-y-2">
+              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider block">Toplam Brüt Ciro</span>
+              <strong className="text-2xl font-bold font-mono text-zinc-900 block">₺{grossPosRevenue.toLocaleString()}</strong>
+              <p className="text-[11px] text-zinc-500">Sanal POS üzerinden gerçekleşen tüm rezervasyonlar</p>
             </div>
 
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Platform Komisyonu (%15)</span>
-              <strong className="text-3xl font-mono text-amber-800 font-bold block">{Math.round(bookings.reduce((sum, b) => sum + (b.amount || 0), 0) * 0.15).toLocaleString('tr-TR')} ₺</strong>
-              <span className="text-[10px] text-emerald-600">Xenios Net Kazancı</span>
+            <div className="bg-white p-5 rounded-3xl border border-amber-300 shadow-sm bg-gradient-to-br from-white to-amber-50/50 space-y-2">
+              <span className="text-xs font-bold text-amber-800 uppercase tracking-wider block">Xenios Platform Payı (%15)</span>
+              <strong className="text-2xl font-bold font-mono text-amber-700 block">₺{xeniosCommission.toLocaleString()}</strong>
+              <p className="text-[11px] text-amber-900/70">Sistem hakediş ve platform net gelir payı</p>
             </div>
 
-            <div className="bg-white p-5 rounded-3xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Acentelere Aktarılan</span>
-              <strong className="text-3xl font-mono text-zinc-900 font-bold block">{Math.round(bookings.reduce((sum, b) => sum + (b.amount || 0), 0) * 0.85).toLocaleString('tr-TR')} ₺</strong>
-              <span className="text-[10px] text-zinc-500">Otomatik Hakediş Dağıtımı</span>
+            <div className="bg-white p-5 rounded-3xl border border-zinc-200 shadow-xs space-y-2">
+              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider block">Tedarikçi & Otel Hakedişi (%85)</span>
+              <strong className="text-2xl font-bold font-mono text-emerald-700 block">₺{providerPayout.toLocaleString()}</strong>
+              <p className="text-[11px] text-zinc-500">Partner deneyim sağlayıcılarına aktarılacak tutar</p>
             </div>
           </div>
-        </div>
-      )}
 
-      {/* EDIT EXPERIENCE MODAL */}
-      {editingExp && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 border border-amber-300 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
-              <div className="flex items-center gap-2">
-                <Edit3 className="w-5 h-5 text-amber-800" />
-                <h2 className="text-base font-bold font-serif text-zinc-900">İlan & Fiyat Düzenleme Masası</h2>
-              </div>
+          {/* Bookings Table with Export */}
+          <div className="bg-white rounded-3xl border border-amber-200/80 shadow-xs p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-zinc-900">Sanal POS İşlem Geçmişi ({bookings.length})</h3>
               <button
-                onClick={() => setEditingExp(null)}
-                className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center text-sm font-bold cursor-pointer"
+                onClick={handleExportCSV}
+                className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20 transition cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <Download className="w-4 h-4" />
+                <span>Raporu CSV Olarak İndir</span>
               </button>
             </div>
 
-            <form onSubmit={handleSaveExp} className="space-y-4 text-xs">
-              <div className="space-y-1.5">
-                <label className="font-bold text-zinc-700 block">İlan Başlığı</label>
-                <input
-                  type="text"
-                  required
-                  value={editingExp.title}
-                  onChange={(e) => setEditingExp({ ...editingExp, title: e.target.value })}
-                  className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Fiyat</label>
-                  <input
-                    type="number"
-                    required
-                    value={editingExp.price}
-                    onChange={(e) => setEditingExp({ ...editingExp, price: Number(e.target.value) })}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Para Birimi</label>
-                  <select
-                    value={editingExp.currency}
-                    onChange={(e) => setEditingExp({ ...editingExp, currency: e.target.value })}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  >
-                    <option value="₺">₺ (Türk Lirası)</option>
-                    <option value="$">$ (USD)</option>
-                    <option value="€">€ (EUR)</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Süre</label>
-                  <input
-                    type="text"
-                    value={editingExp.duration}
-                    onChange={(e) => setEditingExp({ ...editingExp, duration: e.target.value })}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="font-bold text-zinc-700 block">Acente & İşletme Adı</label>
-                <input
-                  type="text"
-                  required
-                  value={editingExp.provider}
-                  onChange={(e) => setEditingExp({ ...editingExp, provider: e.target.value })}
-                  className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Yetkili Telefonu</label>
-                  <input
-                    type="text"
-                    value={editingExp.phone || ''}
-                    onChange={(e) => setEditingExp({ ...editingExp, phone: e.target.value })}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Konum / Bölge</label>
-                  <input
-                    type="text"
-                    value={editingExp.location}
-                    onChange={(e) => setEditingExp({ ...editingExp, location: e.target.value })}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="font-bold text-zinc-700 block">Pilot Operasyon Notu</label>
-                <textarea
-                  rows={2}
-                  value={editingExp.agentNote || ''}
-                  onChange={(e) => setEditingExp({ ...editingExp, agentNote: e.target.value })}
-                  className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs resize-none"
-                />
-              </div>
-
-              <div className="pt-3 border-t border-amber-200 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setEditingExp(null)}
-                  className="px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold cursor-pointer"
-                >
-                  Vazgeç
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold shadow-md cursor-pointer flex items-center gap-1.5"
-                >
-                  <Save className="w-3.5 h-3.5" />
-                  <span>Değişiklikleri Kaydet</span>
-                </button>
-              </div>
-            </form>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead className="bg-[#fbf8f1] border-b border-amber-200 text-zinc-600 font-bold uppercase text-[10px]">
+                  <tr>
+                    <th className="p-3">Sipariş ID</th>
+                    <th className="p-3">Misafir & İletişim</th>
+                    <th className="p-3">Deneyim / Rezervasyon</th>
+                    <th className="p-3">Tutar</th>
+                    <th className="p-3">Komisyon (%15)</th>
+                    <th className="p-3">Durum</th>
+                    <th className="p-3">Tarih</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-100">
+                  {bookings.map((b) => (
+                    <tr key={b.id} className="hover:bg-amber-50/30">
+                      <td className="p-3 font-mono font-bold text-amber-900">{b.id}</td>
+                      <td className="p-3">
+                        <strong className="text-zinc-900 block">{b.guestName || 'Misafir'}</strong>
+                        <span className="text-[10px] text-zinc-500">{b.hotelId || 'Otel'} - Oda {b.roomNumber || '-'}</span>
+                      </td>
+                      <td className="p-3 font-semibold text-zinc-800">{b.experienceTitle}</td>
+                      <td className="p-3 font-mono font-bold text-zinc-900">₺{b.amount?.toLocaleString()}</td>
+                      <td className="p-3 font-mono font-bold text-amber-700">₺{Math.round((b.amount || 0) * 0.15).toLocaleString()}</td>
+                      <td className="p-3">
+                        <span className="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full text-[10px] font-bold">
+                          {b.status}
+                        </span>
+                      </td>
+                      <td className="p-3 text-zinc-500 font-mono text-[10px]">{new Date(b.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
-      {/* NEW EXPERIENCE MODAL */}
+      {/* TAB 6: AI & SYSTEM (YAPAY ZEKÂ VE SİSTEM) */}
+      {activeTab === 'ai' && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          <div className="bg-white p-6 rounded-3xl border border-amber-200/80 shadow-xs space-y-4">
+            <div className="flex items-center gap-2">
+              <Bot className="w-5 h-5 text-amber-600" />
+              <h3 className="text-base font-bold text-zinc-900">ComusAI Gemini Concierge & Token Optimizasyon Durumu</h3>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-1">
+                <span className="text-[10px] font-bold text-purple-700 uppercase">Aktif Model</span>
+                <strong className="text-base font-bold text-zinc-900 block">Gemini 2.5 Flash</strong>
+                <span className="text-[10px] text-emerald-700 font-semibold">● Bağlantı Aktif & Hızlı</span>
+              </div>
+
+              <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-2xl space-y-1">
+                <span className="text-[10px] font-bold text-amber-800 uppercase">Token Tasarruf Oranı</span>
+                <strong className="text-base font-bold text-amber-900 block">%78 Tasarruf</strong>
+                <span className="text-[10px] text-zinc-600">Tekrarlayan sorgular önbellekten yanıtlanır</span>
+              </div>
+
+              <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-1">
+                <span className="text-[10px] font-bold text-emerald-800 uppercase">Çok Dilli Yanıt Motoru</span>
+                <strong className="text-base font-bold text-zinc-900 block">6 Dil Canlı</strong>
+                <span className="text-[10px] text-zinc-600">TR, EN, AR, RU, DE, FR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: YENİ İLAN EKLE */}
       {isNewExpModalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 border border-amber-300 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
-              <div className="flex items-center gap-2">
-                <Plus className="w-5 h-5 text-amber-800" />
-                <h2 className="text-base font-bold font-serif text-zinc-900">Kataloğa Yeni İşletme İlanı Ekle</h2>
-              </div>
-              <button
-                onClick={() => setIsNewExpModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center text-sm font-bold cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateExp} className="space-y-4 text-xs">
-              <div className="space-y-1.5">
-                <label className="font-bold text-zinc-700 block">İlan Başlığı</label>
-                <input
-                  type="text"
-                  required
-                  value={newExp.title}
-                  onChange={(e) => setNewExp({ ...newExp, title: e.target.value })}
-                  placeholder="Ör: Boğaz'da Özel Yat ile Günbatımı Turu"
-                  className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                />
+        <div className="fixed inset-0 z-50 overflow-y-scroll bg-black/75 backdrop-blur-sm p-4">
+          <div className="min-h-full flex items-center justify-center py-6">
+            <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl border border-amber-200 space-y-4 text-zinc-900 animate-in zoom-in-95">
+              <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                <h3 className="text-base font-bold font-serif">Yeni Deneyim / Restoran İlanı Ekle</h3>
+                <button onClick={() => setIsNewExpModalOpen(false)} className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-sm font-bold">✕</button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Fiyat</label>
+              <form onSubmit={handleCreateExp} className="space-y-3 text-xs">
+                <div>
+                  <label className="font-bold block mb-1">İlan Başlığı</label>
                   <input
-                    type="number"
+                    type="text"
                     required
-                    value={newExp.price}
-                    onChange={(e) => setNewExp({ ...newExp, price: Number(e.target.value) })}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
+                    value={newExp.title}
+                    onChange={(e) => setNewExp({ ...newExp, title: e.target.value })}
+                    placeholder="Örn: Boğazda Gün Batımı Özel Yat Turu"
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Para Birimi</label>
-                  <select
-                    value={newExp.currency}
-                    onChange={(e) => setNewExp({ ...newExp, currency: e.target.value })}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  >
-                    <option value="₺">₺ (Türk Lirası)</option>
-                    <option value="$">$ (USD)</option>
-                    <option value="€">€ (EUR)</option>
-                  </select>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-bold block mb-1">Kategori</label>
+                    <select
+                      value={newExp.category}
+                      onChange={(e) => setNewExp({ ...newExp, category: e.target.value })}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                    >
+                      {categories.filter(c => c !== 'ALL').map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">Fiyat (TRY)</label>
+                    <input
+                      type="number"
+                      required
+                      value={newExp.price}
+                      onChange={(e) => setNewExp({ ...newExp, price: Number(e.target.value) })}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-mono"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Kategori</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-bold block mb-1">Sağlayıcı / Acente</label>
+                    <input
+                      type="text"
+                      value={newExp.provider}
+                      onChange={(e) => setNewExp({ ...newExp, provider: e.target.value })}
+                      placeholder="Örn: Bosphorus VIP Cruise"
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">Konum / İlçe</label>
+                    <input
+                      type="text"
+                      value={newExp.location}
+                      onChange={(e) => setNewExp({ ...newExp, location: e.target.value })}
+                      placeholder="Örn: Kuruçeşme, Beşiktaş"
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="font-bold block mb-1">Görsel URL</label>
                   <input
                     type="text"
-                    value={newExp.category}
-                    onChange={(e) => setNewExp({ ...newExp, category: e.target.value })}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="font-bold text-zinc-700 block">İşletme / Acente Adı</label>
-                <input
-                  type="text"
-                  required
-                  value={newExp.provider}
-                  onChange={(e) => setNewExp({ ...newExp, provider: e.target.value })}
-                  placeholder="Ör: Bosphorus VIP Marine Tours"
-                  className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">İşletme Telefonu</label>
-                  <input
-                    type="text"
-                    value={newExp.phone || ''}
-                    onChange={(e) => setNewExp({ ...newExp, phone: e.target.value })}
-                    placeholder="+90 532 000 00 00"
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
+                    value={newExp.image}
+                    onChange={(e) => setNewExp({ ...newExp, image: e.target.value })}
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-[11px]"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Konum</label>
-                  <input
-                    type="text"
-                    value={newExp.location}
-                    onChange={(e) => setNewExp({ ...newExp, location: e.target.value })}
-                    placeholder="Bebek, Beşiktaş"
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
+                <div>
+                  <label className="font-bold block mb-1">Açıklama & Notlar</label>
+                  <textarea
+                    value={newExp.agentNote}
+                    onChange={(e) => setNewExp({ ...newExp, agentNote: e.target.value })}
+                    placeholder="Misafir için özel deneyim detayları..."
+                    rows={2}
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
                   />
                 </div>
-              </div>
 
-              <div className="pt-3 border-t border-amber-200 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsNewExpModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold cursor-pointer"
-                >
-                  İptal
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold shadow-md cursor-pointer flex items-center gap-1.5"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Kataloğa Ekle ve Canlıya Al</span>
-                </button>
-              </div>
-            </form>
+                <div className="flex items-center gap-2 pt-2">
+                  <button type="button" onClick={() => setIsNewExpModalOpen(false)} className="py-2.5 px-4 bg-zinc-100 rounded-xl font-bold">Vazgeç</button>
+                  <button type="submit" className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold shadow-md">İlanı Yayınla</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
 
-      {/* NEW HOTEL MODAL */}
-      {isNewHotelModalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 border border-amber-300 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-zinc-900 animate-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-amber-200/80 pb-3">
-              <div className="flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-amber-800" />
-                <h2 className="text-base font-bold font-serif text-zinc-900">Sisteme Yeni Partner Otel Tanımla</h2>
-              </div>
-              <button
-                onClick={() => setIsNewHotelModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center text-sm font-bold cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateHotel} className="space-y-4 text-xs">
-              <div className="space-y-1.5">
-                <label className="font-bold text-zinc-700 block">Otel Adı</label>
-                <input
-                  type="text"
-                  required
-                  value={newHotelName}
-                  onChange={(e) => setNewHotelName(e.target.value)}
-                  placeholder="Ör: Galata Palace Boutique Hotel"
-                  className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                />
+      {/* MODAL: İLAN DÜZENLE */}
+      {editingExp && (
+        <div className="fixed inset-0 z-50 overflow-y-scroll bg-black/75 backdrop-blur-sm p-4">
+          <div className="min-h-full flex items-center justify-center py-6">
+            <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl border border-amber-200 space-y-4 text-zinc-900 animate-in zoom-in-95">
+              <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                <h3 className="text-base font-bold font-serif">İlanı Düzenle: {editingExp.title}</h3>
+                <button onClick={() => setEditingExp(null)} className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-sm font-bold">✕</button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Semt / Bölge</label>
+              <form onSubmit={handleSaveExp} className="space-y-3 text-xs">
+                <div>
+                  <label className="font-bold block mb-1">İlan Başlığı</label>
                   <input
                     type="text"
                     required
-                    value={newHotelDistrict}
-                    onChange={(e) => setNewHotelDistrict(e.target.value)}
-                    placeholder="Karaköy / Beyoğlu"
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
+                    value={editingExp.title}
+                    onChange={(e) => setEditingExp({ ...editingExp, title: e.target.value })}
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Otel Tipi</label>
-                  <select
-                    value={newHotelType}
-                    onChange={(e) => setNewHotelType(e.target.value)}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  >
-                    <option value="Butik Otel & Konak">Butik Otel & Konak</option>
-                    <option value="5 Yıldızlı Lüks Otel">5 Yıldızlı Lüks Otel</option>
-                    <option value="Tarihi Yalı / Saray">Tarihi Yalı / Saray</option>
-                    <option value="Apart & Rezidans">Apart & Rezidans</option>
-                  </select>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-bold block mb-1">Fiyat (TRY)</label>
+                    <input
+                      type="number"
+                      required
+                      value={editingExp.price}
+                      onChange={(e) => setEditingExp({ ...editingExp, price: Number(e.target.value) })}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">Süre</label>
+                    <input
+                      type="text"
+                      value={editingExp.duration}
+                      onChange={(e) => setEditingExp({ ...editingExp, duration: e.target.value })}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                    />
+                  </div>
                 </div>
+
+                <div>
+                  <label className="font-bold block mb-1">Açıklama</label>
+                  <textarea
+                    value={editingExp.agentNote}
+                    onChange={(e) => setEditingExp({ ...editingExp, agentNote: e.target.value })}
+                    rows={3}
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <button type="button" onClick={() => setEditingExp(null)} className="py-2.5 px-4 bg-zinc-100 rounded-xl font-bold">Vazgeç</button>
+                  <button type="submit" className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold shadow-md">Değişiklikleri Kaydet</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: YENİ YATIRIM PROJESİ EKLE */}
+      {isNewPropModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-scroll bg-black/75 backdrop-blur-sm p-4">
+          <div className="min-h-full flex items-center justify-center py-6">
+            <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl border border-amber-200 space-y-4 text-zinc-900 animate-in zoom-in-95">
+              <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                <h3 className="text-base font-bold font-serif">Yeni Gayrimenkul Yatırım Projesi Ekle</h3>
+                <button onClick={() => setIsNewPropModalOpen(false)} className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-sm font-bold">✕</button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Oda Sayısı</label>
-                  <input
-                    type="number"
-                    value={newHotelRoomCount}
-                    onChange={(e) => setNewHotelRoomCount(Number(e.target.value))}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Wi-Fi SSID</label>
+              <form onSubmit={handleCreateProp} className="space-y-3 text-xs">
+                <div>
+                  <label className="font-bold block mb-1">Proje Başlığı</label>
                   <input
                     type="text"
-                    value={newHotelWifiSsid}
-                    onChange={(e) => setNewHotelWifiSsid(e.target.value)}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
+                    required
+                    value={newProp.title}
+                    onChange={(e) => setNewProp({ ...newProp, title: e.target.value })}
+                    placeholder="Örn: Bosphorus Panorama Luxury Residences"
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="font-bold text-zinc-700 block">Wi-Fi Şifresi</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-bold block mb-1">İlçe / Bölge</label>
+                    <input
+                      type="text"
+                      required
+                      value={newProp.district}
+                      onChange={(e) => setNewProp({ ...newProp, district: e.target.value })}
+                      placeholder="Beşiktaş / Boğaz Hattı"
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">Fiyat (USD)</label>
+                    <input
+                      type="number"
+                      required
+                      value={newProp.priceUSD}
+                      onChange={(e) => setNewProp({ ...newProp, priceUSD: Number(e.target.value) })}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-bold block mb-1">Yatak Odası</label>
+                    <input
+                      type="number"
+                      value={newProp.bedrooms}
+                      onChange={(e) => setNewProp({ ...newProp, bedrooms: Number(e.target.value) })}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">Brüt Alan (m²)</label>
+                    <input
+                      type="number"
+                      value={newProp.areaM2}
+                      onChange={(e) => setNewProp({ ...newProp, areaM2: Number(e.target.value) })}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="font-bold block mb-1">Geliştirici / Acente</label>
                   <input
                     type="text"
-                    value={newHotelWifiPass}
-                    onChange={(e) => setNewHotelWifiPass(e.target.value)}
-                    className="w-full p-3 bg-amber-50/40 border border-amber-200 rounded-xl font-mono text-zinc-900 focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-xs"
+                    value={newProp.developer}
+                    onChange={(e) => setNewProp({ ...newProp, developer: e.target.value })}
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
                   />
                 </div>
+
+                <div>
+                  <label className="font-bold block mb-1">Proje Açıklaması</label>
+                  <textarea
+                    value={newProp.description}
+                    onChange={(e) => setNewProp({ ...newProp, description: e.target.value })}
+                    rows={2}
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <button type="button" onClick={() => setIsNewPropModalOpen(false)} className="py-2.5 px-4 bg-zinc-100 rounded-xl font-bold">Vazgeç</button>
+                  <button type="submit" className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold shadow-md">Projeyi Yayına Al</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: YENİ PARTNER OTEL EKLE */}
+      {isNewHotelModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-scroll bg-black/75 backdrop-blur-sm p-4">
+          <div className="min-h-full flex items-center justify-center py-6">
+            <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl border border-amber-200 space-y-4 text-zinc-900 animate-in zoom-in-95">
+              <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                <h3 className="text-base font-bold font-serif">Yeni Partner Otel / Konak Ekle</h3>
+                <button onClick={() => setIsNewHotelModalOpen(false)} className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-sm font-bold">✕</button>
               </div>
 
-              <div className="pt-3 border-t border-amber-200 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsNewHotelModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold cursor-pointer"
-                >
-                  İptal
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold shadow-md cursor-pointer flex items-center gap-1.5"
-                >
-                  <Building2 className="w-3.5 h-3.5" />
-                  <span>Oteli Sisteme Ekle</span>
-                </button>
-              </div>
-            </form>
+              <form onSubmit={handleCreateHotel} className="space-y-3 text-xs">
+                <div>
+                  <label className="font-bold block mb-1">Otel / Tesis Adı</label>
+                  <input
+                    type="text"
+                    required
+                    value={newHotelName}
+                    onChange={(e) => setNewHotelName(e.target.value)}
+                    placeholder="Örn: Bosphorus Palace Hotel"
+                    className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-bold block mb-1">Bölge / İlçe</label>
+                    <input
+                      type="text"
+                      value={newHotelDistrict}
+                      onChange={(e) => setNewHotelDistrict(e.target.value)}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">Oda Sayısı</label>
+                    <input
+                      type="number"
+                      value={newHotelRoomCount}
+                      onChange={(e) => setNewHotelRoomCount(Number(e.target.value))}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-bold block mb-1">Wi-Fi Ağ Adı (SSID)</label>
+                    <input
+                      type="text"
+                      value={newHotelWifiSsid}
+                      onChange={(e) => setNewHotelWifiSsid(e.target.value)}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">Wi-Fi Şifresi</label>
+                    <input
+                      type="text"
+                      value={newHotelWifiPass}
+                      onChange={(e) => setNewHotelWifiPass(e.target.value)}
+                      className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <button type="button" onClick={() => setIsNewHotelModalOpen(false)} className="py-2.5 px-4 bg-zinc-100 rounded-xl font-bold">Vazgeç</button>
+                  <button type="submit" className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold shadow-md">Oteli Sisteme Ekle</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}

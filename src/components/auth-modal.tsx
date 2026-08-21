@@ -13,7 +13,6 @@ import {
   Globe
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { XeniosStore } from '@/lib/store';
 import { XeniosUser } from '@/lib/types';
 import Image from 'next/image';
@@ -25,7 +24,6 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalProps) {
-  const router = useRouter();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [role, setRole] = useState<'guest' | 'hotel'>(defaultRole);
 
@@ -38,7 +36,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
 
   if (!isOpen) return null;
 
-    const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       toast.error("Lütfen e-posta ve şifrenizi giriniz.");
@@ -46,33 +44,8 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
     }
 
     const inputEmail = email.trim().toLowerCase();
-    const isMaster = (inputEmail === 'anilaslan@usecomus.com' || inputEmail === 'anilaslan') && password === 'Camille+1618';
-
-    if (isMaster) {
-      const masterUser: XeniosUser = {
-        id: 'usr-anilaslan',
-        name: 'Anıl Aslan',
-        email: 'anilaslan@usecomus.com',
-        role: 'pilot',
-        provider: 'email',
-        avatar: 'https://api.dicebear.com/7.x/initials/svg?seed=Anil%20Aslan&backgroundColor=d97706',
-        createdAt: new Date().toISOString()
-      };
-      XeniosStore.setUser(masterUser);
-      XeniosStore.setMasterAdminLoggedIn(true);
-      XeniosStore.setHotelPortalLoggedIn(true);
-
-      toast.success("Master Proje Yöneticisi Girişi Başarılı!", {
-        description: "Kokpit Paneline yönlendiriliyorsunuz..."
-      });
-      setTimeout(() => {
-        onClose();
-        window.location.href = '/dashboard';
-      }, 350);
-      return;
-    }
-
     const userName = name.trim() || (role === 'hotel' ? 'Otel Yöneticisi' : email.split('@')[0]);
+    
     const user: XeniosUser = {
       id: 'usr_' + Date.now(),
       name: userName,
@@ -91,7 +64,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
     if (mode === 'login') {
       if (role === 'hotel') {
         XeniosStore.setHotelPortalLoggedIn(true);
-        toast.success("Otel & Host Yönetim Girişi Başarılı!", {
+        toast.success("Otel Yönetim Paneline Giriş Başarılı!", {
           description: "Otel Yönetim Paneline yönlendiriliyorsunuz..."
         });
         setTimeout(() => {
@@ -147,12 +120,12 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
           </h2>
           <p className="text-xs text-zinc-500">
             {mode === 'login' 
-              ? 'Oda hizmetleri, rezervasyonlarınız ve otel yönetimi için giriş yapın.' 
+              ? 'Oda hizmetleri, rezervasyonlarınız ve otel personeli için giriş yapın.' 
               : 'İstanbul misafir ayrıcalıklarından ve hızlı rezervasyondan yararlanın.'}
           </p>
         </div>
 
-        {/* Mode Switcher Tabs (Giriş Yap / Kayıt Ol) */}
+        {/* Mode Switcher Tabs */}
         <div className="flex rounded-2xl bg-zinc-100 p-1 mb-4 border border-zinc-200">
           <button
             type="button"
@@ -178,7 +151,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
           </button>
         </div>
 
-        {/* Role Switcher in Login Mode (Misafir Girişi vs Otel/Host Kokpit Girişi) */}
+        {/* Role Switcher in Login Mode */}
         {mode === 'login' && (
           <div className="grid grid-cols-2 gap-2 mb-4">
             <button
@@ -202,14 +175,14 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
               onClick={() => setRole('hotel')}
               className={`p-3 rounded-2xl border text-left transition cursor-pointer flex flex-col justify-between ${
                 role === 'hotel'
-                  ? 'bg-zinc-900 border-zinc-950 ring-2 ring-amber-400 text-white'
+                  ? 'bg-amber-500/15 border-amber-500 ring-2 ring-amber-400 text-amber-950'
                   : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
               }`}
             >
-              <Building2 className={`w-4 h-4 mb-1 ${role === 'hotel' ? 'text-amber-400' : 'text-zinc-400'}`} />
+              <Building2 className={`w-4 h-4 mb-1 ${role === 'hotel' ? 'text-amber-700' : 'text-zinc-400'}`} />
               <div>
-                <strong className="text-xs block font-bold">Yönetim & Kokpit</strong>
-                <span className={`text-[10px] block ${role === 'hotel' ? 'text-zinc-400' : 'text-zinc-500'}`}>Otel & Host Girişi</span>
+                <strong className="text-xs block font-bold">Otel Personeli</strong>
+                <span className="text-[10px] text-zinc-500 block">Oda & Talep Yönetimi</span>
               </div>
             </button>
           </div>
@@ -276,7 +249,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={role === 'hotel' ? "hotel@xenios.com" : "misafir@gmail.com"}
+                placeholder={role === 'hotel' ? "hotel@xenios.istanbul" : "misafir@gmail.com"}
                 className="w-full pl-9 pr-3 py-2 text-xs bg-zinc-50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/40"
               />
             </div>
@@ -299,13 +272,9 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
 
           <button
             type="submit"
-            className={`w-full py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-2 ${
-              role === 'hotel' && mode === 'login'
-                ? 'bg-zinc-900 hover:bg-black text-amber-400 shadow-zinc-900/30'
-                : 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/30'
-            }`}
+            className="w-full py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-2 bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/30"
           >
-            <span>{mode === 'login' ? (role === 'hotel' ? 'Kokpit Paneline Giriş Yap' : 'Giriş Yap') : 'Hesabı Oluştur'}</span>
+            <span>{mode === 'login' ? (role === 'hotel' ? 'Otel Paneline Giriş Yap' : 'Giriş Yap') : 'Hesabı Oluştur'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

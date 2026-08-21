@@ -153,15 +153,6 @@ export function HotelHeader({
                         </span>
                       </div>
 
-                      {user.role === 'pilot' && (
-                        <a
-                          href="/pilot"
-                          className="block px-2 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl text-xs font-bold text-center hover:brightness-105 transition shadow-sm"
-                        >
-                          Pilot Masası ➔
-                        </a>
-                      )}
-
                       {user.role === 'hotel' && (
                         <a
                           href="/hotel-portal"
