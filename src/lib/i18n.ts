@@ -242,6 +242,7 @@ export const translations = {
     "quickChips": [
       "Sultanahmet'te 3 saatim var, ne yapmalıyım?",
       "En iyi Boğaz manzaralı akşam yemeği nerede?",
+      "İstanbul'da gayrimenkul ve yatırım fırsatları neler?",
       "İstanbulkart nereden alınır?",
       "Otelde kahvaltı saat kaçta?"
     ],
@@ -520,6 +521,7 @@ export const translations = {
     "quickChips": [
       "I have 3 hours in Sultanahmet, what should I do?",
       "Where is the best sunset dinner with Bosphorus view?",
+      "What are the top real estate and investment opportunities in Istanbul?",
       "Where can I buy an Istanbulkart?",
       "What time is breakfast served at the hotel?"
     ],

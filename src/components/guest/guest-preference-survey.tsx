@@ -159,7 +159,7 @@ const DICTS: Record<string, any> = {
       { value: 'luxury', label: 'Luxe & VIP' }
     ],
     interestsTitle: "Centres d'intérêt",
-    interests: ['Histoire & Culture', 'Bosphore & Mer', 'Gastronomie', 'Vie nocturne', 'Shopping', 'Art & Musées', 'Nature', 'Photographie'],
+    interests: ['Histoire & Culture', 'Bosphore & Mer', 'Gastronomie', 'Vie nocturne', 'Shopping', 'Art & Musées', 'Nature', 'Photographie', 'Investissement'],
     healthTitle: "Santé & Allergies",
     allergies: ['Arachides / Fruits à coque', 'Fruits de mer', 'Lactose / Lait', 'Gluten', 'Pollen'],
     dietaryRestrictions: ['Halal', 'Végétarien', 'Végétalien', 'Sans gluten', 'Diabétique'],

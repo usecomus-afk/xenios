@@ -566,7 +566,7 @@ export const XeniosStore = {
     return {
       travelStyle: 'couple',
       budgetLevel: 'luxury',
-      interests: ['Boğaz Turları', 'Tarih', 'Gastronomi', 'Hamam'],
+      interests: ['Boğaz Turları', 'Tarih', 'Gastronomi', 'Hamam', 'Yatırım'],
       dietaryRestrictions: ['Helal', 'Deniz Ürünleri'],
       kvkkConsent: false
     };

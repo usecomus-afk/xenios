@@ -70,7 +70,11 @@ export async function askGeminiConcierge(
     reply = `İstanbul Boğazı gün batımında büyüleyicidir! Akşam semazen ve folklor gösterili yemekli Boğaz turumuz veya özel saatlik yat kiralama seçeneklerimiz misafirlerimiz arasında en popüler olanlardır.`;
     recs = [
       { title: "Bosphorus Dinner Cruise & Shows (Mega Lüfer)", category: "Boğaz & Tekne", location: "Kabataş" },
-      { title: "Özel Lüks Motoryat Boğaz Gezisi", category: "Boğaz & Tekne", location: "Kuruçeşme / Bebek" }
+  } else if (q.includes('yatırım') || q.includes('invest') || q.includes('gayrimenkul') || q.includes('property') || q.includes('vatandaşlık') || q.includes('citizenship')) {
+    reply = `İstanbul gayrimenkul ve turizm yatırımları için dünya çapında büyük fırsatlar sunuyor. Beşiktaş, Boğaz hattı ve Tarihi Yarımada'daki seçkin rezidans ve yalı projelerimizi inceleyebilir veya Türkiye Vatandaşlığına uygun portföyler için yatırım danışmanlarımızla görüşebilirsiniz.`;
+    recs = [
+      { title: "Bosphorus View Prime Residence (Vatandaşlığa Uygun)", category: "Yatırım & Rezidans", location: "Beşiktaş" },
+      { title: "Karaköy Loft & Art Boutique Suites", category: "Yatırım & Mülk", location: "Karaköy" }
     ];
   } else {
     reply = `Harika bir soru! ${hotelName} misafirimiz olarak İstanbul seyahatinizi unutulmaz kılmak için buradayım. ${guestProfile.travelStyle === 'family' ? 'Ailenizle keyif alacağınız ' : ''}müzeler, Boğaz turları, gizli tarihi sokaklar ve en lezzetli mekanlar için size özel rotalar hazırlayabilirim. Ne tür bir aktivite arzu edersiniz?`;
