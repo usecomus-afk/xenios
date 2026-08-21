@@ -69,7 +69,8 @@ export async function askGeminiConcierge(
   } else if (q.includes('boğaz') || q.includes('tekne') || q.includes('bosphorus') || q.includes('boat')) {
     reply = `İstanbul Boğazı gün batımında büyüleyicidir! Akşam semazen ve folklor gösterili yemekli Boğaz turumuz veya özel saatlik yat kiralama seçeneklerimiz misafirlerimiz arasında en popüler olanlardır.`;
     recs = [
-      { title: "Bosphorus Dinner Cruise & Shows (Mega Lüfer)", category: "Boğaz & Tekne", location: "Kabataş" },
+      { title: "Bosphorus Dinner Cruise & Shows (Mega Lüfer)", category: "Boğaz & Tekne", location: "Kabataş" }
+    ];
   } else if (q.includes('yatırım') || q.includes('invest') || q.includes('gayrimenkul') || q.includes('property') || q.includes('vatandaşlık') || q.includes('citizenship')) {
     reply = `İstanbul gayrimenkul ve turizm yatırımları için dünya çapında büyük fırsatlar sunuyor. Beşiktaş, Boğaz hattı ve Tarihi Yarımada'daki seçkin rezidans ve yalı projelerimizi inceleyebilir veya Türkiye Vatandaşlığına uygun portföyler için yatırım danışmanlarımızla görüşebilirsiniz.`;
     recs = [
