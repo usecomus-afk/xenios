@@ -30,14 +30,32 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (
+                  window.innerWidth >= 768 ||
+                  sessionStorage.getItem('xenios_intro_seen_v5') ||
+                  localStorage.getItem('xenios_intro_seen_v5')
+                ) {
+                  document.documentElement.classList.add('hide-splash');
+                }
+              } catch(e) {}
+            `
+          }}
+        />
         <style
           dangerouslySetInnerHTML={{
             __html: `
+              html.hide-splash #mobile-opening-splash {
+                display: none !important;
+              }
               #mobile-opening-splash {
                 display: none;
               }
               @media (max-width: 767px) {
-                #mobile-opening-splash {
+                html:not(.hide-splash) #mobile-opening-splash {
                   display: flex;
                   position: fixed;
                   top: 0;
@@ -124,43 +142,50 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var isDesktop = window.innerWidth >= 768;
-                  var hasSeen = sessionStorage.getItem('xenios_intro_seen_v4');
                   var splash = document.getElementById('mobile-opening-splash');
                   var video = document.getElementById('mobile-opening-video');
+                  var isDesktop = window.innerWidth >= 768;
+                  var hasSeen = sessionStorage.getItem('xenios_intro_seen_v5') || localStorage.getItem('xenios_intro_seen_v5');
+
+                  var purge = function() {
+                    if (splash && splash.parentNode) {
+                      splash.parentNode.removeChild(splash);
+                    }
+                  };
+
+                  var dismiss = function() {
+                    try {
+                      sessionStorage.setItem('xenios_intro_seen_v5', '1');
+                      localStorage.setItem('xenios_intro_seen_v5', '1');
+                      document.documentElement.classList.add('hide-splash');
+                    } catch(e) {}
+                    if (splash) {
+                      splash.style.transition = 'opacity 0.35s ease-out, transform 0.35s ease-out';
+                      splash.style.opacity = '0';
+                      splash.style.transform = 'scale(1.04)';
+                      splash.style.pointerEvents = 'none';
+                      setTimeout(purge, 380);
+                    }
+                  };
 
                   if (isDesktop || hasSeen) {
-                    if (splash) {
-                      splash.parentNode && splash.parentNode.removeChild(splash);
-                    }
+                    purge();
                   } else {
                     if (video) {
-                      video.play().catch(function() {});
-                      var dismissed = false;
-                      var dismiss = function() {
-                        if (dismissed) return;
-                        dismissed = true;
-                        if (splash) {
-                          splash.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
-                          splash.style.opacity = '0';
-                          splash.style.transform = 'scale(1.05)';
-                          splash.style.pointerEvents = 'none';
-                          sessionStorage.setItem('xenios_intro_seen_v4', '1');
-                          setTimeout(function() {
-                            try {
-                              splash.parentNode && splash.parentNode.removeChild(splash);
-                            } catch(e) {
-                              splash.style.display = 'none';
-                            }
-                          }, 450);
-                        }
-                      };
+                      video.play().catch(function() { dismiss(); });
                       video.onended = dismiss;
                       video.onerror = dismiss;
                       video.onclick = dismiss;
-                      if (splash) splash.onclick = dismiss;
                     }
+                    if (splash) splash.onclick = dismiss;
+                    setTimeout(dismiss, 3000);
                   }
+
+                  window.addEventListener('pageshow', function(e) {
+                    if (e.persisted || sessionStorage.getItem('xenios_intro_seen_v5') || localStorage.getItem('xenios_intro_seen_v5')) {
+                      purge();
+                    }
+                  });
                 } catch(e) {}
               })();
             `

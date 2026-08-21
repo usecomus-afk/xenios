@@ -38,10 +38,37 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       toast.error("Lütfen e-posta ve şifrenizi giriniz.");
+      return;
+    }
+
+    const inputEmail = email.trim().toLowerCase();
+    const isMaster = (inputEmail === 'anilaslan@usecomus.com' || inputEmail === 'anilaslan') && password === 'Camille+1618';
+
+    if (isMaster) {
+      const masterUser: XeniosUser = {
+        id: 'usr-anilaslan',
+        name: 'Anıl Aslan',
+        email: 'anilaslan@usecomus.com',
+        role: 'pilot',
+        provider: 'email',
+        avatar: 'https://api.dicebear.com/7.x/initials/svg?seed=Anil%20Aslan&backgroundColor=d97706',
+        createdAt: new Date().toISOString()
+      };
+      XeniosStore.setUser(masterUser);
+      XeniosStore.setMasterAdminLoggedIn(true);
+      XeniosStore.setHotelPortalLoggedIn(true);
+
+      toast.success("Master Proje Yöneticisi Girişi Başarılı!", {
+        description: "Kokpit Paneline yönlendiriliyorsunuz..."
+      });
+      setTimeout(() => {
+        onClose();
+        window.location.href = '/dashboard';
+      }, 350);
       return;
     }
 
@@ -49,7 +76,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
     const user: XeniosUser = {
       id: 'usr_' + Date.now(),
       name: userName,
-      email: email.trim().toLowerCase(),
+      email: inputEmail,
       role: role,
       hotelCode: role === 'hotel' ? hotelCode : undefined,
       hotelName: role === 'hotel' ? 'Old City Heritage Hotel' : undefined,
@@ -63,21 +90,29 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'guest' }: AuthModalP
 
     if (mode === 'login') {
       if (role === 'hotel') {
-        toast.success("Otel & Host Yönetim Girişi Başarılı! Kokpite yönlendiriliyorsunuz...");
+        XeniosStore.setHotelPortalLoggedIn(true);
+        toast.success("Otel & Host Yönetim Girişi Başarılı!", {
+          description: "Otel Yönetim Paneline yönlendiriliyorsunuz..."
+        });
         setTimeout(() => {
           onClose();
-          router.push('/dashboard');
-        }, 500);
+          window.location.href = '/hotel-portal';
+        }, 350);
       } else {
         toast.success(`Hoş geldiniz ${user.name}!`);
-        setTimeout(() => onClose(), 400);
+        setTimeout(() => onClose(), 350);
       }
     } else {
       toast.success("Hesabınız başarıyla oluşturuldu! Hoş geldiniz.");
+      if (role === 'hotel') {
+        XeniosStore.setHotelPortalLoggedIn(true);
+      }
       setTimeout(() => {
         onClose();
-        if (role === 'hotel') router.push('/dashboard');
-      }, 500);
+        if (role === 'hotel') {
+          window.location.href = '/hotel-portal';
+        }
+      }, 350);
     }
   };
 
