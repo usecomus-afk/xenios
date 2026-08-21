@@ -3,39 +3,44 @@
 import { useState, useEffect, useRef } from 'react';
 
 export function AppIntroSplash() {
-  // Start with true so mobile paints the black splash screen on the very first frame with 0 flicker
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Check if on desktop or if already viewed in this session
-    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
-    const hasSeen = typeof window !== 'undefined' && sessionStorage.getItem('xenios_has_seen_intro_mobile_v2');
+    if (typeof window === 'undefined') return;
+
+    const isDesktop = window.innerWidth >= 768;
+    const hasSeen = 
+      sessionStorage.getItem('xenios_seen_intro_v7') || 
+      localStorage.getItem('xenios_seen_intro_v7');
 
     if (isDesktop || hasSeen) {
-      setIsVisible(false);
       return;
     }
 
-    if (videoRef.current) {
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.log("Intro video autoplay waiting for user interaction:", err);
-        });
-      }
-    }
+    // Show splash on first mobile visit
+    setIsVisible(true);
+
+    // Auto-dismiss safety timer (guarantees the user is NEVER stuck on video)
+    const safetyTimer = setTimeout(() => {
+      handleDismiss();
+    }, 2800);
+
+    return () => clearTimeout(safetyTimer);
   }, []);
 
   const handleDismiss = () => {
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem('xenios_has_seen_intro_mobile_v2', '1');
+      try {
+        sessionStorage.setItem('xenios_seen_intro_v7', '1');
+        localStorage.setItem('xenios_seen_intro_v7', '1');
+      } catch (e) {}
     }
     setIsFadingOut(true);
     setTimeout(() => {
       setIsVisible(false);
-    }, 500);
+    }, 350);
   };
 
   if (!isVisible) return null;
@@ -43,7 +48,8 @@ export function AppIntroSplash() {
   return (
     <div
       onClick={handleDismiss}
-      className={`hidden max-md:flex fixed inset-0 z-[999999] w-screen h-[100dvh] bg-black flex-col items-center justify-center transition-all duration-500 ease-in-out select-none cursor-pointer ${
+      onTouchStart={handleDismiss}
+      className={`md:hidden fixed inset-0 z-[999999] w-screen h-[100dvh] bg-black flex flex-col items-center justify-center transition-all duration-300 ease-out select-none cursor-pointer ${
         isFadingOut ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
@@ -58,7 +64,7 @@ export function AppIntroSplash() {
         webkit-playsinline="true"
         onEnded={handleDismiss}
         onError={handleDismiss}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover pointer-events-none"
       />
 
       {/* Bottom Subtle Brand Watermark */}
@@ -72,10 +78,9 @@ export function AppIntroSplash() {
       </div>
 
       {/* Bottom Loading Progress Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black/50 z-20">
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black/50 z-20 pointer-events-none">
         <div className="h-full bg-gradient-to-r from-amber-500 via-amber-300 to-amber-500 animate-[pulse_1.5s_ease-in-out_infinite]" />
       </div>
     </div>
   );
 }
-
