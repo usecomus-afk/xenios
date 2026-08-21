@@ -188,7 +188,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
       {/* Modal for In-Room Request Confirmation */}
       {selectedService && (
         <div 
-          className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-3 sm:p-6"
+          className="fixed inset-0 z-50 overflow-y-scroll bg-black/75 backdrop-blur-sm p-3 sm:p-6"
           style={{ WebkitOverflowScrolling: 'touch' }}
           onClick={(e) => {
             if (e.target === e.currentTarget) setSelectedService(null);

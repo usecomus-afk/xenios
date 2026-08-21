@@ -80,7 +80,7 @@ export function VirtualPosModal({ experience, hotel, roomNumber, lang, onClose }
 
   return (
     <div 
-      className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-3 sm:p-6"
+      className="fixed inset-0 z-50 overflow-y-scroll bg-black/75 backdrop-blur-sm p-3 sm:p-6"
       style={{ WebkitOverflowScrolling: 'touch' }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();

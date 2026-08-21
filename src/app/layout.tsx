@@ -38,30 +38,28 @@ export default function RootLayout({
               }
               @media (max-width: 767px) {
                 #mobile-opening-splash {
-                  display: flex !important;
-                  position: fixed !important;
-                  top: 0 !important;
-                  left: 0 !important;
-                  right: 0 !important;
-                  bottom: 0 !important;
-                  width: 100vw !important;
-                  height: 100dvh !important;
-                  height: 100vh !important;
-                  z-index: 2147483647 !important;
-                  background-color: #000000 !important;
-                  align-items: center !important;
-                  justify-content: center !important;
-                  overflow: hidden !important;
-                  user-select: none !important;
-                  -webkit-user-select: none !important;
-                  touch-action: none !important;
+                  display: flex;
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  width: 100vw;
+                  height: 100dvh;
+                  z-index: 999999;
+                  background-color: #000000;
+                  align-items: center;
+                  justify-content: center;
+                  overflow: hidden;
+                  user-select: none;
+                  -webkit-user-select: none;
                 }
                 #mobile-opening-video {
-                  width: 100% !important;
-                  height: 100% !important;
-                  object-fit: cover !important;
-                  display: block !important;
-                  background-color: #000000 !important;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  display: block;
+                  background-color: #000000;
                 }
               }
               @media (min-width: 768px) {
@@ -132,7 +130,9 @@ export default function RootLayout({
                   var video = document.getElementById('mobile-opening-video');
 
                   if (isDesktop || hasSeen) {
-                    if (splash) splash.style.display = 'none';
+                    if (splash) {
+                      splash.parentNode && splash.parentNode.removeChild(splash);
+                    }
                   } else {
                     if (video) {
                       video.play().catch(function() {});
@@ -141,14 +141,18 @@ export default function RootLayout({
                         if (dismissed) return;
                         dismissed = true;
                         if (splash) {
-                          splash.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                          splash.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
                           splash.style.opacity = '0';
                           splash.style.transform = 'scale(1.05)';
                           splash.style.pointerEvents = 'none';
                           sessionStorage.setItem('xenios_intro_seen_v4', '1');
                           setTimeout(function() {
-                            splash.style.display = 'none';
-                          }, 500);
+                            try {
+                              splash.parentNode && splash.parentNode.removeChild(splash);
+                            } catch(e) {
+                              splash.style.display = 'none';
+                            }
+                          }, 450);
                         }
                       };
                       video.onended = dismiss;

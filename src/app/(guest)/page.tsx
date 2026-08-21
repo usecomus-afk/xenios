@@ -107,7 +107,7 @@ export default function GuestPage() {
   const activePendingRequests = requests.filter(r => r.status !== 'completed');
 
   return (
-    <div className="min-h-screen bg-[#f8f6f0] pb-28 text-zinc-900 overflow-x-hidden w-full">
+    <div className="min-h-screen bg-[#f8f6f0] pb-28 text-zinc-900 w-full">
       {/* Hotel Header & Credentials */}
       <HotelHeader
         hotel={currentHotel}
@@ -417,68 +417,70 @@ export default function GuestPage() {
       {/* In-Room Requests Modal (Triggered from Top Hotel Card) */}
       {showRequestsModal && (
         <div 
-          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md overflow-y-auto overscroll-contain touch-pan-y flex min-h-full items-center justify-center p-3 sm:p-6 animate-in fade-in"
+          className="fixed inset-0 z-50 overflow-y-scroll bg-black/75 backdrop-blur-sm p-3 sm:p-6"
           style={{ WebkitOverflowScrolling: 'touch' }}
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowRequestsModal(false);
           }}
         >
-          <div 
-            className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-amber-200 my-auto space-y-4 animate-in zoom-in-95 text-zinc-900"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-amber-100 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-700">
-                  <Bell className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-zinc-900">{t.activeRequests}</h3>
-                  <p className="text-[11px] text-zinc-500">{currentHotel.name} - {t.room} {activeRoomNumber}</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowRequestsModal(false)} 
-                className="w-7 h-7 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center text-sm font-bold cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            {requests.length === 0 ? (
-              <div className="py-8 text-center text-zinc-400 space-y-2">
-                <Bell className="w-8 h-8 mx-auto text-amber-400 opacity-50" />
-                <p className="text-xs">{t.noRequests}</p>
-              </div>
-            ) : (
-              <div className="space-y-2.5">
-                {requests.map((req) => (
-                  <div
-                    key={req.id}
-                    className="bg-[#fbf8f1] p-3.5 rounded-2xl border border-amber-200/80 flex items-center justify-between gap-3 text-xs"
-                  >
-                    <div className="space-y-1">
-                      <strong className="text-zinc-900 block">{req.serviceTitle}</strong>
-                      {req.notes && <p className="text-[11px] text-zinc-600">{req.notes}</p>}
-                      <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-mono">
-                        <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                        <span>{new Date(req.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      </div>
-                    </div>
-
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0 ${
-                      req.status === 'completed' 
-                        ? 'bg-emerald-100 text-emerald-800' 
-                        : req.status === 'in_progress'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-amber-100 text-amber-800 animate-pulse'
-                    }`}>
-                      {t.requestStatus[req.status]}
-                    </span>
+          <div className="min-h-full flex items-center justify-center py-6">
+            <div 
+              className="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-amber-200 space-y-4 animate-in zoom-in-95 text-zinc-900"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-700">
+                    <Bell className="w-4 h-4" />
                   </div>
-                ))}
+                  <div>
+                    <h3 className="text-sm font-bold text-zinc-900">{t.activeRequests}</h3>
+                    <p className="text-[11px] text-zinc-500">{currentHotel.name} - {t.room} {activeRoomNumber}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowRequestsModal(false)} 
+                  className="w-7 h-7 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center text-sm font-bold cursor-pointer"
+                >
+                  ✕
+                </button>
               </div>
-            )}
+
+              {requests.length === 0 ? (
+                <div className="py-8 text-center text-zinc-400 space-y-2">
+                  <Bell className="w-8 h-8 mx-auto text-amber-400 opacity-50" />
+                  <p className="text-xs">{t.noRequests}</p>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  {requests.map((req) => (
+                    <div
+                      key={req.id}
+                      className="bg-[#fbf8f1] p-3.5 rounded-2xl border border-amber-200/80 flex items-center justify-between gap-3 text-xs"
+                    >
+                      <div className="space-y-1">
+                        <strong className="text-zinc-900 block">{req.serviceTitle}</strong>
+                        {req.notes && <p className="text-[11px] text-zinc-600">{req.notes}</p>}
+                        <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-mono">
+                          <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                          <span>{new Date(req.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                      </div>
+
+                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0 ${
+                        req.status === 'completed' 
+                          ? 'bg-emerald-100 text-emerald-800' 
+                          : req.status === 'in_progress'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-amber-100 text-amber-800 animate-pulse'
+                      }`}>
+                        {t.requestStatus[req.status]}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

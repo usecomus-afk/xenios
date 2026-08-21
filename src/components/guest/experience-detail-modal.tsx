@@ -90,8 +90,10 @@ export function ExperienceDetailModal({
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-white overflow-y-auto overflow-x-hidden text-zinc-900"
-      style={{ WebkitOverflowScrolling: 'touch' }}
+      className="fixed inset-0 z-50 bg-white overflow-y-scroll overflow-x-hidden text-zinc-900"
+      style={{ 
+        WebkitOverflowScrolling: 'touch'
+      }}
     >
       
       {/* Top Floating Airbnb Navigation Bar */}
