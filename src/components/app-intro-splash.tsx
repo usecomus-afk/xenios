@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ArrowRight } from "lucide-react";
 
 export function AppIntroSplash() {
   const [isVisible, setIsVisible] = useState(true);
@@ -25,7 +24,7 @@ export function AppIntroSplash() {
         const promise = videoRef.current.play();
         if (promise !== undefined) {
           promise.catch(() => {
-            // Autoplay fallback (video will still be visible)
+            // Autoplay fallback
           });
         }
       } catch {
@@ -67,21 +66,6 @@ export function AppIntroSplash() {
         <source src="/xenios1618.mp4" type="video/mp4" />
         <source src="/intro.mp4" type="video/mp4" />
       </video>
-
-      {/* Top Safe-Area Floating Skip Button */}
-      <div className="absolute top-4 right-4 z-20 pt-safe">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDismiss();
-          }}
-          className="px-3.5 py-1.5 rounded-full bg-black/60 hover:bg-black/80 text-white/90 hover:text-white border border-white/20 backdrop-blur-md text-[11px] font-bold flex items-center gap-1.5 transition shadow-lg cursor-pointer active:scale-95"
-        >
-          <span>Geç</span>
-          <ArrowRight className="w-3 h-3 text-amber-400" />
-        </button>
-      </div>
 
       {/* Bottom Subtle Brand Watermark */}
       <div className="absolute bottom-6 left-0 right-0 z-20 flex flex-col items-center text-center px-4 pb-safe pointer-events-none">
