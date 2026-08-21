@@ -14,7 +14,6 @@ import {
   CalendarSync,
   CreditCard,
   QrCode,
-  ArrowLeft,
   X,
   ChevronDown,
   Building2,
@@ -145,16 +144,8 @@ export function HotelSideNav({ isOpen, onClose }: HotelSideNavProps) {
         })}
       </nav>
 
-      {/* Return to Master Admin & Guest PWA */}
+      {/* Guest PWA Preview Link */}
       <div className="p-3 border-t border-amber-100 space-y-2 bg-amber-50/30">
-        <Link
-          href="/dashboard"
-          onClick={onClose}
-          className="flex items-center justify-center gap-1.5 w-full py-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-950 rounded-xl text-xs font-bold border border-amber-300 shadow-xs transition"
-        >
-          <ArrowLeft className="w-3.5 h-3.5 text-amber-700" />
-          <span>Master Admin Masasına Dön</span>
-        </Link>
         <Link
           href="/"
           onClick={onClose}
