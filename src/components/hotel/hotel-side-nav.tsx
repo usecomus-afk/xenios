@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { BrandMark } from "@/components/brand-mark";
 import { XeniosStore } from "@/lib/store";
@@ -61,6 +62,7 @@ export function HotelSideNav({ isOpen, onClose }: HotelSideNavProps) {
   const navItems = [
     { href: "/hotel-portal", label: "Otel Yönetim Paneli", icon: LayoutDashboard },
     { href: "/hotel-portal/requests", label: "Canlı Oda Talepleri", icon: BellRing, badge: pendingReqCount > 0 ? `${pendingReqCount} Canlı` : undefined },
+    { href: "/hotel-portal/kbs", label: "Online Check-in & KBS", iconImage: "/icons/kbs-online-checkin.png" },
     { href: "/hotel-portal/services", label: "Otel İçi Hizmetler & Menü", icon: LayoutGrid },
     { href: "/hotel-portal/rooms", label: "Oda Durumları & Envanter", icon: DoorOpen },
     { href: "/hotel-portal/channels", label: "iCal & OTA Kanalları", icon: CalendarSync },
@@ -131,7 +133,17 @@ export function HotelSideNav({ isOpen, onClose }: HotelSideNavProps) {
               }`}
             >
               <div className="flex items-center gap-3">
-                <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-amber-700' : 'text-zinc-500'}`} />
+                {item.iconImage ? (
+                  <Image 
+                    src={item.iconImage} 
+                    alt={item.label} 
+                    width={18} 
+                    height={18} 
+                    className="w-4 h-4 shrink-0 object-contain" 
+                  />
+                ) : Icon ? (
+                  <Icon className={`h-4 w-4 shrink-0 ${active ? 'text-amber-700' : 'text-zinc-500'}`} />
+                ) : null}
                 <span>{item.label}</span>
               </div>
               {item.badge && (

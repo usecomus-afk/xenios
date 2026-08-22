@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Hotel, Language, XeniosUser } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { LanguageSelector } from './language-selector';
 import { PwaNotificationModal } from '../pwa-notification-modal';
+import { OnlineCheckinModal } from './online-checkin-modal';
 import { PwaNotificationManager } from '@/lib/pwa-notifications';
 import { BrandMark } from '../brand-mark';
 import { XeniosStore } from '@/lib/store';
@@ -53,6 +55,7 @@ export function HotelHeader({
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showHotelModal, setShowHotelModal] = useState(false);
   const [showPwaModal, setShowPwaModal] = useState(false);
+  const [showCheckinModal, setShowCheckinModal] = useState(false);
   const [pwaPerm, setPwaPerm] = useState<NotificationPermission>('default');
 
   useEffect(() => {
@@ -303,19 +306,52 @@ export function HotelHeader({
               </div>
             </div>
 
-            {/* Reception Direct Call & Taleplerim Button */}
+            {/* Reception Direct Call & Online Check-in / Taleplerim */}
             <div className="space-y-2 pt-1">
-              <div className="p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-amber-700" />
-                  <div>
-                    <strong className="text-zinc-900 block">{t.receptionExt}</strong>
-                    <span className="text-[10px] text-zinc-500">Oda telefonundan tuşlayın</span>
+              <div className={hotel.modules?.enable_guest_self_kbs !== false ? "grid grid-cols-2 gap-2" : ""}>
+                {/* 50% Width Reception Extension Badge */}
+                <div className="p-3 rounded-2xl bg-zinc-50 border border-zinc-200 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <Phone className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                    <div className="truncate">
+                      <strong className="text-zinc-900 block text-[11px] truncate">{t.receptionExt}</strong>
+                      <span className="text-[9px] text-zinc-500 block truncate">Dahili Hat</span>
+                    </div>
                   </div>
+                  <strong className="text-xs font-mono text-amber-800 bg-white px-2 py-0.5 rounded-lg border border-amber-200 font-bold shrink-0 ml-1">
+                    {hotel.receptionExt}
+                  </strong>
                 </div>
-                <strong className="text-sm font-mono text-amber-800 bg-white px-3 py-1 rounded-xl border border-amber-200 font-bold">
-                  {hotel.receptionExt}
-                </strong>
+
+                {/* 50% Width Online Check-in & KBS Button */}
+                {hotel.modules?.enable_guest_self_kbs !== false && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowHotelModal(false);
+                      setShowCheckinModal(true);
+                    }}
+                    className="p-2.5 rounded-2xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 border border-amber-300/80 flex items-center gap-2 text-left transition cursor-pointer group shadow-2xs"
+                  >
+                    <div className="w-7 h-7 rounded-xl bg-white border border-amber-200 flex items-center justify-center shrink-0 p-0.5 shadow-2xs">
+                      <Image 
+                        src="/icons/kbs-online-checkin.png" 
+                        alt="Online Check-in" 
+                        width={24} 
+                        height={24} 
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <strong className="text-[11px] font-bold text-amber-950 block truncate group-hover:text-amber-900">
+                        Online Check-in
+                      </strong>
+                      <span className="text-[9px] text-amber-700 block truncate">
+                        Kimlik & KBS
+                      </span>
+                    </div>
+                  </button>
+                )}
               </div>
 
               {onOpenRequests && (
@@ -344,6 +380,16 @@ export function HotelHeader({
           setPwaPerm(PwaNotificationManager.getPermission()); 
         }} 
       />
+
+      {/* ONLINE CHECK-IN & KBS MODAL */}
+      {showCheckinModal && (
+        <OnlineCheckinModal
+          hotel={hotel}
+          roomNumber={roomNumber}
+          lang={lang}
+          onClose={() => setShowCheckinModal(false)}
+        />
+      )}
     </header>
   );
 }

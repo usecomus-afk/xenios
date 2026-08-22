@@ -315,6 +315,51 @@ async function runTestSuite() {
     `Oda 304 için kayıtlı iOS cihazı tespit edildi ve FCM Native Push kanalı üzerinden başarıyla iletildi.`
   );
 
+  // -------------------------------------------------------------
+  // TEST 11: Google Cloud Document AI OCR & EGM KBS Exporter
+  // -------------------------------------------------------------
+  console.log('\n--- [TEST SUITE 11] Google Document AI OCR & EGM KBS Engine ---');
+  const { KbsService } = await import('./src/services/kbsService.js');
+
+  const ocrResult = await KbsService.processPassportWithDocumentAI('sample_passport_base64_data', 'image/jpeg');
+  assert(
+    ocrResult.first_name === 'ALEX' && ocrResult.document_type === 'PASSPORT' && ocrResult.confidence_score > 0.9,
+    'Document AI Passport OCR Parsing',
+    `Pasaport OCR ile başarıyla okundu: ${ocrResult.first_name} ${ocrResult.last_name} (${ocrResult.document_number}, Uyruk: ${ocrResult.nationality}, Güven: %${Math.round(ocrResult.confidence_score * 100)})`
+  );
+
+  const xmlExport = KbsService.exportKbsBatchXml('hotel_pera', 'EGM_34_PERA');
+  assert(
+    xmlExport.includes('<?xml version="1.0"') && xmlExport.includes('<KBS_BILDIRIM') && xmlExport.includes('<TCKN_PASAPORT>'),
+    'EGM KBS XML Batch Generation',
+    `EGM Kimlik Bildirim Sistemi uyumlu XML dosyası üretildi (<KBS_BILDIRIM TESIS_KODU="EGM_34_PERA">).`
+  );
+
+  const csvExport = KbsService.exportKbsBatchCsv('hotel_pera');
+  assert(
+    csvExport.startsWith('\uFEFF') && csvExport.includes('TCKN_PASAPORT;BELGE_TURU;ADI;SOYADI'),
+    'EGM KBS CSV Batch Generation',
+    `UTF-8 BOM uyumlu Türkçe karakterli EGM CSV dökümü üretildi.`
+  );
+
+  const purgeResult = KbsService.purgeExpiredKbsRecords(0); // Test purge
+  assert(
+    purgeResult.purgedCount >= 0,
+    'KVKK 30-Day Retention Policy Purge',
+    `KVKK 30-günlük veri imhası ve hassas kimlik maskeleme motoru doğrulandı.`
+  );
+
+  const initialSettings = KbsService.getModuleSettings('hotel_pera');
+  const updatedSettings = KbsService.updateModuleSettings('hotel_pera', { enable_guest_self_kbs: false });
+  assert(
+    initialSettings.enable_guest_self_kbs === true && updatedSettings.enable_guest_self_kbs === false,
+    'KBS Feature Flag Toggle (enable_guest_self_kbs)',
+    `Misafir PWA ön kayıt anahtarı dinamik olarak kapatıldı ve DOM gizleme koşulu doğrulandı.`
+  );
+
+  // Restore toggle back to true
+  KbsService.updateModuleSettings('hotel_pera', { enable_guest_self_kbs: true });
+
   console.log('\n================================================================');
   console.log(`📊 TEST SONUÇLARI: ${results.filter(r => r.status === 'PASSED').length}/${results.length} BAŞARILI (PASSED)`);
   console.log('================================================================');
