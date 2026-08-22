@@ -9,6 +9,11 @@ export interface Room {
   wifiPass: string;
 }
 
+export interface HotelModules {
+  enable_guest_self_kbs?: boolean;
+  [key: string]: any;
+}
+
 export interface Hotel {
   id: string;
   name: string;
@@ -25,6 +30,7 @@ export interface Hotel {
   checkoutTime: string;
   receptionExt: string;
   featured?: boolean;
+  modules?: HotelModules;
 }
 
 export type ExperienceStatus = 'active' | 'suspended';
