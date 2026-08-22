@@ -3,7 +3,7 @@
  * Generates Official Google Things to Do XML/JSON Product & Availability Catalog Feeds
  */
 
-import experiencesData from '@/data/experiences.json';
+import experiencesData from '../data/experiences.json';
 
 export class GoogleThingsToDoService {
   /**
