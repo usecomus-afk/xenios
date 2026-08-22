@@ -1,23 +1,32 @@
 import { NextResponse } from 'next/server';
-import { KbsService } from '@/services/kbsService';
+import { KbsService, parsePassportMRZ } from '@/services/kbsService';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { base64Image, mimeType = 'image/jpeg' } = body;
+    const { image, base64Image, mimeType = 'image/jpeg', mrzText } = body;
+    const rawImage = image || base64Image;
 
-    if (!base64Image) {
+    if (!rawImage && !mrzText) {
       return NextResponse.json(
-        { success: false, error: 'base64Image parametresi zorunludur.' },
+        { success: false, error: 'Pasaport görseli (image/base64Image) veya MRZ metni zorunludur.' },
         { status: 400 }
       );
     }
 
-    const parsedData = await KbsService.processPassportWithDocumentAI(base64Image, mimeType);
+    let parsedData;
+    if (mrzText) {
+      parsedData = parsePassportMRZ(mrzText);
+    }
+    
+    if (!parsedData && rawImage) {
+      parsedData = await KbsService.processPassportWithDocumentAI(rawImage, mimeType);
+    }
 
     return NextResponse.json({
       success: true,
       parsedData,
+      record: parsedData, // Compatible with both DTO shapes
       message: 'Pasaport Google Document AI OCR ile başarıyla okundu.'
     });
   } catch (err: any) {

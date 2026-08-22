@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Hotel, Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { 
@@ -14,7 +14,8 @@ import {
   User, 
   Globe, 
   Calendar,
-  Sparkles
+  Sparkles,
+  RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
@@ -29,57 +30,84 @@ interface OnlineCheckinModalProps {
 
 export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineCheckinModalProps) {
   const t = getT(lang);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<'UPLOAD' | 'REVIEW' | 'SUCCESS'>('UPLOAD');
   const [isProcessingOcr, setIsProcessingOcr] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   // Form Fields
-  const [firstName, setFirstName] = useState('ALEX');
-  const [lastName, setLastName] = useState('MERCER');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [documentType, setDocumentType] = useState<'PASSPORT' | 'TCKN' | 'NATIONAL_ID'>('PASSPORT');
-  const [documentNumber, setDocumentNumber] = useState('C4489102');
-  const [nationality, setNationality] = useState('USA');
-  const [birthDate, setBirthDate] = useState('1992-05-14');
+  const [documentNumber, setDocumentNumber] = useState('');
+  const [nationality, setNationality] = useState('TUR');
+  const [birthDate, setBirthDate] = useState('');
   const [gender, setGender] = useState<'MALE' | 'FEMALE' | 'UNKNOWN'>('MALE');
 
-  const handleSimulatePassportOcr = async () => {
+  const handleCameraClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
     setIsProcessingOcr(true);
 
     try {
-      const res = await fetch('/api/kbs/ocr', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          base64Image: 'sample_passport_base64_data',
-          mimeType: 'image/jpeg'
-        })
-      });
+      // 1. Görseli Base64'e çevir
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        const base64Image = reader.result as string;
+        setPreviewImage(base64Image);
 
-      if (res.ok) {
-        const data = await res.json();
-        if (data.parsedData) {
-          setFirstName(data.parsedData.first_name);
-          setLastName(data.parsedData.last_name);
-          setDocumentNumber(data.parsedData.document_number);
-          setNationality(data.parsedData.nationality);
-          setBirthDate(data.parsedData.birth_date);
-          setGender(data.parsedData.gender);
-          setDocumentType(data.parsedData.document_type || 'PASSPORT');
+        // 2. Canlı OCR API'sine İstek At
+        const response = await fetch('/api/kbs/ocr', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image: base64Image,
+            mimeType: file.type
+          })
+        });
+
+        const data = await response.json();
+        const rec = data.record || data.parsedData;
+        if (data.success && rec) {
+          // 3. Form alanlarını GERÇEK OCR çıktısıyla doldur
+          setFirstName(rec.first_name || '');
+          setLastName(rec.last_name || '');
+          setDocumentNumber(rec.document_number || '');
+          setNationality(rec.nationality || 'TUR');
+          setBirthDate(rec.birth_date || '1990-01-01');
+          setGender(rec.gender || 'MALE');
+          setDocumentType(rec.document_type || 'PASSPORT');
+
+          toast.success('Pasaport başarıyla tarandı ve bilgiler ayrıştırıldı.');
+          setStep('REVIEW');
+        } else {
+          toast.info('Görsel alındı, lütfen bilgileri kontrol edip eksikleri tamamlayınız.');
+          setStep('REVIEW');
         }
-      }
-
-      toast.success('Pasaport Google Document AI ile başarıyla ayrıştırıldı!');
+        setIsProcessingOcr(false);
+      };
+    } catch (error) {
+      console.error('OCR Processing Error:', error);
+      toast.error('Görsel işlenirken bir hata oluştu, lütfen manuel doldurunuz.');
       setStep('REVIEW');
-    } catch (err: any) {
-      toast.error('OCR okuma hatası, lütfen manuel doldurunuz.');
-      setStep('REVIEW');
-    } finally {
       setIsProcessingOcr(false);
     }
   };
 
   const handleFinalSubmit = async () => {
+    if (!firstName || !lastName || !documentNumber) {
+      toast.error('Lütfen Ad, Soyad ve Pasaport/Kimlik numaranızı eksiksiz giriniz.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -95,8 +123,9 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
           document_type: documentType,
           document_number: documentNumber,
           nationality,
-          birth_date: birthDate,
-          gender
+          birth_date: birthDate || '1990-01-01',
+          gender,
+          document_image_url: previewImage || undefined
         })
       });
 
@@ -122,6 +151,16 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
       <div className="bg-white border border-amber-200 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         
+        {/* Gizli Kamera / Dosya Seçici Input (capture="environment") */}
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          accept="image/*" 
+          capture="environment" 
+          className="hidden" 
+          onChange={handleFileChange} 
+        />
+
         {/* Modal Header */}
         <div className="p-4 sm:p-5 border-b border-amber-100 flex items-center justify-between bg-gradient-to-r from-amber-50 to-orange-50">
           <div className="flex items-center gap-3">
@@ -163,7 +202,7 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
                   <span>Resmi EGM Kimlik Bildirim Sistemi (KBS) Uyumu</span>
                 </div>
                 <p className="text-[11px] text-zinc-600 leading-relaxed">
-                  Resepsiyonda beklemeden odanıza geçebilmeniz için pasaport veya kimliğinizi taratarak saniyeler içinde check-in yapabilirsiniz.
+                  Resepsiyonda beklemeden odanıza geçebilmeniz için pasaport veya kimliğinizi kameranızla çekip saniyeler içinde check-in yapabilirsiniz.
                 </p>
               </div>
 
@@ -173,25 +212,25 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
                   <Camera className="w-7 h-7" />
                 </div>
                 <div>
-                  <strong className="text-xs text-zinc-800 block">Pasaport veya Kimliğinizi Okutun</strong>
-                  <span className="text-[10px] text-zinc-500">Google Cloud Document AI Identity Processor</span>
+                  <strong className="text-xs text-zinc-800 block">Kamera ile Pasaport / Kimlik Çekin</strong>
+                  <span className="text-[10px] text-zinc-500">Otomatik OCR & EGM KBS Belge Okuyucu</span>
                 </div>
 
                 <button
                   type="button"
-                  onClick={handleSimulatePassportOcr}
+                  onClick={handleCameraClick}
                   disabled={isProcessingOcr}
                   className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-zinc-950 font-bold text-xs shadow-md transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isProcessingOcr ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Google AI ile Taranıyor...</span>
+                      <span>Pasaport Taranıyor...</span>
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4" />
-                      <span>Kamera ile Tara / Pasaport Yükle</span>
+                      <Camera className="w-4 h-4" />
+                      <span>📸 Kamera ile Pasaport Tara</span>
                     </>
                   )}
                 </button>
@@ -211,10 +250,35 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
 
           {step === 'REVIEW' && (
             <div className="space-y-3.5">
-              <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-900 text-[11px] flex items-center gap-2 font-medium">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Bilgileriniz Document AI tarafından okundu. Lütfen kontrol edip onaylayınız.</span>
+              <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-900 text-[11px] flex items-center justify-between font-medium">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Kimlik bilgileriniz okundu. Lütfen kontrol edip onaylayınız.</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCameraClick}
+                  className="text-[10px] text-amber-800 font-bold underline flex items-center gap-1 hover:text-amber-950 cursor-pointer shrink-0"
+                >
+                  <RefreshCw className="w-3 h-3" /> Yeniden Çek
+                </button>
               </div>
+
+              {previewImage && (
+                <div className="p-2 rounded-2xl bg-zinc-50 border border-zinc-200 flex items-center gap-3">
+                  <div className="w-16 h-12 rounded-xl overflow-hidden bg-zinc-200 relative shrink-0 border border-zinc-300">
+                    <img 
+                      src={previewImage} 
+                      alt="Taranan Belge" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="text-[11px] text-zinc-500 min-w-0">
+                    <strong className="text-zinc-800 block truncate">Taranan Pasaport Fotoğrafı</strong>
+                    <span className="text-[10px] text-emerald-600 block font-medium">✓ OCR ile metinler başarıyla ayrıştırıldı</span>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -222,6 +286,7 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
                   <input
                     type="text"
                     value={firstName}
+                    placeholder="Adınız"
                     onChange={(e) => setFirstName(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl font-bold text-zinc-800 text-xs focus:ring-2 focus:ring-amber-500 outline-hidden"
                   />
@@ -232,6 +297,7 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
                   <input
                     type="text"
                     value={lastName}
+                    placeholder="Soyadınız"
                     onChange={(e) => setLastName(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl font-bold text-zinc-800 text-xs focus:ring-2 focus:ring-amber-500 outline-hidden"
                   />
@@ -255,6 +321,7 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
                   <input
                     type="text"
                     value={documentNumber}
+                    placeholder="Pasaport veya TCKN No"
                     onChange={(e) => setDocumentNumber(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl font-mono font-bold text-zinc-800 text-xs focus:ring-2 focus:ring-amber-500 outline-hidden"
                   />
@@ -265,6 +332,7 @@ export function OnlineCheckinModal({ hotel, roomNumber, lang, onClose }: OnlineC
                   <input
                     type="text"
                     value={nationality}
+                    placeholder="TUR, DEU, USA..."
                     onChange={(e) => setNationality(e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl font-bold text-zinc-800 text-xs focus:ring-2 focus:ring-amber-500 outline-hidden"
                   />

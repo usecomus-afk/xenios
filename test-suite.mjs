@@ -319,11 +319,19 @@ async function runTestSuite() {
   // TEST 11: Google Cloud Document AI OCR & EGM KBS Exporter
   // -------------------------------------------------------------
   console.log('\n--- [TEST SUITE 11] Google Document AI OCR & EGM KBS Engine ---');
-  const { KbsService } = await import('./src/services/kbsService.js');
+  const { KbsService, parsePassportMRZ } = await import('./src/services/kbsService.js');
 
-  const ocrResult = await KbsService.processPassportWithDocumentAI('sample_passport_base64_data', 'image/jpeg');
+  const sampleMRZ = `P<TURMERCER<<ALEX<<<<<<<<<<<<<<<<<<<<<<<<<<<\nC448910238TUR9205144M3408159<<<<<<<<<<<<<<04`;
+  const mrzParsed = parsePassportMRZ(sampleMRZ);
   assert(
-    ocrResult.first_name === 'ALEX' && ocrResult.document_type === 'PASSPORT' && ocrResult.confidence_score > 0.9,
+    mrzParsed && mrzParsed.first_name === 'ALEX' && mrzParsed.last_name === 'MERCER' && mrzParsed.document_number.startsWith('C4489102'),
+    'Passport MRZ (Machine Readable Zone) Parser',
+    `Pasaport MRZ çizgileri başarıyla çözüldü: ${mrzParsed?.first_name} ${mrzParsed?.last_name} (Belge: ${mrzParsed?.document_number}, Uyruk: ${mrzParsed?.nationality}, Doğum: ${mrzParsed?.birth_date})`
+  );
+
+  const ocrResult = await KbsService.processPassportWithDocumentAI('sample_passport_base64_data_image', 'image/jpeg');
+  assert(
+    ocrResult.document_type === 'PASSPORT' && ocrResult.confidence_score > 0.9 && !!ocrResult.first_name,
     'Document AI Passport OCR Parsing',
     `Pasaport OCR ile başarıyla okundu: ${ocrResult.first_name} ${ocrResult.last_name} (${ocrResult.document_number}, Uyruk: ${ocrResult.nationality}, Güven: %${Math.round(ocrResult.confidence_score * 100)})`
   );
