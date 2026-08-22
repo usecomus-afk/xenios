@@ -1,0 +1,30 @@
+{
+  "appId": "com.xenios.app",
+  "appName": "Xenios",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://xenios.usecomus.com",
+    "cleartext": false,
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    },
+    "Camera": {
+      "presentationStyle": "fullscreen"
+    },
+    "Geolocation": {
+      "enableHighAccuracy": true
+    },
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#18181b",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false
+    }
+  }
+}

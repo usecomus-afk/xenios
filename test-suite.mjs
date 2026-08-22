@@ -277,6 +277,44 @@ async function runTestSuite() {
     `Tüm 7 dış entegrasyon servisi "HEALTHY" durumunda (Ortalama yanıt süresi: < 100ms).`
   );
 
+  // -------------------------------------------------------------
+  // TEST 10: FCM Native Push & Smart Notification Dispatcher
+  // -------------------------------------------------------------
+  console.log('\n--- [TEST SUITE 10] FCM Native Push & Smart Dispatcher ---');
+  const { FcmPushService } = await import('./src/services/fcmPushService.js');
+  const { NotificationDispatcher } = await import('./src/services/notificationDispatcher.js');
+
+  const regResult = NotificationDispatcher.registerDevice({
+    deviceToken: 'fcm_token_sample_ios_device_pera_304',
+    platform: 'ios',
+    userId: 'user_alex_01',
+    role: 'guest',
+    hotelId: 'hotel_pera',
+    roomNumber: '304',
+    phone: '+90 532 555 44 33',
+    lastActive: new Date().toISOString()
+  });
+
+  assert(
+    regResult.success && regResult.deviceCount >= 1,
+    'FCM / APNs Device Registration',
+    `iOS cihaz token'ı başarıyla kaydedildi (${regResult.deviceCount} aktif cihaz).`
+  );
+
+  const smartDispatchRes = await NotificationDispatcher.dispatchSmartNotification({
+    title: '🛎️ Oda Servisi Yolda',
+    body: 'Talebiniz olan ekstra havlu 5 dakika içinde odanıza ulaştırılacaktır.',
+    hotelId: 'hotel_pera',
+    roomNumber: '304',
+    urgency: 'HIGH'
+  });
+
+  assert(
+    smartDispatchRes.success && smartDispatchRes.deliveredChannel === 'FCM_NATIVE',
+    'Smart Dispatcher FCM Routing',
+    `Oda 304 için kayıtlı iOS cihazı tespit edildi ve FCM Native Push kanalı üzerinden başarıyla iletildi.`
+  );
+
   console.log('\n================================================================');
   console.log(`📊 TEST SONUÇLARI: ${results.filter(r => r.status === 'PASSED').length}/${results.length} BAŞARILI (PASSED)`);
   console.log('================================================================');
