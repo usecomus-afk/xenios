@@ -1,59 +1,62 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Hotels & Experiences & Properties: Publicly readable, writeable by Master Admin
-    match /hotels/{hotelId} {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (request.auth.token.role == 'admin' || request.auth.token.email == 'anilaslan@usecomus.com');
+    }
+
+    function isPilotOrHotelManager() {
+      return isAuthenticated() && (request.auth.token.role in ['admin', 'pilot', 'hotel_manager']);
+    }
+
+    function isGuestOwner(guestId) {
+      return isAuthenticated() && request.auth.uid == guestId;
+    }
+
+    // 1. Listings (İlanlar)
+    // Herkes aktif ilanları okuyabilir, sadece admin ve yetkili acenteler yazabilir
+    match /listings/{listingId} {
       allow read: if true;
-      allow write: if request.auth != null || true;
+      allow write: if isAdmin();
     }
-    
-    match /experiences/{expId} {
+
+    // 2. Listing Slots (Seans ve Kapasite)
+    // Herkes seans uygunluğunu okuyabilir; DOĞRUDAN İSTEMCİ YAZIMLARI YASAKTIR.
+    // Stok güncellemeleri yalnızca Cloud Functions (Admin SDK / runTransaction) ile yapılır.
+    match /listing_slots/{slotId} {
       allow read: if true;
-      allow write: if request.auth != null || true;
+      allow write: if false; 
     }
-    
-    match /properties/{propId} {
-      allow read: if true;
-      allow write: if request.auth != null || true;
+
+    // 3. Inventory Locks (10 Dakikalık Geçici Koltuk Kilitleri)
+    // İstemciler kilit oluşturamaz veya değiştiremez. Yalnızca kilit sahibi misafir veya yetkili okuyabilir.
+    match /inventory_locks/{lockId} {
+      allow read: if isAuthenticated() && (
+        isGuestOwner(resource.data.guest_id) || 
+        isPilotOrHotelManager()
+      );
+      allow write: if false; // Sadece Cloud Functions reserveInventorySlot & cleanup yönetir
     }
-    
-    // Live Service Requests: Guest can create, Hotel staff can read and update
-    match /service_requests/{reqId} {
-      allow read, write: if true;
-    }
-    
-    // Bookings & Virtual POS: Guest can create, Admin & Hotel can read
+
+    // 4. Bookings (Kesinleşen Rezervasyonlar)
+    // Misafir kendi biletini görebilir, otel konsiyerj ve pilot masası tüm biletleri denetleyebilir.
     match /bookings/{bookingId} {
-      allow read, write: if true;
-    }
-    
-    // Tourist Complaints: Guest can create, Hakem masası can update
-    match /complaints/{complaintId} {
-      allow read, write: if true;
-    }
-
-    // Real Estate Investment Leads: Guest can create, Xenios & Partners can read
-    match /investment_leads/{leadId} {
-      allow read, write: if true;
+      allow read: if isAuthenticated() && (
+        isGuestOwner(resource.data.guest_details.guest_id) || 
+        isPilotOrHotelManager()
+      );
+      allow write: if false; // Sadece Webhook ve Cloud Function onaylar
     }
 
-    // Central Notifications Log: Dispatched to hi@usecomus.com
-    match /notifications_log/{logId} {
-      allow read, write: if true;
-    }
-
-    // AI Concierge Conversation Logs & Insights
-    match /ai_logs/{logId} {
-      allow read, write: if true;
-    }
-
-    // Master Project Admins & Founders
-    match /admins/{adminId} {
-      allow read, write: if true;
-    }
-
-    match /users/{userId} {
-      allow read, write: if true;
+    // 5. Fail-Safe Alert Queue
+    match /system_alerts/{alertId} {
+      allow read, write: if isAdmin();
     }
   }
 }
