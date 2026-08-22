@@ -63,7 +63,6 @@ export default function HotelKbsPage() {
       currentHotel.modules.enable_guest_self_kbs = nextState;
     } else {
       currentHotel.modules = {
-        ...currentHotel.modules,
         enable_guest_self_kbs: nextState
       };
     }
