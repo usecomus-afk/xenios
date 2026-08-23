@@ -1,4 +1,5 @@
 import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap, PropertyListing, InvestmentLead, InRoomServiceItem } from './types';
+import { UserPreferences } from '@/types/comusAi';
 import rawHotels from '@/data/hotels.json';
 import rawExperiences from '@/data/experiences.json';
 import rawProperties from '@/data/properties.json';
@@ -12,6 +13,7 @@ const STORAGE_KEYS = {
   REQUESTS: 'xenios_live_requests',
   BOOKINGS: 'xenios_bookings',
   PROFILE: 'xenios_guest_profile',
+  USER_PREFERENCES: 'xenios_user_preferences',
   COMPLAINTS: 'xenios_tourist_complaints',
   CURRENT_USER: 'xenios_auth_user',
   MODULE_SETTINGS: 'xenios_module_settings',
@@ -266,7 +268,6 @@ export const XeniosStore = {
     this.savePropertyListings(list);
   },
 
-  // Sessizce toplanan nitelikli veri: görüntülenen mülk tiplerinden basit persona tahmini
   trackPropertyView(property: PropertyListing) {
     const profile = this.getGuestProfile();
     const viewed = [...(profile.investPropertyTypesViewed ?? []), property.propertyType].slice(-20);
@@ -321,7 +322,7 @@ export const XeniosStore = {
     safeSet(STORAGE_KEYS.LANG, lang);
   },
 
-      // In-Room Service Requests (Pure Real Data)
+  // In-Room Service Requests
   getRequests(): ServiceRequest[] {
     try {
       const stored = safeGet(STORAGE_KEYS.REQUESTS);
@@ -380,7 +381,7 @@ export const XeniosStore = {
     }
   },
 
-  // Cockpit: Otel İçi Hizmet Modülleri Yönetimi (aktif/pasif, gizleme, fiyat, içerik)
+  // Cockpit: Otel İçi Hizmet Modülleri Yönetimi
   getModuleSettings(): ModuleAdminSettingsMap {
     try {
       const stored = safeGet(STORAGE_KEYS.MODULE_SETTINGS);
@@ -403,7 +404,7 @@ export const XeniosStore = {
     } catch (e) {}
   },
 
-  // Otel İçi Hizmetler (In-Room Services) Tam Yönetimi (Ekle, Düzenle, Sil, Sırala)
+  // In-Room Services
   getInRoomServices(): InRoomServiceItem[] {
     const defaultServices: InRoomServiceItem[] = [
       { id: 'breakfast', key: 'breakfast', label: 'Kahvaltı Talebi', desc: 'Odaya sıcak kahvaltı servisi', icon: '/icons/menu/breakfast.png', department: 'Room Service (Mutfak KDS)', enabled: true, hidden: false, order: 1 },
@@ -432,7 +433,6 @@ export const XeniosStore = {
       }
     } catch (e) {}
 
-    // Merge moduleSettings for enabled/hidden
     const moduleSettings = this.getModuleSettings();
     return items.map(item => {
       const ms = moduleSettings[item.key];
@@ -455,7 +455,6 @@ export const XeniosStore = {
 
     try {
       safeSet(STORAGE_KEYS.IN_ROOM_SERVICES, JSON.stringify(list));
-      // Also update moduleSettings for fast boolean queries
       this.setModuleSetting(item.key, {
         enabled: item.enabled,
         hidden: item.hidden,
@@ -472,7 +471,6 @@ export const XeniosStore = {
     if (item?.isCustom) {
       list = list.filter(s => s.id !== idOrKey && s.key !== idOrKey);
     } else if (item) {
-      // For default items, mark hidden
       item.hidden = true;
     }
     try {
@@ -497,7 +495,6 @@ export const XeniosStore = {
     } catch (e) {}
   },
 
-    // Demo / Sample Data Control
   isDemoDataHidden(): boolean {
     return safeGet(STORAGE_KEYS.HIDE_DEMO_DATA) === '1';
   },
@@ -512,7 +509,7 @@ export const XeniosStore = {
     }
   },
 
-      // Bookings & Virtual POS (Pure Real Data)
+  // Bookings & Virtual POS
   getBookings(): Booking[] {
     try {
       const stored = safeGet(STORAGE_KEYS.BOOKINGS);
@@ -566,7 +563,7 @@ export const XeniosStore = {
     return {
       travelStyle: 'couple',
       budgetLevel: 'luxury',
-      interests: ['Boğaz Turları', 'Tarih', 'Gastronomi', 'Hamam', 'Yatırım'],
+      interests: ['Boğaz Turları', 'Tarih', 'Gastronomi', 'Hamam', 'Yatırım', 'Medikal Estetik'],
       dietaryRestrictions: ['Helal', 'Deniz Ürünleri'],
       kvkkConsent: false
     };
@@ -578,13 +575,143 @@ export const XeniosStore = {
     } catch (e) {}
   },
 
-  // KVKK: misafirin dilediği zaman tüm kişisel/sağlık verilerini ve onayını silme hakkı
   clearGuestProfile() {
     const cleared: GuestProfile = { kvkkConsent: false };
     try {
       safeSet(STORAGE_KEYS.PROFILE, JSON.stringify(cleared));
     } catch (e) {}
     return cleared;
+  },
+
+  // -------------------------------------------------------------
+  // Comus AI User Preferences & Viewed Listings State Engine
+  // -------------------------------------------------------------
+  getUserPreferences(): UserPreferences {
+    try {
+      const stored = safeGet(STORAGE_KEYS.USER_PREFERENCES);
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+
+    // Default Initial State for Alex Mercer
+    return {
+      guest_id: 'usr_alex_304',
+      first_name: 'Alex',
+      last_name: 'Mercer',
+      hotel_info: {
+        hotel_id: this.getActiveHotelId(),
+        hotel_name: 'Pera Palace Hotel',
+        room_number: this.getActiveRoomId(),
+        district: 'Beyoğlu',
+        location: { lat: 41.0312, lng: 28.9744 }
+      },
+      know_me_profile: {
+        travel_purpose: 'HEALTH_AESTHETICS',
+        interests: {
+          aesthetic_and_wellness: {
+            interested: true,
+            sub_categories: ['HYDRAFACIAL', 'SPA_MASSAGE', 'HAMMAM', 'BOTOX_FILLERS']
+          },
+          gastronomy: true,
+          bosphorus_tours: true,
+          real_estate_investment: false,
+          nightlife_pubcrawl: false
+        },
+        budget_tier: 'LUXURY'
+      },
+      viewed_listings_history: [
+        {
+          listing_id: 'exp-1',
+          title: 'Tarihi Cağaloğlu Hamamı Masaj & Kese',
+          category: 'Kültür & Hamam',
+          district: 'Sultanahmet',
+          viewed_at: new Date(Date.now() - 3600000).toISOString()
+        },
+        {
+          listing_id: 'exp-aesthetic-1',
+          title: 'Quartz Clinique – Nişantaşı Glow & Fraksiyonel Cilt Yenileme',
+          category: 'Medikal Estetik',
+          district: 'Nişantaşı / Şişli',
+          viewed_at: new Date(Date.now() - 1800000).toISOString()
+        }
+      ],
+      blacklisted_offers: [],
+      booked_itinerary: [
+        {
+          booking_id: 'bk_sample_01',
+          title: 'Mega Lüfer Sunset Dinner Cruise',
+          category: 'Boğaz & Tekne',
+          location_name: 'Kabataş İskelesi',
+          district: 'Beyoğlu',
+          location_coordinates: { lat: 41.0365, lng: 28.9895 },
+          date: '2026-08-24',
+          start_time: '19:30',
+          end_time: '22:30',
+          status: 'CONFIRMED'
+        }
+      ]
+    };
+  },
+
+  saveUserPreferences(prefs: UserPreferences) {
+    safeSet(STORAGE_KEYS.USER_PREFERENCES, JSON.stringify(prefs));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_user_preferences_updated'));
+    }
+  },
+
+  updateUserPreferences(partial: Partial<UserPreferences>) {
+    const current = this.getUserPreferences();
+    const updated = {
+      ...current,
+      ...partial,
+      hotel_info: { ...current.hotel_info, ...(partial.hotel_info || {}) },
+      know_me_profile: { ...current.know_me_profile, ...(partial.know_me_profile || {}) }
+    };
+    this.saveUserPreferences(updated);
+    return updated;
+  },
+
+  addViewedListing(listing: { listing_id: string; title: string; category: string; district: string }) {
+    const prefs = this.getUserPreferences();
+    const history = [...(prefs.viewed_listings_history || [])];
+    
+    // Avoid immediate duplicate
+    if (history.length === 0 || history[history.length - 1].listing_id !== listing.listing_id) {
+      history.push({
+        ...listing,
+        viewed_at: new Date().toISOString()
+      });
+      // Keep last 15
+      if (history.length > 15) history.shift();
+      prefs.viewed_listings_history = history;
+      this.saveUserPreferences(prefs);
+    }
+  },
+
+  addBlacklistedOffer(topic_or_category: string, reason?: string) {
+    const prefs = this.getUserPreferences();
+    const list = [...(prefs.blacklisted_offers || [])];
+    if (!list.some(b => b.topic_or_category.toUpperCase() === topic_or_category.toUpperCase())) {
+      list.push({
+        topic_or_category: topic_or_category.toUpperCase(),
+        rejected_at: new Date().toISOString(),
+        reason: reason || 'Kullanıcı ilgilenmediğini belirtti'
+      });
+      prefs.blacklisted_offers = list;
+      this.saveUserPreferences(prefs);
+    }
+  },
+
+  getBookedItinerary() {
+    return this.getUserPreferences().booked_itinerary || [];
+  },
+
+  addToBookedItinerary(item: UserPreferences['booked_itinerary'][0]) {
+    const prefs = this.getUserPreferences();
+    const list = [...(prefs.booked_itinerary || [])];
+    list.push(item);
+    prefs.booked_itinerary = list;
+    this.saveUserPreferences(prefs);
   },
 
   getAiIntroDismissed(): boolean {
@@ -595,7 +722,7 @@ export const XeniosStore = {
     safeSet('xenios_ai_intro_dismissed', v ? '1' : '0');
   },
 
-        // Tourist Complaints & Fraud Dispute Desk (Pure Real Data)
+  // Tourist Complaints
   getComplaints(): Complaint[] {
     try {
       const stored = safeGet(STORAGE_KEYS.COMPLAINTS);

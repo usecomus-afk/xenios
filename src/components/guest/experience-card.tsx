@@ -3,6 +3,7 @@
 import { Experience, Hotel, Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
+import { XeniosStore } from '@/lib/store';
 import { MapPin, Clock, Star, Navigation, CreditCard, Info, Phone, Globe, Utensils, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
@@ -53,11 +54,23 @@ export function ExperienceCard({
     return raw;
   };
 
+  const handleSelectWithTracking = () => {
+    try {
+      XeniosStore.addViewedListing({
+        listing_id: experience.id,
+        title: experience.title,
+        category: experience.category,
+        district: experience.location
+      });
+    } catch (e) {}
+    onSelect(experience);
+  };
+
   return (
     <div className="bg-white rounded-3xl overflow-hidden border border-amber-200/70 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
       {/* Clickable Card Header & Image Area */}
       <div 
-        onClick={() => onSelect(experience)}
+        onClick={handleSelectWithTracking}
         className="cursor-pointer"
       >
         {/* Photo + Category + Rating Tag */}

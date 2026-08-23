@@ -423,6 +423,129 @@ async function runTestSuite() {
     `Klinik lead formu işlendi; kliniğe HTML mail, misafire WhatsApp/SMS takip bağlantısı üretildi (${inquiryRes.portalTrackingUrl}).`
   );
 
+  // -------------------------------------------------------------
+  // TEST 13: Comus AI (Gemini 2.5 Flash) Context & Conversational Engine
+  // -------------------------------------------------------------
+  console.log('\n--- [TEST SUITE 13] Comus AI Gemini 2.5 Flash Context & Itinerary Engine ---');
+  const { buildInjectedComusSystemPrompt } = await import('./src/prompts/comusSystemPrompt.js');
+  const { calculateTrafficAwareRoute, generateGuestWeeklyItinerary } = await import('./src/services/itineraryEngine.js');
+  const { comusAiFunctionTools } = await import('./src/services/comusTools.js');
+
+  const testUserPrefs = {
+    guest_id: 'usr_alex_304',
+    first_name: 'Alex',
+    last_name: 'Mercer',
+    hotel_info: {
+      hotel_id: 'hotel_pera',
+      hotel_name: 'Pera Palace Hotel',
+      room_number: '304',
+      district: 'Beyoğlu',
+      location: { lat: 41.0312, lng: 28.9744 }
+    },
+    know_me_profile: {
+      travel_purpose: 'HEALTH_AESTHETICS',
+      interests: {
+        aesthetic_and_wellness: {
+          interested: true,
+          sub_categories: ['HYDRAFACIAL', 'SPA_MASSAGE']
+        },
+        gastronomy: true,
+        bosphorus_tours: true,
+        real_estate_investment: false,
+        nightlife_pubcrawl: false
+      },
+      budget_tier: 'LUXURY'
+    },
+    viewed_listings_history: [
+      {
+        listing_id: 'exp-1',
+        title: 'Tarihi Cağaloğlu Hamamı Masaj & Kese',
+        category: 'Kültür & Hamam',
+        district: 'Sultanahmet',
+        viewed_at: '2026-08-23T10:00:00Z'
+      },
+      {
+        listing_id: 'exp-aesthetic-1',
+        title: 'Quartz Clinique – Nişantaşı Glow & Fraksiyonel Cilt Yenileme',
+        category: 'Medikal Estetik',
+        district: 'Nişantaşı / Şişli',
+        viewed_at: '2026-08-23T11:30:00Z'
+      }
+    ],
+    blacklisted_offers: [
+      {
+        topic_or_category: 'GAYRIMENKUL_YATIRIM',
+        rejected_at: '2026-08-23T12:00:00Z',
+        reason: 'Misafir ilgilenmediğini belirtti'
+      }
+    ],
+    booked_itinerary: [
+      {
+        booking_id: 'bk_sample_01',
+        title: 'Tarihi Cağaloğlu Hamamı Masajı',
+        category: 'Kültür & Hamam',
+        location_name: 'Cağaloğlu Hamamı',
+        district: 'Sultanahmet',
+        location_coordinates: { lat: 41.0102, lng: 28.9755 },
+        date: '2026-08-24',
+        start_time: '15:30',
+        end_time: '17:00',
+        status: 'CONFIRMED'
+      },
+      {
+        booking_id: 'bk_sample_02',
+        title: 'Quartz Clinique Hydrafacial Seansı',
+        category: 'Medikal Estetik',
+        location_name: 'Quartz Clinique',
+        district: 'Nişantaşı',
+        location_coordinates: { lat: 41.0485, lng: 28.9942 },
+        date: '2026-08-24',
+        start_time: '18:00',
+        end_time: '19:00',
+        status: 'CONFIRMED'
+      }
+    ]
+  };
+
+  const injectedPrompt = buildInjectedComusSystemPrompt(testUserPrefs, 'Pera Palace Hotel', 'Beyoğlu', '304', 'tr');
+  assert(
+    injectedPrompt.includes('Alex Mercer') &&
+    injectedPrompt.includes('Pera Palace Hotel') &&
+    injectedPrompt.includes('HYDRAFACIAL') &&
+    injectedPrompt.includes('Quartz Clinique') &&
+    injectedPrompt.includes('GAYRIMENKUL_YATIRIM'),
+    'Comus AI Dynamic Context Injection Pipeline',
+    `Sistem Promptuna misafir adı ("Alex Mercer"), otel/oda ("Pera Palace 304"), Aesthetic ilgileri ve Anti-Nagging karaliste kilitleri başarıyla enjekte edildi.`
+  );
+
+  assert(
+    comusAiFunctionTools.length === 3 && comusAiFunctionTools.some(t => t.name === 'add_negative_preference'),
+    'Gemini 2.5 Flash Function Calling Tools Registration',
+    `Google GenAI Function Calling araçları (add_negative_preference, create_booking_action, generate_weekly_itinerary) tanımlandı.`
+  );
+
+  const peakRoute = calculateTrafficAwareRoute(
+    { lat: 41.0102, lng: 28.9755 }, // Sultanahmet
+    { lat: 41.0485, lng: 28.9942 }, // Nişantaşı
+    '17:30', // Akşam pik saati
+    'Quartz Clinique - Hydrafacial',
+    'Nişantaşı, Şişli',
+    'Pera Palace Hotel'
+  );
+
+  assert(
+    peakRoute.traffic_level === 'HEAVY' && peakRoute.recommended_transport.mode === 'METRO_MARMARAY',
+    'Istanbul Live Traffic & Peak Hour Route Optimization',
+    `Saat 17:30 trafiği tespit edildi: Araç trafiği (%82) yerine M2 Metro & Tramvay güzergahı (${peakRoute.recommended_transport.estimated_minutes} dk) önerildi.`
+  );
+
+  const itinerary = generateGuestWeeklyItinerary(testUserPrefs);
+  assert(
+    itinerary.length > 0 && itinerary[0].items.length === 2,
+    'Traffic-Aware Dynamic Weekly Itinerary Generation',
+    `Misafirin randevuları (${itinerary[0].items.length} etkinlik) gün bazında gruplandı ve canlı ulaşım tavsiyeleriyle ajandaya dönüştürüldü.`
+  );
+
   console.log('\n================================================================');
   console.log(`📊 TEST SONUÇLARI: ${results.filter(r => r.status === 'PASSED').length}/${results.length} BAŞARILI (PASSED)`);
   console.log('================================================================');

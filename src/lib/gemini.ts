@@ -1,16 +1,19 @@
 import { GuestProfile } from './types';
+import { UserPreferences, AiActionItem } from '@/types/comusAi';
 
 export interface ChatMessage {
   id: string;
   sender: 'user' | 'assistant';
   text: string;
   time: string;
+  actions?: AiActionItem[];
   recommendations?: Array<{
     title: string;
     category: string;
     location: string;
     action?: string;
   }>;
+  negative_locked_categories?: string[];
 }
 
 export async function askGeminiConcierge(
@@ -18,20 +21,23 @@ export async function askGeminiConcierge(
   guestProfile: GuestProfile,
   hotelName: string,
   hotelDistrict: string,
-  lang: string = 'tr'
+  lang: string = 'tr',
+  roomNumber: string = '304',
+  userPreferences?: Partial<UserPreferences>
 ): Promise<ChatMessage> {
   const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   
-  // Call server-side Gemini API route
+  // Call server-side Gemini 2.5 Flash / Comus AI API route
   try {
     const res = await fetch('/api/ai-chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: userQuery,
-        profile: guestProfile,
+        user_preferences: userPreferences,
         hotelName,
         hotelDistrict,
+        roomNumber,
         language: lang
       })
     });
@@ -43,7 +49,9 @@ export async function askGeminiConcierge(
         sender: 'assistant',
         text: data.reply,
         time: now,
-        recommendations: data.recommendations
+        actions: data.actions,
+        recommendations: data.recommendations,
+        negative_locked_categories: data.negative_locked_categories
       };
     }
   } catch (err) {
@@ -54,31 +62,44 @@ export async function askGeminiConcierge(
   const q = userQuery.toLowerCase();
   let reply = "";
   let recs: any[] = [];
+  let actions: AiActionItem[] = [];
 
-  if (q.includes('kahvaltı') || q.includes('breakfast') || q.includes('yemek') || q.includes('restoran')) {
-    reply = `${hotelName} (${hotelDistrict}) konumunuza çok yakın harika önerilerim var! Tarihi Yarımada'da otantik Türk kahvaltısı için Tarihi Sultanahmet Köftecisi veya Galata Köprüsü altındaki deniz ürünleri mekanlarını kesinlikle denemelisiniz. Özel gastronomi ve sokak lezzetleri turumuza da katılabilirsiniz!`;
-    recs = [
-      { title: "Karaköy & Kadıköy Sokak Lezzetleri Turu", category: "Gastronomi", location: "Karaköy / Kadıköy" },
-      { title: "Boğaz Manzaralı Akşam Yemeği Cruise", category: "Boğaz & Tekne", location: "Kabataş İskelesi" }
-    ];
-  } else if (q.includes('hamam') || q.includes('spa') || q.includes('masaj')) {
-    reply = `Günün yorgunluğunu atmak için Sultanahmet'teki tarihi Cağaloğlu Hamamı veya Kılıç Ali Paşa Hamamı eşsiz bir deneyimdir. Xenios üzerinden tek tıkla VIP hamam paketi ayırtabilirsiniz.`;
-    recs = [
-      { title: "Tarihi Cağaloğlu Hamamı Masaj & Kese Deneyimi", category: "Geleneksel & Kültür", location: "Sultanahmet" }
-    ];
-  } else if (q.includes('boğaz') || q.includes('tekne') || q.includes('bosphorus') || q.includes('boat')) {
-    reply = `İstanbul Boğazı gün batımında büyüleyicidir! Akşam semazen ve folklor gösterili yemekli Boğaz turumuz veya özel saatlik yat kiralama seçeneklerimiz misafirlerimiz arasında en popüler olanlardır.`;
-    recs = [
-      { title: "Bosphorus Dinner Cruise & Shows (Mega Lüfer)", category: "Boğaz & Tekne", location: "Kabataş" }
-    ];
-  } else if (q.includes('yatırım') || q.includes('invest') || q.includes('gayrimenkul') || q.includes('property') || q.includes('vatandaşlık') || q.includes('citizenship')) {
-    reply = `İstanbul gayrimenkul ve turizm yatırımları için dünya çapında büyük fırsatlar sunuyor. Beşiktaş, Boğaz hattı ve Tarihi Yarımada'daki seçkin rezidans ve yalı projelerimizi inceleyebilir veya Türkiye Vatandaşlığına uygun portföyler için yatırım danışmanlarımızla görüşebilirsiniz.`;
-    recs = [
-      { title: "Bosphorus View Prime Residence (Vatandaşlığa Uygun)", category: "Yatırım & Rezidans", location: "Beşiktaş" },
-      { title: "Karaköy Loft & Art Boutique Suites", category: "Yatırım & Mülk", location: "Karaköy" }
+  const guestName = userPreferences?.first_name || 'Alex';
+
+  if (q.includes('akşam') || q.includes('yoruldum') || q.includes('rahatlatıcı')) {
+    reply = `İyi akşamlar ${guestName} Bey! Otelinizde (${hotelName}, Oda ${roomNumber}) umarım keyifli bir gün geçirmişsinizdir.\n\nProfilinizdeki 'Aesthetic & Wellness' tercihlerinize ve az önce incelediğiniz Cağaloğlu Hamamı ile Quartz Clinique ilanlarına istinaden size iki harika önerim var:\n\n1. 🧖‍♂️ Tarihi Cağaloğlu Hamamı - Otelinize 5 dk yürüme mesafesinde geleneksel Kese & Köpük masajı.\n2. 🪞 Nişantaşı Quartz Clinique - Cildinizi neme doyuracak 45 dakikalık Ekspres Hydrafacial Bakımı.\n\nİsterseniz sizin adınıza yarın saat 11:00 veya 15:30 için anında randevu oluşturabilirim. Hangisini tercih edersiniz?`;
+    actions = [
+      {
+        id: 'act_hamam',
+        type: 'BOOK_APPOINTMENT',
+        label: '🧖‍♂️ Cağaloğlu Hamamı (Yarın 15:30)',
+        payload: {
+          listing_id: 'exp-1',
+          service_title: 'Tarihi Cağaloğlu Hamamı & Masaj',
+          preferred_date: '2026-08-24',
+          preferred_time: '15:30',
+          booking_type: 'EXPERIENCE_TICKET'
+        }
+      },
+      {
+        id: 'act_quartz',
+        type: 'BOOK_APPOINTMENT',
+        label: '🪞 Quartz Clinique Hydrafacial (Yarın 11:00)',
+        payload: {
+          listing_id: 'exp-aesthetic-1',
+          service_title: 'Nişantaşı Glow & Hydrafacial',
+          preferred_date: '2026-08-24',
+          preferred_time: '11:00',
+          booking_type: 'AESTHETIC_APPOINTMENT'
+        }
+      }
     ];
   } else {
-    reply = `Harika bir soru! ${hotelName} misafirimiz olarak İstanbul seyahatinizi unutulmaz kılmak için buradayım. ${guestProfile.travelStyle === 'family' ? 'Ailenizle keyif alacağınız ' : ''}müzeler, Boğaz turları, gizli tarihi sokaklar ve en lezzetli mekanlar için size özel rotalar hazırlayabilirim. Ne tür bir aktivite arzu edersiniz?`;
+    reply = `Merhaba ${guestName} Bey! ${hotelName} (${hotelDistrict}) misafirimiz olarak size yardımcı olmaktan mutluluk duyarım. İstanbul'da seçkin restoranlar, Boğaz turları, Nişantaşı medikal estetik klinikleri ve size özel rotalar için dilediğinizi sorabilirsiniz. İsterseniz sizin adınıza hemen rezervasyon veya randevu oluşturabilirim.`;
+    recs = [
+      { title: "Bosphorus Dinner Cruise & Shows", category: "Boğaz & Tekne", location: "Kabataş" },
+      { title: "Quartz Clinique – Nişantaşı Glow", category: "Medikal Estetik", location: "Nişantaşı" }
+    ];
   }
 
   return {
@@ -86,6 +107,7 @@ export async function askGeminiConcierge(
     sender: 'assistant',
     text: reply,
     time: now,
+    actions,
     recommendations: recs
   };
 }

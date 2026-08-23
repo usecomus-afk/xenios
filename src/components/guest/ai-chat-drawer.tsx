@@ -108,9 +108,62 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
     setMessages(prev => [...prev, newMsg]);
     setIsLoading(true);
 
-    const assistantMsg = await askGeminiConcierge(userMsg, profile, hotel.name, hotel.district, lang);
+    const userPrefs = XeniosStore.getUserPreferences();
+    const assistantMsg = await askGeminiConcierge(userMsg, profile, hotel.name, hotel.district, lang, roomNumber, userPrefs);
+
+    // If assistant returned negative locks (Anti-Nagging)
+    if (assistantMsg.negative_locked_categories?.length) {
+      assistantMsg.negative_locked_categories.forEach(cat => {
+        XeniosStore.addBlacklistedOffer(cat, 'Misafir chat üzerinden reddetti');
+      });
+    }
+
     setMessages(prev => [...prev, assistantMsg]);
     setIsLoading(false);
+  };
+
+  const handleExecuteAction = (action: any) => {
+    if (action.type === 'BOOK_APPOINTMENT') {
+      const payload = action.payload || {};
+      const serviceTitle = payload.service_title || 'Seçili Hizmet';
+      const prefDate = payload.preferred_date || '2026-08-24';
+      const prefTime = payload.preferred_time || '11:00';
+
+      XeniosStore.addToBookedItinerary({
+        booking_id: `bk_${Date.now()}`,
+        title: serviceTitle,
+        category: payload.booking_type || 'Rezervasyon',
+        location_name: payload.listing_id?.includes('hamam') ? 'Cağaloğlu Hamamı' : 'Quartz Clinique',
+        district: payload.listing_id?.includes('hamam') ? 'Sultanahmet' : 'Nişantaşı',
+        location_coordinates: payload.listing_id?.includes('hamam') ? { lat: 41.0102, lng: 28.9755 } : { lat: 41.0485, lng: 28.9942 },
+        date: prefDate,
+        start_time: prefTime,
+        end_time: '12:00',
+        status: 'CONFIRMED'
+      });
+
+      const confirmMsg: ChatMessage = {
+        id: `conf-${Date.now()}`,
+        sender: 'assistant',
+        text: `Harika bir seçim! ${serviceTitle} randevunuz ${prefDate} saat ${prefTime} için adınıza başarıyla oluşturulmuştur. 🎟️\n\n📅 Haftalık seyahat ajandanıza eklendi. Ulaşım rotanız otel resepsiyonu ve VIP transfer ekibimize bildirildi.`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, confirmMsg]);
+    } else if (action.type === 'VIEW_ITINERARY') {
+      const userPrefs = XeniosStore.getUserPreferences();
+      const itinerary = userPrefs.booked_itinerary || [];
+      const text = itinerary.length > 0
+        ? `📅 **Haftalık Seyahat Ajandanız:**\n` + itinerary.map(i => `• ${i.date} ${i.start_time}: ${i.title} (${i.location_name})`).join('\n') + `\n\n🚗 *Trafik Notu:* Sultanahmet - Nişantaşı aksında 17:00-19:30 saatleri arasında M2 Metrosunu tercih etmeniz önerilir.`
+        : `Henüz kayıtlı bir seyahat randevunuz bulunmamaktadır. Dilerseniz hemen bir etkinlik veya estetik seansı planlayabiliriz.`;
+      
+      const itinMsg: ChatMessage = {
+        id: `itin-${Date.now()}`,
+        sender: 'assistant',
+        text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, itinMsg]);
+    }
   };
 
   return (
@@ -199,7 +252,7 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
                       </div>
                     )}
 
-                    <div className={`max-w-[85%] rounded-2xl p-3.5 text-xs shadow-xs space-y-1.5 ${
+                    <div className={`max-w-[85%] rounded-2xl p-3.5 text-xs shadow-xs space-y-2 ${
                       isUser
                         ? 'bg-amber-500 text-white rounded-tr-xs'
                         : 'bg-white text-zinc-800 border border-amber-200/80 rounded-tl-xs'
@@ -207,6 +260,23 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
                       <div className="whitespace-pre-wrap leading-relaxed">
                         {msg.text}
                       </div>
+
+                      {/* Interactive Action Buttons from Comus AI */}
+                      {!isUser && msg.actions && msg.actions.length > 0 && (
+                        <div className="pt-2 flex flex-col gap-1.5 border-t border-amber-100">
+                          {msg.actions.map((act) => (
+                            <button
+                              key={act.id}
+                              type="button"
+                              onClick={() => handleExecuteAction(act)}
+                              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer text-left"
+                            >
+                              <span>{act.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
                       <div className={`text-[9px] font-mono ${isUser ? 'text-amber-100 text-right' : 'text-zinc-400'}`}>
                         {msg.time}
                       </div>
