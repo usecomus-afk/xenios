@@ -1,3 +1,16 @@
+export interface BookedItineraryItem {
+  booking_id: string;
+  title: string;
+  category: string;
+  location_name: string;
+  district: string;
+  location_coordinates: { lat: number; lng: number };
+  date: string; // YYYY-MM-DD
+  start_time: string; // HH:mm
+  end_time: string; // HH:mm
+  status: 'CONFIRMED' | 'COMPLETED';
+}
+
 export interface UserPreferences {
   guest_id: string;
   first_name: string;
@@ -38,18 +51,7 @@ export interface UserPreferences {
     reason?: string;
   }[];
   // Satın alınan / randevusu onaylanan etkinlikler dizisi
-  booked_itinerary: {
-    booking_id: string;
-    title: string;
-    category: string;
-    location_name: string;
-    district: string;
-    location_coordinates: { lat: number; lng: number };
-    date: string; // YYYY-MM-DD
-    start_time: string; // HH:mm
-    end_time: string; // HH:mm
-    status: 'CONFIRMED' | 'COMPLETED';
-  }[];
+  booked_itinerary: BookedItineraryItem[];
 }
 
 export interface AiActionItem {
