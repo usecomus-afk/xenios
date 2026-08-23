@@ -103,26 +103,12 @@ export default function HotelLiveRequestsPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          {!XeniosStore.isDemoDataHidden() && (
-            <button
-              onClick={() => {
-                XeniosStore.setHideDemoData(true);
-                toast.success('Tüm örnek kayıtlar gizlendi.');
-                refresh();
-              }}
-              className="px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-xl border border-amber-300 flex items-center gap-1.5 transition cursor-pointer"
-            >
-              <EyeOff className="w-3.5 h-3.5" />
-              <span>Örnekleri Gizle</span>
-            </button>
-          )}
-
           <button
             onClick={handleSimulateRequest}
-            className="px-4 py-2 bg-white hover:bg-amber-50 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
           >
-            <Sparkles className="w-4 h-4 text-amber-600" />
-            <span>+ Örnek Canlı Talep Gönder</span>
+            <Sparkles className="w-4 h-4" />
+            <span>+ Test Canlı Talep Gönder</span>
           </button>
         </div>
       </div>

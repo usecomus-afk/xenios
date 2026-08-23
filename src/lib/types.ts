@@ -273,6 +273,32 @@ export interface ModuleAdminSettings {
 
 export type ModuleAdminSettingsMap = Record<string, ModuleAdminSettings>;
 
+export interface RoomServiceMenuItem {
+  id: string;
+  hotelId: string;
+  name: string;
+  category: 'Kahvaltı' | 'Başlangıç' | 'Ana Yemek' | 'Tatlı' | 'İçecek' | 'Atıştırmalık' | 'Gece Menüsü';
+  description: string;
+  ingredients: string;
+  price: number;
+  currency: string;
+  image: string;
+  available: boolean;
+  preparationTimeMinutes?: number;
+  createdAt: string;
+}
+
+export interface OTAChannelItem {
+  id: string;
+  hotelId: string;
+  name: string;
+  roomNumber?: string; // 'all' or specific room number
+  feedUrl: string;
+  status: 'Senkronize' | 'Bağlantı Hazır' | 'Hata' | 'Beklemede';
+  lastSync?: string;
+  active: boolean;
+}
+
 export interface XeniosUser {
   id: string;
   name: string;
@@ -285,3 +311,4 @@ export interface XeniosUser {
   phone?: string;
   createdAt: string;
 }
+

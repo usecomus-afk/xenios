@@ -34,20 +34,6 @@ export default function BookingsPage() {
           <h1 className="text-xl font-bold font-serif text-zinc-900">Sanal POS & Finansal Raporlar</h1>
           <p className="text-xs text-zinc-500">Platform Geneli 3D Secure Rezervasyonlar, Komisyon Paylaşımları ve Gelir Raporu</p>
         </div>
-
-        {!XeniosStore.isDemoDataHidden() && (
-          <button
-            onClick={() => {
-              XeniosStore.setHideDemoData(true);
-              toast.success('Tüm örnek kayıtlar gizlendi.');
-              refresh();
-            }}
-            className="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-xl border border-amber-300 flex items-center gap-1.5 transition cursor-pointer self-start sm:self-auto"
-          >
-            <EyeOff className="w-3.5 h-3.5" />
-            <span>Örnek Verileri Gizle</span>
-          </button>
-        )}
       </div>
 
       {/* KPI Cards */}

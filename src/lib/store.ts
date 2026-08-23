@@ -1,4 +1,4 @@
-import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap, PropertyListing, InvestmentLead, InRoomServiceItem } from './types';
+import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap, PropertyListing, InvestmentLead, InRoomServiceItem, RoomServiceMenuItem, OTAChannelItem } from './types';
 import { UserPreferences } from '@/types/comusAi';
 import rawHotels from '@/data/hotels.json';
 import rawExperiences from '@/data/experiences.json';
@@ -20,7 +20,9 @@ const STORAGE_KEYS = {
   IN_ROOM_SERVICES: 'xenios_in_room_services_v2',
   PROPERTIES: 'xenios_custom_properties',
   INVESTMENT_LEADS: 'xenios_investment_leads',
-  HIDE_DEMO_DATA: 'xenios_hide_demo_data'
+  HIDE_DEMO_DATA: 'xenios_hide_demo_data',
+  ROOM_SERVICE_MENU: 'xenios_room_service_menu',
+  OTA_CHANNELS: 'xenios_ota_channels'
 };
 
 const DEFAULT_MODULE_SETTING: ModuleAdminSettings = { enabled: true, hidden: false };
@@ -495,18 +497,182 @@ export const XeniosStore = {
     } catch (e) {}
   },
 
-  isDemoDataHidden(): boolean {
-    return safeGet(STORAGE_KEYS.HIDE_DEMO_DATA) === '1';
+  // Room Service (F&B) Menu Management
+  getRoomServiceMenu(hotelId?: string): RoomServiceMenuItem[] {
+    const targetHotelId = hotelId || this.getActiveHotelId();
+    const defaultMenu: RoomServiceMenuItem[] = [
+      {
+        id: 'menu-item-1',
+        hotelId: targetHotelId,
+        name: 'Geleneksel Türk Serpme Kahvaltısı',
+        category: 'Kahvaltı',
+        description: 'Ezine peyniri, Kars kaşarı, petek bal, kaymak, organik zeytin çeşitleri, tereyağı, domates, salatalık, menemen ve taze pişmiş simit.',
+        ingredients: 'Yumurta, Peynir Çeşitleri, Bal, Kaymak, Zeytin, Tereyağı, Simit',
+        price: 24,
+        currency: 'EUR',
+        image: '/images/experiences/exp-gastro-1.jpg',
+        available: true,
+        preparationTimeMinutes: 20,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'menu-item-2',
+        hotelId: targetHotelId,
+        name: 'Dana Antrikot Izgara & Trüflü Patates Püresi',
+        category: 'Ana Yemek',
+        description: 'Közlenmiş arpacık soğan, ızgara kuşkonmaz ve trüf yağlı taze patates püresi eşliğinde 220gr dinlendirilmiş antrikot.',
+        ingredients: '220gr Dana Antrikot, Trüf Yağı, Patates, Kuşkonmaz, Biberiye',
+        price: 34,
+        currency: 'EUR',
+        image: '/images/experiences/exp-gastro-2.jpg',
+        available: true,
+        preparationTimeMinutes: 25,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'menu-item-3',
+        hotelId: targetHotelId,
+        name: 'El Yapımı Yaban Mantarlı Fettuccine',
+        category: 'Ana Yemek',
+        description: 'Porçini ve istiridye mantarları, taze krema sosu, parmesan peyniri ve taze kekik yaprakları ile taze el açması makarna.',
+        ingredients: 'Taze Makarna, Porçini Mantarı, Krema, Parmesan, Sarımsak',
+        price: 21,
+        currency: 'EUR',
+        image: '/images/experiences/exp-gastro-3.jpg',
+        available: true,
+        preparationTimeMinutes: 15,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'menu-item-4',
+        hotelId: targetHotelId,
+        name: 'Xenios Gurme Kulüp Sandviç',
+        category: 'Atıştırmalık',
+        description: 'Izgara tavuk göğsü, füme dana eti, haşlanmış yumurta, kaşar peyniri, domates, marul ve çıtır patates kızartması.',
+        ingredients: 'Tost Ekmeği, Tavuk Göğsü, Füme Et, Yumurta, Patates',
+        price: 16,
+        currency: 'EUR',
+        image: '/images/experiences/exp-gastro-4.jpg',
+        available: true,
+        preparationTimeMinutes: 12,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'menu-item-5',
+        hotelId: targetHotelId,
+        name: 'Geleneksel Fırın Sütlaç & Fındık',
+        category: 'Tatlı',
+        description: 'Taş fırında nar gibi kızartılmış karamelize kabuklu hakiki manda sütlü fırın sütlaç, kavrulmuş Giresun fındığı ile.',
+        ingredients: 'Manda Sütü, Pirinç, Şeker, Giresun Fındığı, Vanilya',
+        price: 9,
+        currency: 'EUR',
+        image: '/images/experiences/exp-gastro-5.jpg',
+        available: true,
+        preparationTimeMinutes: 5,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'menu-item-6',
+        hotelId: targetHotelId,
+        name: 'Taze Sıkılmış Akdeniz Portakal Suyu',
+        category: 'İçecek',
+        description: 'Antalya Finike bahçelerinden günlük taze sıkılmış %100 doğal katkısız portakal suyu.',
+        ingredients: '%100 Doğal Portakal',
+        price: 7,
+        currency: 'EUR',
+        image: '/images/experiences/exp-gastro-6.jpg',
+        available: true,
+        preparationTimeMinutes: 5,
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    try {
+      const stored = safeGet(`${STORAGE_KEYS.ROOM_SERVICE_MENU}_${targetHotelId}`);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {}
+    return defaultMenu;
   },
 
-  setHideDemoData(hide: boolean) {
-    safeSet(STORAGE_KEYS.HIDE_DEMO_DATA, hide ? '1' : '0');
+  saveRoomServiceMenu(hotelId: string, menu: RoomServiceMenuItem[]) {
+    safeSet(`${STORAGE_KEYS.ROOM_SERVICE_MENU}_${hotelId}`, JSON.stringify(menu));
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('xenios_demo_updated'));
-      window.dispatchEvent(new Event('xenios_complaints_updated'));
-      window.dispatchEvent(new Event('xenios_bookings_updated'));
-      window.dispatchEvent(new Event('xenios_requests_updated'));
+      window.dispatchEvent(new Event('xenios_room_service_menu_updated'));
     }
+  },
+
+  addRoomServiceMenuItem(hotelId: string, item: Omit<RoomServiceMenuItem, 'id' | 'createdAt'>) {
+    const list = this.getRoomServiceMenu(hotelId);
+    const newItem: RoomServiceMenuItem = {
+      ...item,
+      id: `menu-item-${Date.now()}`,
+      createdAt: new Date().toISOString()
+    };
+    list.unshift(newItem);
+    this.saveRoomServiceMenu(hotelId, list);
+    return newItem;
+  },
+
+  updateRoomServiceMenuItem(hotelId: string, id: string, updated: Partial<RoomServiceMenuItem>) {
+    const list = this.getRoomServiceMenu(hotelId).map(item => item.id === id ? { ...item, ...updated } : item);
+    this.saveRoomServiceMenu(hotelId, list);
+  },
+
+  deleteRoomServiceMenuItem(hotelId: string, id: string) {
+    const list = this.getRoomServiceMenu(hotelId).filter(item => item.id !== id);
+    this.saveRoomServiceMenu(hotelId, list);
+  },
+
+  // OTA & iCal Channels Management
+  getOTAChannels(hotelId?: string): OTAChannelItem[] {
+    const targetHotelId = hotelId || this.getActiveHotelId();
+    const defaultChannels: OTAChannelItem[] = [
+      { id: 'chan-1', hotelId: targetHotelId, name: 'Airbnb', roomNumber: 'all', feedUrl: 'https://www.airbnb.com/calendar/ical/sample-hotel.ics', status: 'Senkronize', lastSync: '10 dk önce', active: true },
+      { id: 'chan-2', hotelId: targetHotelId, name: 'Booking.com', roomNumber: 'all', feedUrl: 'https://admin.booking.com/hotel/hotelparams/ical.html', status: 'Senkronize', lastSync: '6 dk önce', active: true },
+      { id: 'chan-3', hotelId: targetHotelId, name: 'VRBO / HomeAway', roomNumber: 'all', feedUrl: 'https://www.vrbo.com/icalendar/sample.ics', status: 'Senkronize', lastSync: '18 dk önce', active: true },
+      { id: 'chan-4', hotelId: targetHotelId, name: 'Expedia Partner', roomNumber: 'all', feedUrl: 'https://www.expediapartnercentral.com/ical/feed.ics', status: 'Senkronize', lastSync: '14 dk önce', active: true }
+    ];
+
+    try {
+      const stored = safeGet(`${STORAGE_KEYS.OTA_CHANNELS}_${targetHotelId}`);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {}
+    return defaultChannels;
+  },
+
+  saveOTAChannels(hotelId: string, channels: OTAChannelItem[]) {
+    safeSet(`${STORAGE_KEYS.OTA_CHANNELS}_${hotelId}`, JSON.stringify(channels));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('xenios_ota_channels_updated'));
+    }
+  },
+
+  addOTAChannel(hotelId: string, channel: Omit<OTAChannelItem, 'id'>) {
+    const list = this.getOTAChannels(hotelId);
+    const newChan: OTAChannelItem = {
+      ...channel,
+      id: `chan-${Date.now()}`
+    };
+    list.unshift(newChan);
+    this.saveOTAChannels(hotelId, list);
+    return newChan;
+  },
+
+  deleteOTAChannel(hotelId: string, id: string) {
+    const list = this.getOTAChannels(hotelId).filter(c => c.id !== id);
+    this.saveOTAChannels(hotelId, list);
+  },
+
+  isDemoDataHidden(): boolean {
+    return true;
+  },
+
+  setHideDemoData(_val: boolean) {
+    // Demo data permanently hidden
   },
 
   // Bookings & Virtual POS
