@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Experience, Hotel, Language } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { 
@@ -53,6 +53,15 @@ export function AestheticInquiryModal({
   const clinicId = `clinic_${experience.id.replace('exp_aesthetic_', '')}`;
   const serviceId = `srv_${experience.id.replace('exp_aesthetic_', '')}`;
 
+  // ESC key listener to close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!guestName || !guestPhone) {
@@ -101,13 +110,21 @@ export function AestheticInquiryModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white border border-rose-200 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        className="bg-white border border-rose-200 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* Modal Header */}
-        <div className="p-4 sm:p-5 border-b border-rose-100 flex items-center justify-between bg-gradient-to-r from-rose-50 to-orange-50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-200 flex items-center justify-center p-1.5 shadow-xs">
+        <div className="p-4 sm:p-5 border-b border-rose-100 flex items-center justify-between gap-3 bg-gradient-to-r from-rose-50 to-orange-50 shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-200 flex items-center justify-center p-1.5 shadow-xs shrink-0">
               <Image 
                 src="/icons/categories/aesthetic-beauty.png" 
                 alt="Aesthetic & Beauty" 
@@ -116,19 +133,21 @@ export function AestheticInquiryModal({
                 className="w-full h-full object-contain"
               />
             </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-rose-800 tracking-wider block">
-                Klinik Bilgi & Konsültasyon Talebi
+            <div className="min-w-0 flex-1">
+              <span className="text-[10px] uppercase font-bold text-rose-800 tracking-wider block truncate">
+                Klinik Bilgi & Danışmanlık Talebi
               </span>
-              <h2 className="text-sm sm:text-base font-bold font-serif text-zinc-900 truncate max-w-xs">
+              <h2 className="text-xs sm:text-sm font-bold font-serif text-zinc-900 leading-snug line-clamp-1" title={experience.title}>
                 {experience.title}
               </h2>
             </div>
           </div>
 
           <button
+            type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition cursor-pointer"
+            aria-label="Kapat"
+            className="w-8 h-8 rounded-full bg-white hover:bg-rose-100 text-zinc-600 hover:text-zinc-900 border border-rose-200 flex items-center justify-center transition cursor-pointer shrink-0 shadow-xs active:scale-95"
           >
             <X className="w-4 h-4" />
           </button>
@@ -142,7 +161,7 @@ export function AestheticInquiryModal({
               <div className="p-3.5 rounded-2xl bg-rose-50/60 border border-rose-200 text-left flex items-start gap-2.5">
                 <HelpCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
                 <div className="text-[11px] text-zinc-600 leading-relaxed">
-                  <strong className="text-zinc-900 block font-medium">Sağlayıcı: {experience.provider}</strong>
+                  <strong className="text-zinc-900 block font-medium">Sağlayıcı: {experience.provider} ({experience.location})</strong>
                   <span>Tedavi paketleri, fiyat detayları veya hekim konsültasyonu hakkında klinik danışmanları en kısa sürede sizinle iletişime geçecektir.</span>
                 </div>
               </div>
@@ -234,23 +253,32 @@ export function AestheticInquiryModal({
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Kliniğe İletiliyor...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    <span>Bilgi Talebini Kliniğe Gönder</span>
-                  </>
-                )}
-              </button>
+              <div className="pt-2 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="w-1/3 py-2.5 rounded-2xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold text-xs transition cursor-pointer text-center"
+                >
+                  Vazgeç / Kapat
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-2/3 py-2.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Kliniğe İletiliyor...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Talebi Kliniğe İlet</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </form>
           ) : (
             <div className="space-y-4 text-center py-4">
