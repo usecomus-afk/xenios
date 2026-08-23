@@ -16,6 +16,8 @@ import { AuthModal } from '@/components/auth-modal';
 import { FairShoppingPolicy } from '@/components/guest/fair-shopping-policy';
 import { InvestInIstanbul } from '@/components/guest/invest-in-istanbul';
 import { RestaurantReservationModal } from '@/components/guest/restaurant-reservation-modal';
+import { AestheticBookingModal } from '@/components/guest/aesthetic-booking-modal';
+import { AestheticInquiryModal } from '@/components/guest/aesthetic-inquiry-modal';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -25,9 +27,9 @@ import {
   Bell, 
   X, 
   Compass, 
-  ArrowRight,
-  ShieldCheck,
-  Clock
+  ArrowRight, 
+  ShieldCheck, 
+  Clock 
 } from 'lucide-react';
 
 export default function GuestPage() {
@@ -46,6 +48,8 @@ export default function GuestPage() {
   const [transitExp, setTransitExp] = useState<Experience | null>(null);
   const [checkoutExp, setCheckoutExp] = useState<Experience | null>(null);
   const [restaurantReserveExp, setRestaurantReserveExp] = useState<Experience | null>(null);
+  const [aestheticBookingExp, setAestheticBookingExp] = useState<Experience | null>(null);
+  const [aestheticInquiryExp, setAestheticInquiryExp] = useState<Experience | null>(null);
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -85,7 +89,8 @@ export default function GuestPage() {
     { key: t.categoriesList.shopping.title, rawKey: "Alışveriş & Çarşılar", iconPath: '/icons/categories/alisveris-carsilar.png', count: 4, desc: t.categoriesList.shopping.desc },
     { key: t.categoriesList.art.title, rawKey: "Sanat & Semazen", iconPath: '/icons/categories/sanat-semazen.png', count: 4, desc: t.categoriesList.art.desc },
     { key: t.categoriesList.culture.title, rawKey: "Kültürel Miras", iconPath: '/icons/categories/kulturel-miras.png', count: 5, desc: t.categoriesList.culture.desc },
-    { key: t.categoriesList.transfer.title, rawKey: "Özel VIP Transfer", iconPath: '/icons/categories/ozel-vip-transfer.png', count: 5, desc: t.categoriesList.transfer.desc }
+    { key: t.categoriesList.transfer.title, rawKey: "Özel VIP Transfer", iconPath: '/icons/categories/ozel-vip-transfer.png', count: 5, desc: t.categoriesList.transfer.desc },
+    { key: t.categoriesList.aesthetic?.title || "Aesthetic & Beauty Clinics", rawKey: "14. Medikal Estetik & Güzellik", iconPath: '/icons/categories/aesthetic-beauty.png', count: 12, desc: t.categoriesList.aesthetic?.desc || "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı" }
   ];
 
   // Filter experiences (admin-suspended listings never reach the guest catalog)
@@ -244,6 +249,8 @@ export default function GuestPage() {
                   onOpenTransit={(exp) => setTransitExp(exp)}
                   onOpenCheckout={(exp) => setCheckoutExp(exp)}
                   onOpenRestaurantReserve={(exp) => setRestaurantReserveExp(exp)}
+                  onOpenAestheticBooking={(exp) => setAestheticBookingExp(exp)}
+                  onOpenAestheticInquiry={(exp) => setAestheticInquiryExp(exp)}
                 />
               ))}
             </div>
@@ -379,6 +386,36 @@ export default function GuestPage() {
             setSelectedDetailExp(null);
             setRestaurantReserveExp(exp);
           }}
+          onOpenAestheticBooking={(exp) => {
+            setSelectedDetailExp(null);
+            setAestheticBookingExp(exp);
+          }}
+          onOpenAestheticInquiry={(exp) => {
+            setSelectedDetailExp(null);
+            setAestheticInquiryExp(exp);
+          }}
+        />
+      )}
+
+      {/* Aesthetic & Beauty CRM Booking Modal */}
+      {aestheticBookingExp && (
+        <AestheticBookingModal
+          experience={aestheticBookingExp}
+          hotel={currentHotel}
+          roomNumber={activeRoomNumber}
+          lang={lang}
+          onClose={() => setAestheticBookingExp(null)}
+        />
+      )}
+
+      {/* Aesthetic & Beauty Lead Inquiry Modal */}
+      {aestheticInquiryExp && (
+        <AestheticInquiryModal
+          experience={aestheticInquiryExp}
+          hotel={currentHotel}
+          roomNumber={activeRoomNumber}
+          lang={lang}
+          onClose={() => setAestheticInquiryExp(null)}
         />
       )}
 

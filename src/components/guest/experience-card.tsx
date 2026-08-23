@@ -14,6 +14,8 @@ interface ExperienceCardProps {
   onOpenTransit: (exp: Experience) => void;
   onOpenCheckout: (exp: Experience) => void;
   onOpenRestaurantReserve?: (exp: Experience) => void;
+  onOpenAestheticBooking?: (exp: Experience) => void;
+  onOpenAestheticInquiry?: (exp: Experience) => void;
 }
 
 export function ExperienceCard({ 
@@ -23,11 +25,14 @@ export function ExperienceCard({
   onSelect, 
   onOpenTransit, 
   onOpenCheckout,
-  onOpenRestaurantReserve
+  onOpenRestaurantReserve,
+  onOpenAestheticBooking,
+  onOpenAestheticInquiry
 }: ExperienceCardProps) {
   const t = getT(lang);
   const imageSrc = experience.image || `/images/experiences/${experience.id}.jpg`;
   const isRestaurant = experience.category.toLowerCase().includes('restoran') || experience.id.startsWith('rest-');
+  const isAesthetic = experience.category.toLowerCase().includes('estetik') || experience.categoryTag === 'Aesthetic' || experience.id.startsWith('exp-aesthetic-');
 
   // Category Tag localization lookup
   const getLocalizedTag = () => {
@@ -178,7 +183,43 @@ export function ExperienceCard({
           <Navigation className="w-4 h-4 text-amber-700" />
         </button>
 
-        {isRestaurant ? (
+        {isAesthetic ? (
+          <div className="flex-1 flex items-center gap-1.5 min-w-0">
+            {/* Randevu Oluştur (Primary) */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onOpenAestheticBooking) {
+                  onOpenAestheticBooking(experience);
+                } else {
+                  onSelect(experience);
+                }
+              }}
+              className="flex-1 py-2.5 px-2 rounded-2xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white text-[11px] font-bold shadow-md shadow-rose-500/25 flex items-center justify-center gap-1 transition transform active:scale-95 cursor-pointer truncate"
+            >
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">Randevu Oluştur</span>
+            </button>
+
+            {/* Bilgi Almak İstiyorum (Secondary Outline) */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onOpenAestheticInquiry) {
+                  onOpenAestheticInquiry(experience);
+                } else {
+                  onSelect(experience);
+                }
+              }}
+              className="flex-1 py-2.5 px-2 rounded-2xl bg-white hover:bg-rose-50/70 text-rose-900 border border-rose-300 text-[11px] font-bold flex items-center justify-center gap-1 transition transform active:scale-95 cursor-pointer truncate shadow-2xs"
+            >
+              <Phone className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+              <span className="truncate">Bilgi Almak İstiyorum</span>
+            </button>
+          </div>
+        ) : isRestaurant ? (
           <>
             {/* Table Reservation Button */}
             <button

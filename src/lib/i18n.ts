@@ -179,7 +179,11 @@ export const translations = {
       "transfer": {
         "title": "Özel VIP Transfer",
         "desc": "Havalimanı karşılama, şoförlü lüks Mercedes Vito"
-      }
+      },
+      "aesthetic": {
+        "title": "Aesthetic & Beauty Clinics",
+        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+      },
     },
     "experiencesTitle": "İstanbul Hizmet & Deneyim Kataloğu",
     "experiencesSubtitle": "13 özel kategoride TÜRSAB lisanslı ve seçkin İstanbul turları, biletler ve aktiviteler.",
@@ -458,7 +462,11 @@ export const translations = {
       "transfer": {
         "title": "Private VIP Transfer",
         "desc": "Airport meet & greet with private chauffeured luxury Mercedes Vito"
-      }
+      },
+      "aesthetic": {
+        "title": "Aesthetic & Beauty Clinics",
+        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+      },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
     "experiencesSubtitle": "13 categories of TÜRSAB-certified premier tours, tickets, and activities.",
@@ -737,7 +745,11 @@ export const translations = {
       "transfer": {
         "title": "خدمة التوصيل VIP الخاصة",
         "desc": "استقبال خاص من المطار بسيارات مرسيدس فيتو الفاخرة مع سائق"
-      }
+      },
+      "aesthetic": {
+        "title": "Aesthetic & Beauty Clinics",
+        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+      },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
     "experiencesSubtitle": "13 categories of TÜRSAB-certified premier tours, tickets, and activities.",
@@ -1015,7 +1027,11 @@ export const translations = {
       "transfer": {
         "title": "VIP трансфер",
         "desc": "Встреча в аэропорту на роскошном Mercedes Vito с водителем"
-      }
+      },
+      "aesthetic": {
+        "title": "Aesthetic & Beauty Clinics",
+        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+      },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
     "experiencesSubtitle": "13 categories of TÜRSAB-certified premier tours, tickets, and activities.",
@@ -1293,7 +1309,11 @@ export const translations = {
       "transfer": {
         "title": "Privater VIP-Transfer",
         "desc": "Flughafen-Abholung mit privatem Mercedes Vito & Chauffeur"
-      }
+      },
+      "aesthetic": {
+        "title": "Aesthetic & Beauty Clinics",
+        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+      },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
     "experiencesSubtitle": "13 categories of TÜRSAB-certified premier tours, tickets, and activities.",
@@ -1571,7 +1591,11 @@ export const translations = {
       "transfer": {
         "title": "Transfert VIP Privé",
         "desc": "Accueil à l'aéroport avec chauffeur privé en Mercedes Vito de luxe"
-      }
+      },
+      "aesthetic": {
+        "title": "Aesthetic & Beauty Clinics",
+        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+      },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
     "experiencesSubtitle": "13 categories of TÜRSAB-certified premier tours, tickets, and activities.",

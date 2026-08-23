@@ -1337,7 +1337,7 @@
     "duration": "3 Saat",
     "coords": {
       "lat": 41.0315,
-      "lng": 28.9740
+      "lng": 28.974
     },
     "categoryTag": "Önerdiğimiz Restoranlar",
     "iconName": "Utensils",
@@ -1617,7 +1617,7 @@
     "duration": "3 Saat",
     "coords": {
       "lat": 41.0292,
-      "lng": 28.9790
+      "lng": 28.979
     },
     "categoryTag": "Önerdiğimiz Restoranlar",
     "iconName": "Utensils",
@@ -1816,5 +1816,341 @@
       "İrmik Helvası"
     ],
     "image": "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "exp-aesthetic-1",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Quartz Clinique",
+    "title": "Nişantaşı Glow & Fraksiyonel Cilt Yenileme",
+    "location": "Abdi İpekçi Cad., Nişantaşı / Şişli",
+    "phone": "+90 212 241 46 24",
+    "website": "https://www.quartzclinique.com/",
+    "agentNote": "Sıfır İyileşme Süresi (Zero Downtime), FDA Onaylı Cihazlar, Çok Dilli Medikal Konsiyerj, Otel Transfer Desteği",
+    "scoreStr": "4.8/5",
+    "price": 180,
+    "currency": "EUR",
+    "duration": "45 Dk",
+    "rating": 4.8,
+    "coords": {
+      "lat": 41.0485,
+      "lng": 28.9942
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1512290900672-1f4a9b40092c?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Ameliyatsız Yüz Gençleştirme",
+      "İleri Cilt Protokolü",
+      "Zero Downtime"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-2",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Maya Estetik",
+    "title": "Deep Clean HydraFacial & Leke Tedavisi",
+    "location": "Mecidiyeköy & Nişantaşı / Şişli",
+    "phone": "0850 444 87 23",
+    "website": "https://mayaestetik.com/",
+    "agentNote": "Vakumlu Vortex Teknolojisi, Cilt Tipi Analizi, Aynı Gün Şehri Gezmeye Devam Edebilme, Anında Canlılık",
+    "scoreStr": "4.7/5",
+    "price": 90,
+    "currency": "EUR",
+    "duration": "45 Dk",
+    "rating": 4.7,
+    "coords": {
+      "lat": 41.0664,
+      "lng": 28.9951
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Vortex Vakum",
+      "Gözenek Temizliği",
+      "Hyaluronik Serum"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-3",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Estetik International",
+    "title": "Organik Saç & Yüz Mezoterapisi",
+    "location": "Ataşehir & Fulya / Şişli",
+    "phone": "+90 549 471 15 24",
+    "website": "https://www.estetikinternational.com/",
+    "agentNote": "Kişiye Özel Biyo-Kokteyller, İnce Çizgi ve Gözenek Sıkılaştırma, VIP Lounge ve Karşılama",
+    "scoreStr": "4.6/5",
+    "price": 250,
+    "currency": "EUR",
+    "duration": "60 Dk",
+    "rating": 4.6,
+    "coords": {
+      "lat": 41.0582,
+      "lng": 28.9997
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1597764693654-15b3a1e7b6c4?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Kök Hücre",
+      "Mezoterapi",
+      "Biyo-Canlandırıcı"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-4",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Smile Hair Clinic",
+    "title": "Safir FUE & DHI Saç Restorasyonu",
+    "location": "Finans Merkezi Aksı, Ümraniye / Ataşehir",
+    "phone": "+90 216 740 03 33",
+    "website": "https://smilehairclinic.com/",
+    "agentNote": "Doğal Ön Saç Çizgisi Tasarımı, Maksimum Greft Garantisi, 12 Aylık Dijital Uzaktan Takip",
+    "scoreStr": "4.9/5",
+    "price": 1750,
+    "currency": "EUR",
+    "duration": "4 Saat",
+    "rating": 4.9,
+    "coords": {
+      "lat": 41.0025,
+      "lng": 29.1124
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Safir FUE",
+      "DHI Saç Ekimi",
+      "VIP Turist Paketi"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-5",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Vanity Cosmetic Surgery",
+    "title": "Baby Botox & Doğal Dudak Dolgusu",
+    "location": "Altunizade / Üsküdar",
+    "phone": "0850 441 54 44",
+    "website": "https://www.vanityclinic.com/",
+    "agentNote": "Mimikleri Dondurmayan Doğal Sonuçlar, Orijinal FDA Onaylı Dolgu Maddeleri, 15 Dakikalık Pratik Uygulama",
+    "scoreStr": "4.8/5",
+    "price": 220,
+    "currency": "EUR",
+    "duration": "30 Dk",
+    "rating": 4.8,
+    "coords": {
+      "lat": 41.0215,
+      "lng": 29.0435
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1597559925846-a4273af46397?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Baby Botox",
+      "Doğal Dudak Dolgusu",
+      "Altın Oran"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-6",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Memorial Wellness",
+    "title": "Lüks Oksijen & Anti-Stress Cilt Detoksu",
+    "location": "Zorlu Center, Beşiktaş",
+    "phone": "+90 212 314 66 66",
+    "website": "https://www.memorial.com.tr/",
+    "agentNote": "Saf Oksijen İnfüzyonu, JCI Akreditasyonlu Hastane Standartları, Zorlu Center VIP Lokasyonu",
+    "scoreStr": "4.9/5",
+    "price": 320,
+    "currency": "EUR",
+    "duration": "60 Dk",
+    "rating": 4.9,
+    "coords": {
+      "lat": 41.0662,
+      "lng": 29.0175
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Oksijen İnfüzyonu",
+      "Anti-Stress Detoks",
+      "Jet-Lag Recovery"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-7",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Dentakay Dental Clinic",
+    "title": "Hollywood Smile & Dijital Gülüş Tasarımı",
+    "location": "Fulya, Şişli / İstanbul",
+    "phone": "+90 544 456 00 20",
+    "website": "https://dentakay.com",
+    "agentNote": "3D CAD/CAM Ağız İçi Tarama, 5-7 Günde Hızlı Teslimat, VIP Havalimanı Karşılama, Çok Dilli Tercüman",
+    "scoreStr": "4.9/5",
+    "price": 2200,
+    "currency": "EUR",
+    "duration": "90 Dk",
+    "rating": 4.9,
+    "coords": {
+      "lat": 41.0558,
+      "lng": 28.9984
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Hollywood Smile",
+      "3D CAD/CAM",
+      "Zirkonyum Kaplama"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-8",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "ClinicPlast (Dr. Salih Onur Basat)",
+    "title": "Kapalı & Piezo Ultrasonic Rhinoplasty",
+    "location": "Terrace Fulya, Şişli / İstanbul",
+    "phone": "+90 533 150 90 90",
+    "website": "https://clinicplast.com",
+    "agentNote": "Kırmadan Ses Dalgalarıyla Kemik Şekillendirme (Piezo), Minimum Morluk ve Şişlik, Tam Donanımlı A-Plus Hastane",
+    "scoreStr": "4.8/5",
+    "price": 2800,
+    "currency": "EUR",
+    "duration": "3 Saat",
+    "rating": 4.8,
+    "coords": {
+      "lat": 41.0565,
+      "lng": 28.9995
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Piezo Rhinoplasty",
+      "Kapalı Burun Estetiği",
+      "Minimum Morluk"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-9",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Clinic Mono",
+    "title": "Vaser Hi-Def Liposuction & Mommy Makeover",
+    "location": "Mecidiyeköy / Şişli",
+    "phone": "+90 549 800 66 66",
+    "website": "https://clinicmono.com",
+    "agentNote": "Karın Germe, Göğüs Dikleştirme ve Liposuction Kombinasyonu, Özel Hemşire ve Otel Refakati",
+    "scoreStr": "4.7/5",
+    "price": 3500,
+    "currency": "EUR",
+    "duration": "4 Saat",
+    "rating": 4.7,
+    "coords": {
+      "lat": 41.0678,
+      "lng": 28.9945
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Vaser Hi-Def",
+      "Mommy Makeover",
+      "Kombine Vücut Cerrahisi"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-10",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "Elithair Istanbul Clinic",
+    "title": "Elit-DHI & İğnesiz Anestezi ile Saç / Sakal Ekimi",
+    "location": "Vadistanbul Aksı, Sarıyer / İstanbul",
+    "phone": "+90 212 909 00 11",
+    "website": "https://elithairtransplant.com",
+    "agentNote": "Dr. Balwi Patentli Ön Çizgi Protokolü, İğnesiz Comfort Anestezi, Tıraşsız DHI Ekim Seçeneği",
+    "scoreStr": "4.9/5",
+    "price": 1900,
+    "currency": "EUR",
+    "duration": "4 Saat",
+    "rating": 4.9,
+    "coords": {
+      "lat": 41.1082,
+      "lng": 28.9885
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Elit-DHI",
+      "İğnesiz Anestezi",
+      "Tıraşsız Ekim"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-11",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "ClinMedica Nişantaşı",
+    "title": "Kombine Medikal Estetik (Baby Botox, Jawline & Profhilo)",
+    "location": "Valikonağı Cad., Nişantaşı / Şişli",
+    "phone": "+90 542 300 70 80",
+    "website": "https://clinmedica.com",
+    "agentNote": "CE & FDA Onaylı Orijinal Ürün Garantisi, 30 Dakikalık Ekspres Uygulama, İfadeyi Değiştirmeyen Doğal İsviçre/Fransız Dolguları",
+    "scoreStr": "4.8/5",
+    "price": 350,
+    "currency": "EUR",
+    "duration": "30 Dk",
+    "rating": 4.8,
+    "coords": {
+      "lat": 41.0512,
+      "lng": 28.9925
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "Baby Botox",
+      "Jawline Dolgusu",
+      "Profhilo Gençlik Aşısı"
+    ]
+  },
+  {
+    "id": "exp-aesthetic-12",
+    "category": "14. Medikal Estetik & Güzellik",
+    "provider": "The LifeCo Wellbeing Istanbul",
+    "title": "Anti-Aging, IV Glutatyon / NAD+ Terapi & Bütünsel Detoks",
+    "location": "Akatlar, Beşiktaş / İstanbul",
+    "phone": "+90 212 324 07 07",
+    "website": "https://thelifeco.com",
+    "agentNote": "Hücresel Yenilenme (Anti-Aging IV), Jet-Lag ve Karaciğer Detoksu, Kızılötesi Sauna ve Ozon Terapisi",
+    "scoreStr": "4.9/5",
+    "price": 280,
+    "currency": "EUR",
+    "duration": "60 Dk",
+    "rating": 4.9,
+    "coords": {
+      "lat": 41.0825,
+      "lng": 29.0285
+    },
+    "categoryTag": "Aesthetic",
+    "iconName": "Sparkles",
+    "featured": true,
+    "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+    "specialties": [
+      "IV Glutatyon",
+      "NAD+ Terapi",
+      "Hücresel Detoks"
+    ]
   }
 ]

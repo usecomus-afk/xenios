@@ -365,8 +365,63 @@ async function runTestSuite() {
     `Misafir PWA ön kayıt anahtarı dinamik olarak kapatıldı ve DOM gizleme koşulu doğrulandı.`
   );
 
-  // Restore toggle back to true
-  KbsService.updateModuleSettings('hotel_pera', { enable_guest_self_kbs: true });
+  // -------------------------------------------------------------
+  // TEST 12: Aesthetic & Beauty 2-Way CRM Sync & Lead Contact Form Engine
+  // -------------------------------------------------------------
+  console.log('\n--- [TEST SUITE 12] Aesthetic & Beauty 2-Way CRM Sync & Lead Engine ---');
+  const { AestheticServiceEngine } = await import('./src/services/aestheticService.js');
+
+  const clinics = AestheticServiceEngine.getClinics();
+  assert(
+    clinics.length >= 12,
+    'Aesthetic & Beauty Clinic Catalog Ingestion',
+    `Docx portföyünden 12 seçkin klinik ve hizmet modeli başarıyla yüklendi (Klinik Sayısı: ${clinics.length}).`
+  );
+
+  const slots = await AestheticServiceEngine.getClinicAvailableSlots('clinic_quartz', 'srv_quartz_glow', '2026-08-25');
+  assert(
+    slots.length > 0 && slots.some(s => s.is_available),
+    'Clinic CRM Live Available Slots Query',
+    `Quartz Clinique için seçilen tarihte (${slots.length} saat dilimi) canlı CRM müsaitlik sorgusu yapıldı.`
+  );
+
+  const aptBooking = await AestheticServiceEngine.bookAppointment({
+    clinic_id: 'clinic_quartz',
+    service_id: 'srv_quartz_glow',
+    guest_name: 'Sophia Muller',
+    guest_phone: '+90 532 999 88 77',
+    guest_email: 'sophia@example.com',
+    hotel_id: 'hotel_pera',
+    room_number: '305',
+    appointment_date: '2026-08-25',
+    start_time: '11:30',
+    end_time: '12:15',
+    notes: 'Hassas cilt protokolü talebi'
+  });
+
+  assert(
+    aptBooking && aptBooking.crm_sync_status === 'SYNCED' && aptBooking.status === 'CONFIRMED',
+    'Atomic Appointment Booking & Clinic CRM Push',
+    `Randevu atomik olarak oluşturuldu ve kliniğin REST/CRM sistemine iletildi (Randevu ID: ${aptBooking.id}).`
+  );
+
+  const inquiryRes = await AestheticServiceEngine.processInquiryForm({
+    clinic_id: 'clinic_smile_hair',
+    service_id: 'srv_smile_hair_fue',
+    guest_name: 'David Beckham',
+    guest_email: 'david@vip.co.uk',
+    guest_phone: '+44 7700 900077',
+    preferred_contact_method: 'WHATSAPP',
+    message: 'Safir FUE için greft analizi ve otel transferi hakkında bilgi rica ederim.',
+    hotel_id: 'hotel_pera',
+    room_number: '304'
+  });
+
+  assert(
+    inquiryRes.success && inquiryRes.notificationSent && inquiryRes.portalTrackingUrl.includes('inquiry'),
+    'Aesthetic Lead Contact Form Processing & Notification Dispatch',
+    `Klinik lead formu işlendi; kliniğe HTML mail, misafire WhatsApp/SMS takip bağlantısı üretildi (${inquiryRes.portalTrackingUrl}).`
+  );
 
   console.log('\n================================================================');
   console.log(`📊 TEST SONUÇLARI: ${results.filter(r => r.status === 'PASSED').length}/${results.length} BAŞARILI (PASSED)`);

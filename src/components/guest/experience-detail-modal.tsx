@@ -21,6 +21,8 @@ interface ExperienceDetailModalProps {
   onOpenTransit: (exp: Experience) => void;
   onOpenCheckout: (exp: Experience) => void;
   onOpenRestaurantReserve?: (exp: Experience) => void;
+  onOpenAestheticBooking?: (exp: Experience) => void;
+  onOpenAestheticInquiry?: (exp: Experience) => void;
 }
 
 export function ExperienceDetailModal({
@@ -31,7 +33,9 @@ export function ExperienceDetailModal({
   onClose,
   onOpenTransit,
   onOpenCheckout,
-  onOpenRestaurantReserve
+  onOpenRestaurantReserve,
+  onOpenAestheticBooking,
+  onOpenAestheticInquiry
 }: ExperienceDetailModalProps) {
   const [isLiked, setIsLiked] = useState(false);
 
@@ -42,6 +46,7 @@ export function ExperienceDetailModal({
   const t = getT(lang);
   const imageSrc = experience.image || `/images/experiences/${experience.id}.jpg`;
   const isRestaurant = experience.category.toLowerCase().includes('restoran') || experience.id.startsWith('rest-');
+  const isAesthetic = experience.category.toLowerCase().includes('estetik') || experience.categoryTag === 'Aesthetic' || experience.id.startsWith('exp-aesthetic-');
 
   // Dynamic tailored steps based on category
   const steps = [
@@ -313,7 +318,35 @@ export function ExperienceDetailModal({
           </div>
 
           <div className="flex items-center gap-2">
-            {isRestaurant ? (
+            {isAesthetic ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenAestheticBooking) {
+                      onOpenAestheticBooking(experience);
+                    }
+                  }}
+                  className="px-4 sm:px-6 py-3 rounded-2xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white text-xs sm:text-sm font-bold shadow-lg shadow-rose-500/25 flex items-center gap-2 transition transform active:scale-95 cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Randevu Oluştur</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenAestheticInquiry) {
+                      onOpenAestheticInquiry(experience);
+                    }
+                  }}
+                  className="px-3.5 sm:px-5 py-3 rounded-2xl bg-white hover:bg-rose-50/80 text-rose-900 text-xs sm:text-sm font-bold border border-rose-300 shadow-sm flex items-center gap-1.5 transition transform active:scale-95 cursor-pointer"
+                >
+                  <Phone className="w-4 h-4 text-rose-600" />
+                  <span>Bilgi Almak İstiyorum</span>
+                </button>
+              </>
+            ) : isRestaurant ? (
               <>
                 <button
                   type="button"
