@@ -90,7 +90,7 @@ export default function GuestPage() {
     { key: t.categoriesList.art.title, rawKey: "Sanat & Semazen", iconPath: '/icons/categories/sanat-semazen.png', count: 4, desc: t.categoriesList.art.desc },
     { key: t.categoriesList.culture.title, rawKey: "Kültürel Miras", iconPath: '/icons/categories/kulturel-miras.png', count: 5, desc: t.categoriesList.culture.desc },
     { key: t.categoriesList.transfer.title, rawKey: "Özel VIP Transfer", iconPath: '/icons/categories/ozel-vip-transfer.png', count: 5, desc: t.categoriesList.transfer.desc },
-    { key: t.categoriesList.aesthetic?.title || "Aesthetic & Beauty Clinics", rawKey: "14. Medikal Estetik & Güzellik", iconPath: '/icons/categories/aesthetic-beauty.png', count: 12, desc: t.categoriesList.aesthetic?.desc || "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı" }
+    { key: t.categoriesList.aesthetic?.title || "Medikal Estetik & Güzellik", rawKey: "14. Medikal Estetik & Güzellik", iconPath: '/icons/categories/aesthetic-beauty.png', count: 12, desc: t.categoriesList.aesthetic?.desc || "Nişantaşı & Şişli'nin seçkin kliniklerinde medikal estetik, saç ekimi & cilt bakımı" }
   ];
 
   // Filter experiences (admin-suspended listings never reach the guest catalog)
@@ -199,6 +199,11 @@ export default function GuestPage() {
                 <h2 className="text-xl font-bold font-serif text-zinc-900">{t.categoriesList.restaurants.title}</h2>
                 <p className="text-xs text-zinc-500">{t.categoriesList.restaurants.desc}</p>
               </div>
+            ) : selectedCategory.toLowerCase().includes('estetik') || selectedCategory.toLowerCase().includes('aesthetic') || selectedCategory.toLowerCase().includes('güzellik') ? (
+              <div>
+                <h2 className="text-xl font-bold font-serif text-zinc-900">{t.categoriesList.aesthetic?.title || 'Medikal Estetik & Güzellik'}</h2>
+                <p className="text-xs text-zinc-500">{t.categoriesList.aesthetic?.desc || "Nişantaşı & Şişli'nin seçkin kliniklerinde medikal estetik, saç ekimi & cilt bakımı"}</p>
+              </div>
             ) : (
               <div>
                 <h2 className="text-xl font-bold font-serif text-zinc-900">{t.experiencesTitle}</h2>
@@ -221,19 +226,41 @@ export default function GuestPage() {
 
               {/* Horizontal Scroll Categories */}
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-                {categories.map((cat, cIdx) => (
-                  <button
-                    key={cIdx}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`text-[11px] px-3.5 py-1.5 rounded-xl whitespace-nowrap font-medium transition cursor-pointer ${
-                      selectedCategory === cat
-                        ? 'bg-amber-500 text-white font-bold shadow-sm'
-                        : 'bg-white text-zinc-600 hover:bg-amber-50 border border-amber-200/60'
-                    }`}
-                  >
-                    {cat === 'all' ? t.allCategories : cat.replace(/^[0-9]+.s*/, '')}
-                  </button>
-                ))}
+                {categories.map((cat, cIdx) => {
+                  const getCategoryLabel = (categoryRaw: string) => {
+                    if (categoryRaw === 'all') return t.allCategories;
+                    const cleaned = categoryRaw.replace(/^[0-9]+\.\s*/, '');
+                    const lower = cleaned.toLowerCase();
+                    if (lower.includes('estetik') || lower.includes('aesthetic') || lower.includes('güzellik')) return t.categoriesList.aesthetic?.title || cleaned;
+                    if (lower.includes('restoran')) return t.categoriesList.restaurants.title;
+                    if (lower.includes('boğaz') || lower.includes('yat')) return t.categoriesList.bosphorus.title;
+                    if (lower.includes('tarih') || lower.includes('müze')) return t.categoriesList.history.title;
+                    if (lower.includes('gastro') || lower.includes('gurme')) return t.categoriesList.gastronomy.title;
+                    if (lower.includes('fotoğraf') || lower.includes('kostüm')) return t.categoriesList.photo.title;
+                    if (lower.includes('macera') || lower.includes('doğa')) return t.categoriesList.adventure.title;
+                    if (lower.includes('hamam') || lower.includes('spa')) return t.categoriesList.hamam.title;
+                    if (lower.includes('alışveriş') || lower.includes('çarşı')) return t.categoriesList.shopping.title;
+                    if (lower.includes('semazen') || lower.includes('sanat')) return t.categoriesList.art.title;
+                    if (lower.includes('kültür') || lower.includes('miras')) return t.categoriesList.culture.title;
+                    if (lower.includes('transfer') || lower.includes('vip')) return t.categoriesList.transfer.title;
+                    if (lower.includes('yatırım') || lower.includes('invest')) return t.categoriesList.invest.title;
+                    return cleaned;
+                  };
+
+                  return (
+                    <button
+                      key={cIdx}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`text-[11px] px-3.5 py-1.5 rounded-xl whitespace-nowrap font-medium transition cursor-pointer ${
+                        selectedCategory === cat
+                          ? 'bg-amber-500 text-white font-bold shadow-sm'
+                          : 'bg-white text-zinc-600 hover:bg-amber-50 border border-amber-200/60'
+                      }`}
+                    >
+                      {getCategoryLabel(cat)}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -298,8 +325,11 @@ export default function GuestPage() {
                   'alisveris-carsilar.png',
                   'sanat-semazen.png',
                   'kulturel-miras.png',
-                  'ozel-vip-transfer.png'
+                  'ozel-vip-transfer.png',
+                  'aesthetic-beauty.png'
                 ].some(iconName => cat.iconPath.endsWith(iconName));
+
+                const isAesthetic = cat.iconPath.endsWith('aesthetic-beauty.png');
 
                 return (
                   <div
@@ -323,11 +353,11 @@ export default function GuestPage() {
                     className="p-4 rounded-3xl bg-white border border-amber-200/70 hover:border-amber-400 shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-between gap-4 group"
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
-                      <div className="w-14 h-14 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-1 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+                      <div className="w-16 h-16 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-1 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
                         <img 
                           src={cat.iconPath} 
                           alt={cat.key} 
-                          className={`w-full h-full object-contain transition-transform ${isScaledUp ? 'scale-135' : 'scale-100'}`}
+                          className={`w-full h-full object-contain transition-transform ${isAesthetic ? 'scale-140' : isScaledUp ? 'scale-135' : 'scale-110'}`}
                         />
                       </div>
                       <div className="min-w-0">

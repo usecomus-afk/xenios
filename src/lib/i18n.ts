@@ -181,8 +181,8 @@ export const translations = {
         "desc": "Havalimanı karşılama, şoförlü lüks Mercedes Vito"
       },
       "aesthetic": {
-        "title": "Aesthetic & Beauty Clinics",
-        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+        "title": "Medikal Estetik & Güzellik",
+        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde medikal estetik, saç ekimi & cilt bakımı"
       },
     },
     "experiencesTitle": "İstanbul Hizmet & Deneyim Kataloğu",
@@ -465,7 +465,7 @@ export const translations = {
       },
       "aesthetic": {
         "title": "Aesthetic & Beauty Clinics",
-        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+        "desc": "Medical aesthetics, hair transplant & skin care at elite clinics in Nişantaşı & Şişli"
       },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
@@ -747,8 +747,8 @@ export const translations = {
         "desc": "استقبال خاص من المطار بسيارات مرسيدس فيتو الفاخرة مع سائق"
       },
       "aesthetic": {
-        "title": "Aesthetic & Beauty Clinics",
-        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+        "title": "عيادات التجميل والعناية",
+        "desc": "الطب التجميلي وزراعة الشعر والعناية بالبشرة في أرقى عيادات نيشانتاشي وشيشلي"
       },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
@@ -1029,8 +1029,8 @@ export const translations = {
         "desc": "Встреча в аэропорту на роскошном Mercedes Vito с водителем"
       },
       "aesthetic": {
-        "title": "Aesthetic & Beauty Clinics",
-        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+        "title": "Эстетическая медицина и клиники",
+        "desc": "Косметология, пересадка волос и уход за кожей в элитных клиниках Нишанташи и Шишли"
       },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
@@ -1311,8 +1311,8 @@ export const translations = {
         "desc": "Flughafen-Abholung mit privatem Mercedes Vito & Chauffeur"
       },
       "aesthetic": {
-        "title": "Aesthetic & Beauty Clinics",
-        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+        "title": "Ästhetik & Schönheitskliniken",
+        "desc": "Medizinische Ästhetik, Haartransplantation & Hautpflege in Elite-Kliniken in Nişantaşı & Şişli"
       },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",
@@ -1593,8 +1593,8 @@ export const translations = {
         "desc": "Accueil à l'aéroport avec chauffeur privé en Mercedes Vito de luxe"
       },
       "aesthetic": {
-        "title": "Aesthetic & Beauty Clinics",
-        "desc": "Nişantaşı & Şişli'nin seçkin kliniklerinde estetik, saç ekimi & cilt bakımı"
+        "title": "Cliniques d'Esthétique & Beauté",
+        "desc": "Médecine esthétique, greffe de cheveux et soins de la peau dans les cliniques d'élite de Nişantaşı et Şişli"
       },
     },
     "experiencesTitle": "Istanbul Curated Experiences & Tours",

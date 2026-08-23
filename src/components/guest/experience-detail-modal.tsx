@@ -48,6 +48,25 @@ export function ExperienceDetailModal({
   const isRestaurant = experience.category.toLowerCase().includes('restoran') || experience.id.startsWith('rest-');
   const isAesthetic = experience.category.toLowerCase().includes('estetik') || experience.categoryTag === 'Aesthetic' || experience.id.startsWith('exp-aesthetic-');
 
+  const getLocalizedTag = () => {
+    const raw = experience.categoryTag || (experience.category.includes('.') ? experience.category.split('.')[1].trim() : experience.category);
+    const lower = raw.toLowerCase();
+    if (lower.includes('estetik') || lower.includes('aesthetic') || lower.includes('güzellik') || experience.categoryTag === 'Aesthetic') return t.categoriesList.aesthetic?.title || 'Medikal Estetik & Güzellik';
+    if (lower.includes('restoran')) return t.categoriesList.restaurants.title;
+    if (lower.includes('boğaz') || lower.includes('yat')) return t.categoriesList.bosphorus.title;
+    if (lower.includes('tarih') || lower.includes('müze')) return t.categoriesList.history.title;
+    if (lower.includes('gastro') || lower.includes('gurme')) return t.categoriesList.gastronomy.title;
+    if (lower.includes('fotoğraf') || lower.includes('kostüm')) return t.categoriesList.photo.title;
+    if (lower.includes('macera') || lower.includes('doğa')) return t.categoriesList.adventure.title;
+    if (lower.includes('hamam') || lower.includes('spa')) return t.categoriesList.hamam.title;
+    if (lower.includes('alışveriş') || lower.includes('çarşı')) return t.categoriesList.shopping.title;
+    if (lower.includes('semazen') || lower.includes('sanat')) return t.categoriesList.art.title;
+    if (lower.includes('kültür') || lower.includes('miras')) return t.categoriesList.culture.title;
+    if (lower.includes('transfer') || lower.includes('vip')) return t.categoriesList.transfer.title;
+    if (lower.includes('yatırım') || lower.includes('invest')) return t.categoriesList.invest.title;
+    return raw;
+  };
+
   // Dynamic tailored steps based on category
   const steps = [
     {
@@ -167,7 +186,7 @@ export function ExperienceDetailModal({
         <div className="space-y-3 pb-6 border-b border-zinc-200">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900">
-              {experience.categoryTag || experience.category}
+              {getLocalizedTag()}
             </span>
             {experience.cuisine && (
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-100 text-zinc-800">

@@ -153,18 +153,18 @@ export function AestheticBookingModal({
         {/* Modal Header */}
         <div className="p-4 sm:p-5 border-b border-rose-100 flex items-center justify-between gap-3 bg-gradient-to-r from-rose-50 to-orange-50 shrink-0">
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
-            <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-200 flex items-center justify-center p-1.5 shadow-xs shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-200 flex items-center justify-center p-1 shadow-xs shrink-0">
               <Image 
                 src="/icons/categories/aesthetic-beauty.png" 
                 alt="Aesthetic & Beauty" 
-                width={32} 
-                height={32} 
-                className="w-full h-full object-contain"
+                width={40} 
+                height={40} 
+                className="w-full h-full object-contain scale-110"
               />
             </div>
             <div className="min-w-0 flex-1">
               <span className="text-[10px] uppercase font-bold text-rose-800 tracking-wider block truncate">
-                Canlı CRM Randevu Motoru
+                {t.categoriesList.aesthetic?.title || "Medikal Estetik & Güzellik"}
               </span>
               <h2 className="text-xs sm:text-sm font-bold font-serif text-zinc-900 leading-snug line-clamp-1" title={experience.title}>
                 {experience.title}

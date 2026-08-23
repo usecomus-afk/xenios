@@ -39,6 +39,7 @@ export function ExperienceCard({
   const getLocalizedTag = () => {
     const raw = experience.categoryTag || (experience.category.includes('.') ? experience.category.split('.')[1].trim() : experience.category);
     const lower = raw.toLowerCase();
+    if (lower.includes('estetik') || lower.includes('aesthetic') || lower.includes('güzellik') || experience.categoryTag === 'Aesthetic') return t.categoriesList.aesthetic?.title || 'Medikal Estetik & Güzellik';
     if (lower.includes('restoran')) return t.categoriesList.restaurants.title;
     if (lower.includes('boğaz') || lower.includes('yat')) return t.categoriesList.bosphorus.title;
     if (lower.includes('tarih') || lower.includes('müze')) return t.categoriesList.history.title;
