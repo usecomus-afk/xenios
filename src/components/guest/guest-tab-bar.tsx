@@ -33,16 +33,16 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id as any)}
-              className={`flex flex-col items-center justify-center py-1 px-2 rounded-2xl transition relative cursor-pointer ${
+              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all relative cursor-pointer active:scale-90 ${
                 isActive 
-                  ? 'text-amber-700 font-bold' 
+                  ? 'text-amber-800 font-bold' 
                   : 'text-zinc-500 hover:text-zinc-800'
               }`}
             >
-              <div className={`p-1.5 rounded-xl transition ${
+              <div className={`p-1.5 rounded-2xl transition-all ${
                 isActive 
-                  ? 'bg-amber-100 text-amber-800' 
-                  : ''
+                  ? 'btn-3d text-amber-800 scale-105' 
+                  : 'hover:bg-amber-50/80'
               }`}>
                 {tab.iconType === 'image' && tab.imgSrc ? (
                   <div className="w-5 h-5 relative flex items-center justify-center">

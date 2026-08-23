@@ -159,9 +159,9 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
                   setCustomOption(item.options[0]);
                 }
               }}
-              className={`xenios-tile rounded-3xl p-4 sm:p-5 flex flex-col items-center text-center justify-between gap-3 min-h-[145px] group border transition-all shadow-sm bg-white relative ${
+              className={`btn-3d p-4 sm:p-5 flex flex-col items-center text-center justify-between gap-3 min-h-[145px] group relative ${
                 isEnabled
-                  ? 'cursor-pointer border-amber-200/70 hover:border-amber-400/90 hover:shadow-md'
+                  ? 'cursor-pointer'
                   : 'cursor-not-allowed border-zinc-200 opacity-50 grayscale'
               }`}
             >

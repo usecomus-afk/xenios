@@ -137,7 +137,7 @@ export default function GuestPage() {
             />
 
             {/* Curated Istanbul Experiences Banner (Kataloğu Keşfet Modülü) */}
-            <div className="bg-white rounded-3xl p-5 sm:p-6 border border-amber-300/80 shadow-md hover:shadow-lg transition space-y-4 relative overflow-hidden bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30">
+            <div className="btn-3d p-5 sm:p-6 space-y-4 relative overflow-hidden bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30">
               
               {/* Decorative subtle ambient light */}
               <div className="absolute -top-12 -right-12 w-44 h-44 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
@@ -174,7 +174,7 @@ export default function GuestPage() {
                 <div className="shrink-0 pt-2 sm:pt-0">
                   <button
                     onClick={() => setActiveTab('experiences')}
-                    className="w-full sm:w-auto px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl text-xs sm:text-sm shadow-md shadow-amber-500/25 transition transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-2xl text-xs sm:text-sm shadow-md transition transform hover:-translate-y-0.5 active:translate-y-0.5 active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer"
                   >
                     <Image 
                       src="/icons/katalogu-kesfet.png" 
@@ -350,10 +350,10 @@ export default function GuestPage() {
                       setSelectedCategory(matched);
                       setActiveTab('experiences');
                     }}
-                    className="p-4 rounded-3xl bg-white border border-amber-200/70 hover:border-amber-400 shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-between gap-4 group"
+                    className="btn-3d p-4 sm:p-5 cursor-pointer flex items-center justify-between gap-4 group"
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
-                      <div className="w-16 h-16 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-1 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+                      <div className="w-16 h-16 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-1 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform overflow-hidden">
                         <img 
                           src={cat.iconPath} 
                           alt={cat.key} 
@@ -371,7 +371,7 @@ export default function GuestPage() {
                     </div>
 
                     <div className="flex items-center gap-1 shrink-0 text-xs font-bold text-amber-600">
-                      <span className="px-2 py-0.5 bg-amber-50 rounded-full border border-amber-200 text-[11px]">
+                      <span className="px-2.5 py-1 bg-amber-50 rounded-full border border-amber-200 text-[11px] font-bold shadow-2xs">
                         {cat.count} {t.listingsCount}
                       </span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
