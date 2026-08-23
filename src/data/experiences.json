@@ -1838,7 +1838,7 @@
     "categoryTag": "Aesthetic",
     "iconName": "Sparkles",
     "featured": true,
-    "image": "https://images.unsplash.com/photo-1512290900672-1f4a9b40092c?auto=format&fit=crop&w=1200&q=80",
+    "image": "/images/experiences/exp-aesthetic-1.jpg",
     "specialties": [
       "Ameliyatsız Yüz Gençleştirme",
       "İleri Cilt Protokolü",
@@ -1866,7 +1866,7 @@
     "categoryTag": "Aesthetic",
     "iconName": "Sparkles",
     "featured": true,
-    "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=80",
+    "image": "/images/experiences/exp-aesthetic-2.jpg",
     "specialties": [
       "Vortex Vakum",
       "Gözenek Temizliği",
@@ -1894,7 +1894,7 @@
     "categoryTag": "Aesthetic",
     "iconName": "Sparkles",
     "featured": true,
-    "image": "https://images.unsplash.com/photo-1597764693654-15b3a1e7b6c4?auto=format&fit=crop&w=1200&q=80",
+    "image": "/images/experiences/exp-aesthetic-3.jpg",
     "specialties": [
       "Kök Hücre",
       "Mezoterapi",
@@ -1950,7 +1950,7 @@
     "categoryTag": "Aesthetic",
     "iconName": "Sparkles",
     "featured": true,
-    "image": "https://images.unsplash.com/photo-1597559925846-a4273af46397?auto=format&fit=crop&w=1200&q=80",
+    "image": "/images/experiences/exp-aesthetic-5.jpg",
     "specialties": [
       "Baby Botox",
       "Doğal Dudak Dolgusu",
