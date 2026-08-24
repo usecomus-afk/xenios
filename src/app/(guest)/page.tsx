@@ -67,7 +67,41 @@ export default function GuestPage() {
       setRequests(XeniosStore.getRequests());
     };
     window.addEventListener('xenios_requests_updated', handleReqUpdate);
-    return () => window.removeEventListener('xenios_requests_updated', handleReqUpdate);
+
+    const handleTab = (e: any) => {
+      const targetTab = e.detail?.tab;
+      if (targetTab) {
+        if (targetTab === 'ai') {
+          setIsAiOpen(true);
+        } else {
+          setActiveTab(targetTab);
+          setIsAiOpen(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    };
+    const handleOpenAi = () => setIsAiOpen(true);
+
+    window.addEventListener('xenios_tab_changed', handleTab);
+    window.addEventListener('xenios_open_ai', handleOpenAi);
+
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab');
+      if (tabParam && ['services', 'experiences', 'categories', 'ai', 'practical', 'invest'].includes(tabParam)) {
+        if (tabParam === 'ai') {
+          setIsAiOpen(true);
+        } else {
+          setActiveTab(tabParam as any);
+        }
+      }
+    }
+
+    return () => {
+      window.removeEventListener('xenios_requests_updated', handleReqUpdate);
+      window.removeEventListener('xenios_tab_changed', handleTab);
+      window.removeEventListener('xenios_open_ai', handleOpenAi);
+    };
   }, []);
 
   const currentHotel = hotels.find(h => h.id === activeHotelId) || hotels[0];
@@ -568,19 +602,6 @@ export default function GuestPage() {
           setIsAiOpen(false);
           if (activeTab === 'ai') setActiveTab('services');
         }}
-      />
-
-      {/* Bottom Sticky Navigation */}
-      <GuestTabBar
-        activeTab={activeTab}
-        onTabChange={(tab) => {
-          if (tab === 'ai') {
-            setIsAiOpen(true);
-          } else {
-            setActiveTab(tab);
-          }
-        }}
-        lang={lang}
       />
     </div>
   );
