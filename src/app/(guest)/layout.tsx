@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { MobileFooterNav } from '@/components/navigation/MobileFooterNav';
 
 export const metadata: Metadata = {
   title: 'Xenios - Misafir Rehberi & Concierge',
@@ -15,6 +16,7 @@ export default function GuestLayout({
       <div className="flex-1 pb-24">
         {children}
       </div>
+      <MobileFooterNav />
     </div>
   );
 }
