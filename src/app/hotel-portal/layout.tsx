@@ -66,9 +66,9 @@ export default function HotelPortalLayout({
 
   return (
     <HotelAuthGuard>
-      <div className="min-h-screen bg-[#f8f6f0] text-zinc-900 flex flex-col">
+      <div className={`${isSubPage ? 'min-h-screen' : 'h-[100dvh] max-h-[100dvh] overflow-hidden'} bg-[#f8f6f0] text-zinc-900 flex flex-col`}>
         {/* Modern Top Header Bar */}
-        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-200/80 shadow-xs px-3.5 sm:px-6 py-3">
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-200/80 shadow-xs px-3.5 sm:px-6 py-2 sm:py-2.5">
           <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
             
             {/* Left: Brand & Title / Back Button */}
@@ -97,25 +97,8 @@ export default function HotelPortalLayout({
               )}
             </div>
 
-            {/* Right: Hotel Switcher, Live Notifications & Logout */}
+            {/* Right: Live Notifications & Logout */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Hotel Selector */}
-              <div className="relative">
-                <select
-                  value={currentHotel.id}
-                  onChange={handleHotelChange}
-                  className="text-xs font-bold bg-amber-50/60 hover:bg-amber-50 border border-amber-300/80 text-zinc-900 rounded-2xl px-3 py-1.5 pr-7 focus:outline-none focus:ring-2 focus:ring-amber-500/40 appearance-none cursor-pointer shadow-xs max-w-[140px] sm:max-w-[210px] truncate"
-                  title="Yönetilen Otel"
-                >
-                  {hotels.map((h) => (
-                    <option key={h.id} value={h.id}>
-                      {h.name}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="w-3.5 h-3.5 text-amber-800 absolute right-2.5 top-2.5 pointer-events-none" />
-              </div>
-
               {/* Notification Button */}
               <Link
                 href="/hotel-portal/requests"
@@ -150,11 +133,12 @@ export default function HotelPortalLayout({
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 p-3.5 sm:p-6 md:p-8 max-w-6xl w-full mx-auto space-y-6">
+        <main className={`flex-1 w-full max-w-6xl mx-auto ${isSubPage ? 'p-3.5 sm:p-6 md:p-8 space-y-6 overflow-y-auto' : 'p-2 sm:p-3 md:p-4 overflow-hidden flex flex-col min-h-0'}`}>
           {children}
         </main>
       </div>
     </HotelAuthGuard>
   );
 }
+
 
