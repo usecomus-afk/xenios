@@ -6,12 +6,16 @@ import { Home, Compass, LayoutGrid, Building2 } from 'lucide-react';
 import Image from 'next/image';
 
 interface GuestTabBarProps {
-  activeTab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical' | 'invest';
-  onTabChange: (tab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical' | 'invest') => void;
-  lang: Language;
+  activeTab?: 'services' | 'experiences' | 'categories' | 'ai' | 'practical' | 'invest';
+  onTabChange?: (tab: 'services' | 'experiences' | 'categories' | 'ai' | 'practical' | 'invest') => void;
+  lang?: Language;
 }
 
-export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) {
+export function GuestTabBar({ 
+  activeTab = 'services', 
+  onTabChange, 
+  lang = 'tr' 
+}: GuestTabBarProps) {
   const t = getT(lang);
 
   const tabs = [
@@ -32,7 +36,7 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
           return (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id as any)}
+              onClick={() => onTabChange?.(tab.id as any)}
               className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all relative cursor-pointer active:scale-90 ${
                 isActive 
                   ? 'text-amber-800 font-bold' 
