@@ -146,6 +146,7 @@ export default function HotelPortalDashboard() {
                   alt={mod.title}
                   width={56}
                   height={56}
+                  unoptimized
                   className="w-full h-full object-contain"
                 />
                 {mod.hasPulse && (
