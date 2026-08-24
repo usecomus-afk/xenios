@@ -141,26 +141,26 @@ export default function HotelPortalDashboard() {
           >
             {/* Top Row: Icon & Badge */}
             <div className="flex items-start justify-between gap-1.5 sm:gap-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-xl bg-amber-50/80 border border-amber-200/70 p-1 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform overflow-hidden relative">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl bg-amber-50/90 border border-amber-200/80 p-1 sm:p-1.5 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform overflow-hidden relative">
                 <Image
                   src={mod.iconPath}
                   alt={mod.title}
-                  width={44}
-                  height={44}
+                  width={56}
+                  height={56}
                   unoptimized
                   className="w-full h-full object-contain"
                 />
                 {mod.hasPulse && (
-                  <span className="absolute top-0.5 right-0.5 flex h-2 w-2">
+                  <span className="absolute top-1 right-1 flex h-2.5 w-2.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-600"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-600"></span>
                   </span>
                 )}
               </div>
 
               {mod.badge && (
                 <span
-                  className={`text-[8px] sm:text-[9px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full border shadow-2xs shrink-0 truncate max-w-[90px] sm:max-w-none ${
+                  className={`text-[8.5px] sm:text-[9.5px] font-bold px-2 py-0.5 rounded-full border shadow-2xs shrink-0 truncate max-w-[100px] sm:max-w-none ${
                     mod.badgeType === 'danger'
                       ? 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse'
                       : mod.badgeType === 'success'
