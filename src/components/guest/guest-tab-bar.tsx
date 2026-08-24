@@ -24,7 +24,7 @@ export function GuestTabBar({ activeTab, onTabChange, lang }: GuestTabBarProps) 
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-lg border-t border-amber-200/80 px-2 py-1.5 safe-bottom z-40 shadow-2xl">
+    <nav className="mobile-bottom-nav bg-white/95 backdrop-blur-xl border-t border-amber-200/90 px-2 py-1.5 safe-bottom shadow-2xl">
       <div className="max-w-md mx-auto flex items-center justify-around">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;

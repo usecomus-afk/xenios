@@ -126,9 +126,24 @@ body {
   animation: xenios-pulse-line 3.2s ease-in-out infinite;
 }
 
+/* Mobile Bottom Navigation Bar - Fixed Viewport Stacking Context */
+.mobile-bottom-nav {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
+  will-change: transform;
+  z-index: 50 !important;
+  contain: layout paint;
+  isolation: isolate;
+}
+
 /* Mobile Safe Areas */
 .safe-bottom {
-  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 .safe-top {
