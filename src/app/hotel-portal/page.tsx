@@ -6,10 +6,7 @@ import { ServiceRequest, Hotel } from '@/lib/types';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  BellRing,
-  ArrowRight,
-  Sparkles,
-  Building2
+  ArrowRight
 } from 'lucide-react';
 
 interface PortalModule {
@@ -83,7 +80,7 @@ export default function HotelPortalDashboard() {
       desc: 'Oda durumları, kat envanteri, anlık doluluk ve temizlik takibi',
       href: '/hotel-portal/rooms',
       iconPath: '/icons/hotel-portal/oda-panosu.png',
-      badge: `${currentHotel.rooms.length} Tanımlı Oda`,
+      badge: `${currentHotel.rooms?.length || 0} Tanımlı Oda`,
       badgeType: 'neutral'
     },
     {
@@ -134,50 +131,16 @@ export default function HotelPortalDashboard() {
   ];
 
   return (
-    <div className="space-y-6 pb-12">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-amber-500/15 via-amber-100/40 to-amber-50/70 p-6 rounded-3xl border border-amber-300 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase font-extrabold tracking-widest text-amber-900 bg-amber-200/80 px-2.5 py-0.5 rounded-full border border-amber-300 font-mono">
-              {currentHotel.type || 'Lüks Otel'}
-            </span>
-            <span className="text-xs text-zinc-600 font-medium">{currentHotel.district}, İstanbul</span>
-          </div>
-          <h1 className="text-xl sm:text-2xl font-bold font-serif text-zinc-900 mt-1.5">
-            {currentHotel.name} • Yönetim Paneli
-          </h1>
-          <p className="text-xs text-zinc-600 mt-1 max-w-xl">
-            Tüm otel operasyonlarınızı, canlı oda taleplerini ve kanal entegrasyonlarını tek merkezden yönetin.
-          </p>
-        </div>
-
-        {hasUnread && (
-          <Link
-            href="/hotel-portal/requests"
-            className="self-start sm:self-auto px-4 py-3 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold rounded-2xl text-xs flex items-center gap-2.5 shadow-md shadow-rose-600/25 transition transform hover:scale-[1.02] active:scale-95 shrink-0 cursor-pointer"
-          >
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
-            </span>
-            <BellRing className="w-4 h-4 text-white" />
-            <span>{pendingRequests.length} Yeni Oda Talebi Var</span>
-          </Link>
-        )}
-      </div>
-
-      {/* 8 Module Grid - 3D Claymorphism Soft Style */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+    <div className="space-y-4 sm:space-y-6 pb-12">
+      <div className="grid grid-cols-2 gap-3 sm:gap-5">
         {modules.map((mod) => (
           <Link
             key={mod.id}
             href={mod.href}
-            className="btn-3d p-5 flex flex-col justify-between gap-4 group cursor-pointer text-left min-h-[190px]"
+            className="btn-3d p-3.5 sm:p-5 flex flex-col justify-between gap-3 sm:gap-4 group cursor-pointer text-left min-h-[170px] sm:min-h-[190px]"
           >
-            {/* Top Row: Icon & Badge */}
-            <div className="flex items-start justify-between gap-3">
-              <div className="w-16 h-16 rounded-2xl bg-amber-50/80 border border-amber-200/70 p-2 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform overflow-hidden relative">
+            <div className="flex items-start justify-between gap-2 sm:gap-3">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-amber-50/80 border border-amber-200/70 p-1.5 sm:p-2 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform overflow-hidden relative">
                 <Image
                   src={mod.iconPath}
                   alt={mod.title}
@@ -186,16 +149,16 @@ export default function HotelPortalDashboard() {
                   className="w-full h-full object-contain"
                 />
                 {mod.hasPulse && (
-                  <span className="absolute top-1.5 right-1.5 flex h-3 w-3">
+                  <span className="absolute top-1 right-1 sm:top-1.5 sm:right-1.5 flex h-2.5 w-2.5 sm:h-3 sm:w-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-600"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3 sm:w-3 bg-rose-600"></span>
                   </span>
                 )}
               </div>
 
               {mod.badge && (
                 <span
-                  className={`text-[10px] font-bold px-2.5 py-1 rounded-full border shadow-2xs shrink-0 ${
+                  className={`text-[9px] sm:text-[10px] font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border shadow-2xs shrink-0 ${
                     mod.badgeType === 'danger'
                       ? 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse'
                       : mod.badgeType === 'success'
@@ -208,20 +171,18 @@ export default function HotelPortalDashboard() {
               )}
             </div>
 
-            {/* Middle: Title & Description */}
             <div className="space-y-1">
-              <h2 className="text-sm font-bold text-zinc-900 group-hover:text-amber-800 transition-colors leading-snug">
+              <h2 className="text-xs sm:text-sm font-bold text-zinc-900 group-hover:text-amber-800 transition-colors leading-snug line-clamp-2 sm:line-clamp-1">
                 {mod.title}
               </h2>
-              <p className="text-[11px] text-zinc-500 leading-relaxed line-clamp-2">
+              <p className="text-[10px] sm:text-[11px] text-zinc-500 leading-relaxed line-clamp-2">
                 {mod.desc}
               </p>
             </div>
 
-            {/* Bottom: Action Arrow */}
-            <div className="pt-2 border-t border-zinc-100 flex items-center justify-between text-[11px] font-bold text-amber-700 group-hover:text-amber-900">
+            <div className="pt-2 border-t border-zinc-100 flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-amber-700 group-hover:text-amber-900">
               <span>Modülü Aç</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-amber-600" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform text-amber-600" />
             </div>
           </Link>
         ))}
