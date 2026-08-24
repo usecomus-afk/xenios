@@ -12,10 +12,9 @@ export default function GuestLayout({
 }) {
   return (
     <div className="min-h-screen bg-[#f8f6f0] text-zinc-900 w-full relative flex flex-col antialiased">
-      {/* İçerik alanı - Alt navigasyon barı sabit (fixed) ve bağımsız rendering katmanında çalışır */}
-      <main className="flex-1 w-full">
+      <div className="flex-1 pb-24">
         {children}
-      </main>
+      </div>
     </div>
   );
 }
