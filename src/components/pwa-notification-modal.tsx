@@ -12,7 +12,6 @@ import {
   Volume2, 
   VolumeX, 
   Compass, 
-  Scale, 
   X, 
   Hotel,
   CheckCircle2
@@ -157,28 +156,7 @@ export function PwaNotificationModal({ isOpen, onClose }: { isOpen: boolean; onC
             </button>
           </div>
 
-          {/* 3. Hakem Masası */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-zinc-50 border border-zinc-200/80">
-            <div className="flex items-center gap-2.5">
-              <Scale className="w-4 h-4 text-purple-600" />
-              <div>
-                <strong className="text-zinc-900 block font-bold text-[11px]">Hakem Masası & İade Takibi</strong>
-                <span className="text-[10px] text-zinc-500">Şikayet inceleme ve para iadesi kararları</span>
-              </div>
-            </div>
-            <button
-              onClick={() => handleToggle('disputes')}
-              className={`w-10 h-6 rounded-full transition cursor-pointer p-0.5 ${
-                prefs.disputes ? 'bg-emerald-600' : 'bg-zinc-300'
-              }`}
-            >
-              <div className={`w-5 h-5 rounded-full bg-white transition transform ${
-                prefs.disputes ? 'translate-x-4' : 'translate-x-0'
-              }`} />
-            </button>
-          </div>
-
-          {/* 4. Sesli Uyarı */}
+          {/* 3. Sesli Uyarı */}
           <div className="flex items-center justify-between p-3 rounded-xl bg-zinc-50 border border-zinc-200/80">
             <div className="flex items-center gap-2.5">
               {prefs.sound ? <Volume2 className="w-4 h-4 text-zinc-700" /> : <VolumeX className="w-4 h-4 text-zinc-400" />}
