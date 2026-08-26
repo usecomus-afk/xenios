@@ -146,7 +146,7 @@ export default function GuestPage() {
   const activePendingRequests = requests.filter(r => r.status !== 'completed');
 
   return (
-    <div className="min-h-screen bg-[#f8f6f0] pb-32 sm:pb-28 text-zinc-900 w-full">
+    <div className="w-full text-zinc-900">
       {/* Hotel Header & Credentials */}
       <HotelHeader
         hotel={currentHotel}

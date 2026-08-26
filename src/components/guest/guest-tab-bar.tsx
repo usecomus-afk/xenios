@@ -87,10 +87,11 @@ export function GuestTabBar({
         bottom: 0,
         left: 0,
         right: 0,
-        width: '100vw',
+        width: '100%',
+        maxWidth: '100vw',
         zIndex: 99999,
-        transform: 'translate3d(0, 0, 0)',
-        WebkitTransform: 'translate3d(0, 0, 0)'
+        transform: 'none',
+        WebkitTransform: 'none'
       }}
     >
       <div className="max-w-md mx-auto flex items-center justify-around">
