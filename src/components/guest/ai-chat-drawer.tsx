@@ -6,7 +6,7 @@ import { XeniosStore } from '@/lib/store';
 import { askGeminiConcierge, ChatMessage } from '@/lib/gemini';
 import { GuestPreferenceSurvey } from './guest-preference-survey';
 import { useState, useEffect, useRef } from 'react';
-import { Send, User, X, UserCog } from 'lucide-react';
+import { Send, User, X, UserCog, Zap, Coins, ChevronDown, ChevronUp, ShieldCheck, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
 interface AiChatDrawerProps {
@@ -26,6 +26,8 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
   const [introDismissed, setIntroDismissed] = useState(true);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [tokenStats, setTokenStats] = useState(XeniosStore.getAiTokenStats());
+  const [showTokenDetails, setShowTokenDetails] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>(() => [
     {
       id: 'init-1',
@@ -46,6 +48,16 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
   }, [messages]);
 
   useEffect(() => {
+    const handleTokenUpdate = () => {
+      setTokenStats(XeniosStore.getAiTokenStats());
+    };
+    window.addEventListener('xenios_ai_token_updated', handleTokenUpdate);
+    return () => {
+      window.removeEventListener('xenios_ai_token_updated', handleTokenUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
     if (isOpen) {
       const prev = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
@@ -59,6 +71,7 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
     if (isOpen) {
       setProfile(XeniosStore.getGuestProfile());
       setIntroDismissed(XeniosStore.getAiIntroDismissed());
+      setTokenStats(XeniosStore.getAiTokenStats());
       setShowSurvey(false);
       setMessages([
         {
@@ -218,6 +231,53 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
           </div>
         </div>
 
+        {/* Live Token Spending & Cache Savings Bar */}
+        <div className="bg-zinc-900 border-b border-amber-500/30 text-white px-3.5 py-2 text-[11px] flex flex-col gap-1.5 shadow-inner">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="flex items-center gap-1 font-mono font-bold text-amber-300">
+                <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                <span>{tokenStats.totalTokensUsed.toLocaleString()} Token</span>
+              </span>
+              <span className="text-zinc-500">|</span>
+              <span className="font-mono text-zinc-300">
+                ₺{(tokenStats.estimatedCostUSD * 38.5).toFixed(2)}
+              </span>
+              <span className="px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                <span>%{Math.round((tokenStats.totalTokensSaved / (tokenStats.totalTokensUsed + tokenStats.totalTokensSaved || 1)) * 100)} Tasarruf</span>
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowTokenDetails(!showTokenDetails)}
+              className="text-[10px] text-amber-300/80 hover:text-amber-200 flex items-center gap-0.5 font-bold cursor-pointer transition"
+            >
+              <span>{showTokenDetails ? 'Kapat' : 'Detay'}</span>
+              {showTokenDetails ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            </button>
+          </div>
+
+          {/* Expandable Token Analytics Popover */}
+          {showTokenDetails && (
+            <div className="mt-1 pt-2 border-t border-zinc-800 grid grid-cols-3 gap-2 text-[10px] text-zinc-400 animate-in fade-in">
+              <div className="bg-zinc-800/80 p-1.5 rounded-xl border border-zinc-700/60 text-center">
+                <span className="block text-[9px] text-zinc-500 font-bold">GİRDİ / İSTEM</span>
+                <span className="font-mono font-bold text-white">{tokenStats.totalPromptTokens.toLocaleString()}</span>
+              </div>
+              <div className="bg-zinc-800/80 p-1.5 rounded-xl border border-zinc-700/60 text-center">
+                <span className="block text-[9px] text-zinc-500 font-bold">YANIT / ÇIKTI</span>
+                <span className="font-mono font-bold text-amber-400">{tokenStats.totalCompletionTokens.toLocaleString()}</span>
+              </div>
+              <div className="bg-zinc-800/80 p-1.5 rounded-xl border border-zinc-700/60 text-center">
+                <span className="block text-[9px] text-emerald-400 font-bold">ÖNBELLEK KAZANÇ</span>
+                <span className="font-mono font-bold text-emerald-400">+{tokenStats.totalTokensSaved.toLocaleString()}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Survey Drawer Overlay if open */}
         {showSurvey ? (
           <div className="flex-1 overflow-y-auto p-4 bg-[#fbf8f1] overscroll-contain">
@@ -277,8 +337,15 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
                         </div>
                       )}
 
-                      <div className={`text-[9px] font-mono ${isUser ? 'text-amber-100 text-right' : 'text-zinc-400'}`}>
-                        {msg.time}
+                      <div className={`text-[9px] font-mono flex items-center justify-between gap-2 ${isUser ? 'text-amber-100 justify-end' : 'text-zinc-400'}`}>
+                        {!isUser && msg.tokenUsage && (
+                          <span className="text-[9px] font-mono text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">
+                            {msg.tokenUsage.source === 'gemini_2_5_flash'
+                              ? `⚡ ${msg.tokenUsage.totalTokens} token`
+                              : '💾 Önbellek (0 token)'}
+                          </span>
+                        )}
+                        <span>{msg.time}</span>
                       </div>
                     </div>
 

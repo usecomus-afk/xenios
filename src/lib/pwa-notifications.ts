@@ -111,5 +111,40 @@ export const PwaNotificationManager = {
       'PWA bildirimleriniz başarıyla aktif edildi! Oda talepleriniz ve rezervasyon güncellemeleri anında buraya iletilecektir.',
       '/hotel-portal/requests'
     );
+  },
+
+  setupGlobalNotificationListeners() {
+    if (typeof window === 'undefined') return;
+
+    // Listen to new room requests
+    window.addEventListener('xenios_request_created', ((e: CustomEvent) => {
+      const detail = e.detail;
+      this.showNotification(
+        '🛎️ Yeni Oda Hizmeti Talebi',
+        detail?.title ? `"${detail.title}" talebiniz personele iletildi.` : 'Talebiniz resepsiyona başarıyla iletildi.',
+        '/'
+      );
+    }) as EventListener);
+
+    // Listen to new bookings
+    window.addEventListener('xenios_booking_created', ((e: CustomEvent) => {
+      const detail = e.detail;
+      this.showNotification(
+        '🎟️ Rezervasyonunuz Onaylandı',
+        detail?.title ? `"${detail.title}" rezervasyonunuz başarıyla tamamlandı.` : 'Rezervasyonunuz kaydedildi.',
+        '/bookings'
+      );
+    }) as EventListener);
+
+    // Listen to broadcast announcements from Pilot Deck
+    window.addEventListener('xenios_broadcast_notification', ((e: CustomEvent) => {
+      const detail = e.detail;
+      this.showNotification(
+        detail?.title || '📢 Xenios Canlı Sistem Bildirimi',
+        detail?.body || 'Sistem ve operasyon güncellemesi yayınlandı.',
+        detail?.url || '/'
+      );
+    }) as EventListener);
   }
 };
+

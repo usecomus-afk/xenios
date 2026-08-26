@@ -1,5 +1,6 @@
-import { GuestProfile } from './types';
+import { GuestProfile, TokenUsageInfo } from './types';
 import { UserPreferences, AiActionItem } from '@/types/comusAi';
+import { XeniosStore } from './store';
 
 export interface ChatMessage {
   id: string;
@@ -14,6 +15,7 @@ export interface ChatMessage {
     action?: string;
   }>;
   negative_locked_categories?: string[];
+  tokenUsage?: TokenUsageInfo;
 }
 
 export async function askGeminiConcierge(
@@ -44,6 +46,9 @@ export async function askGeminiConcierge(
 
     if (res.ok) {
       const data = await res.json();
+      if (data.tokenUsage) {
+        XeniosStore.recordAiTokenUsage(data.tokenUsage);
+      }
       return {
         id: `msg-${Date.now()}`,
         sender: 'assistant',
@@ -51,7 +56,8 @@ export async function askGeminiConcierge(
         time: now,
         actions: data.actions,
         recommendations: data.recommendations,
-        negative_locked_categories: data.negative_locked_categories
+        negative_locked_categories: data.negative_locked_categories,
+        tokenUsage: data.tokenUsage
       };
     }
   } catch (err) {

@@ -92,4 +92,12 @@ export interface ComusAiChatResponse {
   negative_locked_categories?: string[];
   source: 'gemini_2_5_flash' | 'instant_knowledge' | 'cache_hit' | 'local_fallback' | 'error_fallback';
   tokensSaved?: boolean;
+  tokenUsage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+    cachedTokensSaved: number;
+    estimatedCostUSD: number;
+    source: string;
+  };
 }

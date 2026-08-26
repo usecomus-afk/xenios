@@ -117,6 +117,12 @@ export default function PilotMasterDeckPage() {
   const [newHotelCheckout, setNewHotelCheckout] = useState('11:30');
   const [newHotelReceptionExt, setNewHotelReceptionExt] = useState('9');
 
+  // Token & Broadcast state
+  const [tokenStats, setTokenStats] = useState(() => XeniosStore.getAiTokenStats());
+  const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
+  const [broadcastTitle, setBroadcastTitle] = useState('📢 Özel VIP Boğaz Turu Duyurusu');
+  const [broadcastBody, setBroadcastBody] = useState('Bu akşama özel gün batımı yat turlarımızda partner otel misafirlerine %15 indirim fırsatı!');
+
   const refreshAll = () => {
     setUser(XeniosStore.getUser());
     setExperiences(XeniosStore.getExperiences());
@@ -125,16 +131,19 @@ export default function PilotMasterDeckPage() {
     setHotels(XeniosStore.getHotels());
     setBookings(XeniosStore.getBookings());
     setRequests(XeniosStore.getRequests());
+    setTokenStats(XeniosStore.getAiTokenStats());
   };
 
   useEffect(() => {
     refreshAll();
+    const handleToken = () => setTokenStats(XeniosStore.getAiTokenStats());
     window.addEventListener('xenios_experiences_updated', refreshAll);
     window.addEventListener('xenios_properties_updated', refreshAll);
     window.addEventListener('xenios_investment_leads_updated', refreshAll);
     window.addEventListener('xenios_hotels_updated', refreshAll);
     window.addEventListener('xenios_bookings_updated', refreshAll);
     window.addEventListener('xenios_requests_updated', refreshAll);
+    window.addEventListener('xenios_ai_token_updated', handleToken);
     return () => {
       window.removeEventListener('xenios_experiences_updated', refreshAll);
       window.removeEventListener('xenios_properties_updated', refreshAll);
@@ -142,6 +151,7 @@ export default function PilotMasterDeckPage() {
       window.removeEventListener('xenios_hotels_updated', refreshAll);
       window.removeEventListener('xenios_bookings_updated', refreshAll);
       window.removeEventListener('xenios_requests_updated', refreshAll);
+      window.removeEventListener('xenios_ai_token_updated', handleToken);
     };
   }, []);
 
@@ -359,8 +369,11 @@ export default function PilotMasterDeckPage() {
     toast.success("Finansal rapor CSV formatında başarıyla indirildi!");
   };
 
-  // Categories list
-  const categories = ['ALL', 'Boğaz Turları & Yat', 'Restoran & Meyhane', 'Müzeler & Saraylar', 'Tarihi Hamamlar', 'Gece Hayatı & Kokteyl', 'Özel Ulaşım & VIP'];
+  // Dynamic categories list from all live catalog items
+  const categories = useMemo(() => {
+    const set = new Set(experiences.map(e => e.category || e.categoryTag || 'Genel'));
+    return ['ALL', ...Array.from(set)];
+  }, [experiences]);
 
   const filteredExperiences = experiences.filter(exp => {
     const matchCat = selectedCategory === 'ALL' || exp.category === selectedCategory || exp.categoryTag === selectedCategory;
@@ -902,29 +915,77 @@ export default function PilotMasterDeckPage() {
       {activeTab === 'ai' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="bg-white p-6 rounded-3xl border border-amber-200/80 shadow-xs space-y-4">
-            <div className="flex items-center gap-2">
-              <Bot className="w-5 h-5 text-amber-600" />
-              <h3 className="text-base font-bold text-zinc-900">ComusAI Gemini Concierge & Token Optimizasyon Durumu</h3>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-amber-100 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-300 flex items-center justify-center text-amber-700">
+                  <Bot className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-zinc-900">ComusAI Gemini Concierge & Canlı Token Harcama Sayacı</h3>
+                  <p className="text-xs text-zinc-500">Misafir etkileşimleri, token sarfiyatı ve önbellek tasarruf telemetrisi</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsBroadcastModalOpen(true)}
+                  className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-2xl text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer"
+                >
+                  <BellRing className="w-4 h-4" />
+                  <span>📢 PWA Bildirimi Gönder</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    XeniosStore.resetAiTokenStats();
+                    toast.success("AI Token Harcama Sayacı sıfırlandı!");
+                  }}
+                  className="px-3 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold rounded-2xl text-xs flex items-center gap-1.5 transition cursor-pointer"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Sayacı Sıfırla</span>
+                </button>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <div className="p-4 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-1">
-                <span className="text-[10px] font-bold text-purple-700 uppercase">Aktif Model</span>
-                <strong className="text-base font-bold text-zinc-900 block">Gemini 2.5 Flash</strong>
-                <span className="text-[10px] text-emerald-700 font-semibold">● Bağlantı Aktif & Hızlı</span>
+            {/* Live Token Metrics Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="p-4 bg-purple-50/80 border border-purple-200 rounded-2xl space-y-1">
+                <span className="text-[10px] font-bold text-purple-700 uppercase">Toplam Harcanan Token</span>
+                <strong className="text-xl font-bold font-mono text-zinc-900 block">{tokenStats.totalTokensUsed.toLocaleString()}</strong>
+                <span className="text-[10px] text-purple-800 font-semibold">{tokenStats.totalPromptTokens.toLocaleString()} Girdi · {tokenStats.totalCompletionTokens.toLocaleString()} Çıktı</span>
               </div>
 
-              <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-2xl space-y-1">
-                <span className="text-[10px] font-bold text-amber-800 uppercase">Token Tasarruf Oranı</span>
-                <strong className="text-base font-bold text-amber-900 block">%78 Tasarruf</strong>
-                <span className="text-[10px] text-zinc-600">Tekrarlayan sorgular önbellekten yanıtlanır</span>
+              <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl space-y-1">
+                <span className="text-[10px] font-bold text-emerald-800 uppercase">Önbellekten Kurtarılan</span>
+                <strong className="text-xl font-bold font-mono text-emerald-700 block">+{tokenStats.totalTokensSaved.toLocaleString()}</strong>
+                <span className="text-[10px] text-emerald-800 font-semibold">%{Math.round((tokenStats.totalTokensSaved / (tokenStats.totalTokensUsed + tokenStats.totalTokensSaved || 1)) * 100)} Maliyet Tasarrufu</span>
               </div>
 
-              <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-1">
-                <span className="text-[10px] font-bold text-emerald-800 uppercase">Çok Dilli Yanıt Motoru</span>
-                <strong className="text-base font-bold text-zinc-900 block">6 Dil Canlı</strong>
-                <span className="text-[10px] text-zinc-600">TR, EN, AR, RU, DE, FR</span>
+              <div className="p-4 bg-amber-50/80 border border-amber-200 rounded-2xl space-y-1">
+                <span className="text-[10px] font-bold text-amber-800 uppercase">Tahmini Toplam Maliyet</span>
+                <strong className="text-xl font-bold font-mono text-amber-900 block">₺{(tokenStats.estimatedCostUSD * 38.5).toFixed(2)}</strong>
+                <span className="text-[10px] text-zinc-600 font-mono">${tokenStats.estimatedCostUSD.toFixed(5)} USD</span>
               </div>
+
+              <div className="p-4 bg-blue-50/80 border border-blue-200 rounded-2xl space-y-1">
+                <span className="text-[10px] font-bold text-blue-800 uppercase">Sorgu & Hit Oranı</span>
+                <strong className="text-xl font-bold font-mono text-blue-950 block">{tokenStats.totalQueries} İstek</strong>
+                <span className="text-[10px] text-blue-800 font-semibold">{tokenStats.cacheHitQueries} Önbellek Yanıtı</span>
+              </div>
+            </div>
+
+            {/* Architecture Details */}
+            <div className="p-4 rounded-2xl bg-zinc-50 border border-zinc-200/80 space-y-2 text-xs text-zinc-700">
+              <h4 className="font-bold text-zinc-900 flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>3 Kademeli Akıllı Token Tasarruf Mimarisi</span>
+              </h4>
+              <ul className="list-disc list-inside space-y-1 text-[11px] text-zinc-600">
+                <li><strong>Kademe 1 (0 Token):</strong> Otel Wi-Fi şifresi, kahvaltı saatleri, oda numarası ve ombudsman turizm şikayetleri anında yerel motordan (0 maliyet) döner.</li>
+                <li><strong>Kademe 2 (Önbellek Hit):</strong> Misafir aynı veya benzer soruları sorduğunda yanıt in-memory semantik cache üzerinden üretilir.</li>
+                <li><strong>Kademe 3 (Gemini 2.5 Flash):</strong> Sadece derin konsiyerj, rota planlama ve randevu oluşturma adımlarında canlı LLM çağrısı yapılır.</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -1263,6 +1324,89 @@ export default function PilotMasterDeckPage() {
                 </div>
               </form>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: PWA CANLI DUYURU & BİLDİRİM GÖNDER */}
+      {isBroadcastModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-scroll bg-black/75 backdrop-blur-sm p-4 flex items-center justify-center">
+          <div className="relative w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-amber-200 space-y-4 text-zinc-900 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-300 flex items-center justify-center text-amber-700">
+                  <BellRing className="w-4 h-4" />
+                </div>
+                <h3 className="text-base font-bold font-serif">PWA Canlı Bildirim Yayını</h3>
+              </div>
+              <button 
+                onClick={() => setIsBroadcastModalOpen(false)} 
+                className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('xenios_broadcast_notification', {
+                    detail: {
+                      title: broadcastTitle,
+                      body: broadcastBody,
+                      url: '/'
+                    }
+                  }));
+                }
+                toast.success('PWA Canlı Bildirimi tüm bağlı misafir ve otel panellerine iletildi!');
+                setIsBroadcastModalOpen(false);
+              }} 
+              className="space-y-3.5 text-xs"
+            >
+              <div>
+                <label className="font-bold block mb-1">Bildirim Başlığı</label>
+                <input
+                  type="text"
+                  required
+                  value={broadcastTitle}
+                  onChange={(e) => setBroadcastTitle(e.target.value)}
+                  className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/40 font-semibold"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold block mb-1">Bildirim Mesajı (İçerik)</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={broadcastBody}
+                  onChange={(e) => setBroadcastBody(e.target.value)}
+                  className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/40"
+                />
+              </div>
+
+              <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-[11px] text-amber-900 space-y-1">
+                <span className="font-bold block">⚡ Anlık İletim Protokolü:</span>
+                <p>Bu bildirim Service Worker Web Push, sistem çanı ve in-app toast uyarıları üzerinden eşzamanlı yayınlanır.</p>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button 
+                  type="button" 
+                  onClick={() => setIsBroadcastModalOpen(false)} 
+                  className="py-2.5 px-4 bg-zinc-100 rounded-xl font-bold"
+                >
+                  Vazgeç
+                </button>
+                <button 
+                  type="submit" 
+                  className="flex-1 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-bold shadow-md shadow-amber-500/20"
+                >
+                  📢 Bildirimi Herkese Yayınla
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

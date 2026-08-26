@@ -312,3 +312,26 @@ export interface XeniosUser {
   createdAt: string;
 }
 
+export interface TokenUsageInfo {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  cachedTokensSaved: number;
+  estimatedCostUSD: number;
+  source: 'gemini_2_5_flash' | 'instant_knowledge' | 'cache_hit' | 'local_fallback';
+}
+
+export interface AiTokenStats {
+  totalPromptTokens: number;
+  totalCompletionTokens: number;
+  totalTokensUsed: number;
+  totalTokensSaved: number;
+  totalQueries: number;
+  cacheHitQueries: number;
+  estimatedCostUSD: number;
+  lastQueryTokens?: number;
+  lastQuerySaved?: number;
+  lastQuerySource?: string;
+  updatedAt: string;
+}
+

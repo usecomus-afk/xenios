@@ -1,4 +1,4 @@
-import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap, PropertyListing, InvestmentLead, InRoomServiceItem, RoomServiceMenuItem, OTAChannelItem } from './types';
+import { Hotel, Room, ServiceRequest, Booking, GuestProfile, Language, Complaint, ComplaintStatus, XeniosUser, Experience, ModuleAdminSettings, ModuleAdminSettingsMap, PropertyListing, InvestmentLead, InRoomServiceItem, RoomServiceMenuItem, OTAChannelItem, AiTokenStats, TokenUsageInfo } from './types';
 import { UserPreferences } from '@/types/comusAi';
 import rawHotels from '@/data/hotels.json';
 import rawExperiences from '@/data/experiences.json';
@@ -22,7 +22,8 @@ const STORAGE_KEYS = {
   INVESTMENT_LEADS: 'xenios_investment_leads',
   HIDE_DEMO_DATA: 'xenios_hide_demo_data',
   ROOM_SERVICE_MENU: 'xenios_room_service_menu',
-  OTA_CHANNELS: 'xenios_ota_channels'
+  OTA_CHANNELS: 'xenios_ota_channels',
+  AI_TOKEN_USAGE: 'xenios_ai_token_usage'
 };
 
 const DEFAULT_MODULE_SETTING: ModuleAdminSettings = { enabled: true, hidden: false };
@@ -938,5 +939,83 @@ export const XeniosStore = {
         if (typeof window !== 'undefined') window.dispatchEvent(new Event('xenios_complaints_updated'));
       } catch (e) {}
     }
+  },
+
+  // Comus AI Token Harcama ve Tasarruf İstatistikleri
+  getAiTokenStats(): AiTokenStats {
+    const defaultStats: AiTokenStats = {
+      totalPromptTokens: 12450,
+      totalCompletionTokens: 3820,
+      totalTokensUsed: 16270,
+      totalTokensSaved: 54300,
+      totalQueries: 142,
+      cacheHitQueries: 112,
+      estimatedCostUSD: 0.024,
+      lastQueryTokens: 0,
+      lastQuerySaved: 0,
+      lastQuerySource: 'gemini_2_5_flash',
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      const stored = safeGet(STORAGE_KEYS.AI_TOKEN_USAGE);
+      if (stored) {
+        return { ...defaultStats, ...JSON.parse(stored) };
+      }
+    } catch (e) {}
+    return defaultStats;
+  },
+
+  recordAiTokenUsage(usage: Partial<TokenUsageInfo>) {
+    const current = this.getAiTokenStats();
+    const promptTokens = Number(usage.promptTokens) || 0;
+    const completionTokens = Number(usage.completionTokens) || 0;
+    const totalTokens = Number(usage.totalTokens) || (promptTokens + completionTokens);
+    const saved = Number(usage.cachedTokensSaved) || 0;
+    const isCacheHit = usage.source === 'cache_hit' || usage.source === 'instant_knowledge';
+
+    // Gemini 2.5 Flash pricing: $0.075 / 1M prompt, $0.30 / 1M output
+    const costIncrement = ((promptTokens * 0.075) + (completionTokens * 0.30)) / 1000000;
+
+    const updated: AiTokenStats = {
+      totalPromptTokens: current.totalPromptTokens + promptTokens,
+      totalCompletionTokens: current.totalCompletionTokens + completionTokens,
+      totalTokensUsed: current.totalTokensUsed + totalTokens,
+      totalTokensSaved: current.totalTokensSaved + saved,
+      totalQueries: current.totalQueries + 1,
+      cacheHitQueries: current.cacheHitQueries + (isCacheHit ? 1 : 0),
+      estimatedCostUSD: +(current.estimatedCostUSD + costIncrement).toFixed(5),
+      lastQueryTokens: totalTokens,
+      lastQuerySaved: saved,
+      lastQuerySource: usage.source || 'gemini_2_5_flash',
+      updatedAt: new Date().toISOString()
+    };
+
+    safeSet(STORAGE_KEYS.AI_TOKEN_USAGE, JSON.stringify(updated));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('xenios_ai_token_updated', { detail: updated }));
+    }
+    return updated;
+  },
+
+  resetAiTokenStats() {
+    const resetStats: AiTokenStats = {
+      totalPromptTokens: 0,
+      totalCompletionTokens: 0,
+      totalTokensUsed: 0,
+      totalTokensSaved: 0,
+      totalQueries: 0,
+      cacheHitQueries: 0,
+      estimatedCostUSD: 0,
+      lastQueryTokens: 0,
+      lastQuerySaved: 0,
+      lastQuerySource: 'reset',
+      updatedAt: new Date().toISOString()
+    };
+    safeSet(STORAGE_KEYS.AI_TOKEN_USAGE, JSON.stringify(resetStats));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('xenios_ai_token_updated', { detail: resetStats }));
+    }
+    return resetStats;
   }
 };

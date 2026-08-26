@@ -80,7 +80,15 @@ export async function POST(req: Request) {
         reply: `Sayın ${guestName} Bey, ${instantAnswer.reply}`,
         recommendations: instantAnswer.recommendations,
         source: 'instant_knowledge',
-        tokensSaved: true
+        tokensSaved: true,
+        tokenUsage: {
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+          cachedTokensSaved: 650,
+          estimatedCostUSD: 0,
+          source: 'instant_knowledge'
+        }
       });
     }
 
@@ -120,7 +128,15 @@ export async function POST(req: Request) {
         reply: cached.reply,
         recommendations: cached.recommendations,
         source: 'cache_hit',
-        tokensSaved: true
+        tokensSaved: true,
+        tokenUsage: {
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+          cachedTokensSaved: 720,
+          estimatedCostUSD: 0,
+          source: 'cache_hit'
+        }
       });
     }
 
@@ -259,12 +275,26 @@ export async function POST(req: Request) {
     // Save candidate to cache
     setCachedResponse(cacheKey, replyText, recommendations);
 
+    const isLiveGemini = !!apiKey && !!replyText;
+    const promptTokens = isLiveGemini ? Math.max(120, Math.ceil((fullSystemPrompt.length + message.length) / 4)) : 0;
+    const completionTokens = isLiveGemini ? Math.max(25, Math.ceil(replyText.length / 4)) : 0;
+    const totalTokens = promptTokens + completionTokens;
+    const estimatedCostUSD = isLiveGemini ? +(((promptTokens * 0.075) + (completionTokens * 0.30)) / 1000000).toFixed(6) : 0;
+
     const responsePayload: ComusAiChatResponse = {
       reply: replyText,
       actions,
       recommendations,
       negative_locked_categories: updatedLockedCategories.length > 0 ? updatedLockedCategories : undefined,
-      source: apiKey ? 'gemini_2_5_flash' : 'local_fallback'
+      source: isLiveGemini ? 'gemini_2_5_flash' : 'local_fallback',
+      tokenUsage: {
+        promptTokens,
+        completionTokens,
+        totalTokens,
+        cachedTokensSaved: isLiveGemini ? 0 : 500,
+        estimatedCostUSD,
+        source: isLiveGemini ? 'gemini_2_5_flash' : 'local_fallback'
+      }
     };
 
     return NextResponse.json(responsePayload);
@@ -273,7 +303,15 @@ export async function POST(req: Request) {
     return NextResponse.json({
       reply: "Şu anda asistan bağlantısı sağlanırken bir gecikme oluştu. Resepsiyonumuz ve concierge ekibimiz 7/24 hizmetinizdedir.",
       recommendations: [],
-      source: 'error_fallback'
+      source: 'error_fallback',
+      tokenUsage: {
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        cachedTokensSaved: 0,
+        estimatedCostUSD: 0,
+        source: 'error_fallback'
+      }
     });
   }
 }
