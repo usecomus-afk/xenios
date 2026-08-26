@@ -68,9 +68,21 @@ export default function GuestPage() {
     };
     window.addEventListener('xenios_requests_updated', handleReqUpdate);
 
+    const closeAllModals = () => {
+      setSelectedDetailExp(null);
+      setTransitExp(null);
+      setCheckoutExp(null);
+      setRestaurantReserveExp(null);
+      setAestheticBookingExp(null);
+      setAestheticInquiryExp(null);
+      setShowRequestsModal(false);
+      setShowAuthModal(false);
+    };
+
     const handleTab = (e: any) => {
       const targetTab = e.detail?.tab;
       if (targetTab) {
+        closeAllModals();
         if (targetTab === 'ai') {
           setIsAiOpen(true);
         } else {
@@ -80,7 +92,10 @@ export default function GuestPage() {
         }
       }
     };
-    const handleOpenAi = () => setIsAiOpen(true);
+    const handleOpenAi = () => {
+      closeAllModals();
+      setIsAiOpen(true);
+    };
 
     window.addEventListener('xenios_tab_changed', handleTab);
     window.addEventListener('xenios_open_ai', handleOpenAi);
@@ -89,6 +104,7 @@ export default function GuestPage() {
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
       if (tabParam && ['services', 'experiences', 'categories', 'ai', 'practical', 'invest'].includes(tabParam)) {
+        closeAllModals();
         if (tabParam === 'ai') {
           setIsAiOpen(true);
         } else {

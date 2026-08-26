@@ -156,7 +156,7 @@ export function ExperienceDetailModal({
       </header>
 
       {/* Main Content Scroll Area */}
-      <div className="max-w-2xl mx-auto px-4 pt-4 pb-32 space-y-7">
+      <div className="max-w-2xl mx-auto px-4 pt-4 pb-48 space-y-7">
         
         {/* Hero Photo Carousel Card */}
         <div className="relative h-72 sm:h-96 w-full rounded-3xl overflow-hidden shadow-lg bg-zinc-900">
@@ -317,7 +317,7 @@ export function ExperienceDetailModal({
       </div>
 
       {/* FLOATING BOTTOM BAR (Sticky Footer) */}
-      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-lg border-t border-zinc-200 p-4 safe-bottom z-50 shadow-2xl">
+      <div className="fixed bottom-[64px] sm:bottom-[68px] inset-x-0 bg-white/95 backdrop-blur-lg border-t border-zinc-200 p-3.5 sm:p-4 z-40 shadow-2xl">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-4">
           <div className="space-y-0.5">
             <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold">
