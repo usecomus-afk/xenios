@@ -133,12 +133,13 @@ body {
   left: 0 !important;
   right: 0 !important;
   width: 100% !important;
-  transform: translateZ(0) !important;
-  -webkit-transform: translateZ(0) !important;
-  will-change: transform;
-  z-index: 50 !important;
-  contain: layout paint;
-  isolation: isolate;
+  max-width: 100vw !important;
+  z-index: 9999 !important;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  pointer-events: auto !important;
 }
 
 /* Mobile Safe Areas */

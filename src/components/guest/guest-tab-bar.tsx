@@ -80,7 +80,18 @@ export function GuestTabBar({
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-3 pt-2.5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+    <nav 
+      className="mobile-bottom-nav fixed bottom-0 left-0 right-0 z-[9999] border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-3 pt-2.5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]"
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999,
+        transform: 'translate3d(0, 0, 0)',
+        WebkitTransform: 'translate3d(0, 0, 0)'
+      }}
+    >
       <div className="max-w-md mx-auto flex items-center justify-around">
         {tabs.map((tab) => {
           const isActive = currentTab === tab.id;

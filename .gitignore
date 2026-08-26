@@ -2,5 +2,7 @@ node_modules
 .next
 .git
 *.log
-.env*.local
+.env*
 *.tsbuildinfo
+*key*.json
+*.json.json
