@@ -340,12 +340,17 @@ export default function GuestPage() {
         {/* TAB 3: Category Catalog View */}
         {activeTab === 'categories' && (
           <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-bold font-serif text-zinc-900">{t.categoriesTitle}</h2>
-              <p className="text-xs text-zinc-500">{t.categoriesSubtitle}</p>
+            <div className="space-y-1">
+              <h2 className="text-xl font-bold font-serif text-zinc-900 flex items-center gap-2">
+                <span>{t.categoriesTitle}</span>
+              </h2>
+              <p className="text-xs text-zinc-500 max-w-xl font-medium">
+                {t.categoriesSubtitle}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+            {/* 2-Column Grid matching In-Room Services modular style */}
+            <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 pt-1">
               {categoryShowcase.map((cat, idx) => {
                 const isScaledUp = [
                   'invest.png',
@@ -366,8 +371,9 @@ export default function GuestPage() {
                 const isAesthetic = cat.iconPath.endsWith('aesthetic-beauty.png');
 
                 return (
-                  <div
+                  <button
                     key={idx}
+                    type="button"
                     onClick={() => {
                       if ((cat as any).tab === 'invest') {
                         setActiveTab('invest');
@@ -384,33 +390,32 @@ export default function GuestPage() {
                       setSelectedCategory(matched);
                       setActiveTab('experiences');
                     }}
-                    className="btn-3d p-4 sm:p-5 cursor-pointer flex items-center justify-between gap-4 group"
+                    className="btn-3d p-4 sm:p-5 flex flex-col items-center text-center justify-between gap-3 min-h-[155px] sm:min-h-[170px] group relative cursor-pointer"
                   >
-                    <div className="flex items-center gap-3.5 min-w-0">
-                      <div className="w-16 h-16 rounded-2xl bg-amber-50/70 border border-amber-200/60 p-1 flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform overflow-hidden">
-                        <img 
-                          src={cat.iconPath} 
-                          alt={cat.key} 
-                          className={`w-full h-full object-contain transition-transform ${isAesthetic ? 'scale-140' : isScaledUp ? 'scale-135' : 'scale-110'}`}
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-bold text-zinc-900 group-hover:text-amber-700 transition-colors">
-                          {cat.key}
-                        </h3>
-                        <p className="text-[11px] text-zinc-500 line-clamp-1 mt-0.5">
-                          {cat.desc}
-                        </p>
-                      </div>
+                    {/* 3D Icon Box matching in-room services */}
+                    <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-[#fbf8f1] p-2 flex items-center justify-center group-hover:scale-105 transition-transform border border-amber-100/60 shadow-inner overflow-hidden relative">
+                      <img 
+                        src={cat.iconPath} 
+                        alt={cat.key} 
+                        className={`w-full h-full object-contain drop-shadow-sm transition-transform ${isAesthetic ? 'scale-130' : isScaledUp ? 'scale-120' : 'scale-105'}`}
+                      />
+                      {cat.count > 0 && (
+                        <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-amber-600/90 text-white font-bold text-[9px] shadow-2xs leading-none">
+                          {cat.count}
+                        </span>
+                      )}
                     </div>
 
-                    <div className="flex items-center gap-1 shrink-0 text-xs font-bold text-amber-600">
-                      <span className="px-2.5 py-1 bg-amber-50 rounded-full border border-amber-200 text-[11px] font-bold shadow-2xs">
-                        {cat.count} {t.listingsCount}
+                    {/* Title & Description */}
+                    <div className="w-full">
+                      <span className="text-xs sm:text-sm font-bold text-zinc-800 group-hover:text-amber-800 transition-colors leading-tight block">
+                        {cat.key}
                       </span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      <span className="text-[10px] text-zinc-400 line-clamp-1 mt-0.5 block">
+                        {cat.desc}
+                      </span>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
