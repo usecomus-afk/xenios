@@ -4,9 +4,9 @@ import { Hotel, Language, GuestProfile } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { XeniosStore } from '@/lib/store';
 import { askGeminiConcierge, ChatMessage } from '@/lib/gemini';
-import { GuestPreferenceSurvey } from './guest-preference-survey';
 import { useState, useEffect, useRef } from 'react';
-import { Send, User, X, UserCog, Zap, Coins, ChevronDown, ChevronUp, ShieldCheck, Sparkles } from 'lucide-react';
+import { GuestPreferenceSurvey } from './guest-preference-survey';
+import { Send, User, X, UserCog, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
 interface AiChatDrawerProps {
@@ -26,8 +26,6 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
   const [introDismissed, setIntroDismissed] = useState(true);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [tokenStats, setTokenStats] = useState(XeniosStore.getAiTokenStats());
-  const [showTokenDetails, setShowTokenDetails] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>(() => [
     {
       id: 'init-1',
@@ -48,16 +46,6 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
   }, [messages]);
 
   useEffect(() => {
-    const handleTokenUpdate = () => {
-      setTokenStats(XeniosStore.getAiTokenStats());
-    };
-    window.addEventListener('xenios_ai_token_updated', handleTokenUpdate);
-    return () => {
-      window.removeEventListener('xenios_ai_token_updated', handleTokenUpdate);
-    };
-  }, []);
-
-  useEffect(() => {
     if (isOpen) {
       const prev = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
@@ -71,7 +59,6 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
     if (isOpen) {
       setProfile(XeniosStore.getGuestProfile());
       setIntroDismissed(XeniosStore.getAiIntroDismissed());
-      setTokenStats(XeniosStore.getAiTokenStats());
       setShowSurvey(false);
       setMessages([
         {
@@ -192,9 +179,9 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
       >
         
         {/* Header */}
-        <div className="p-4 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white flex items-center justify-between shadow-md">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xs overflow-hidden p-1.5">
+        <div className="px-4 py-3.5 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white flex items-center justify-between shadow-md">
+          <div className="flex items-center gap-2.5 flex-1 min-w-0 pr-2">
+            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-xs overflow-hidden p-1.5 shrink-0">
               <Image
                 src="/icons/menu/aiGuide.png"
                 alt="comus AI"
@@ -204,16 +191,21 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
                 priority
               />
             </div>
-            <div>
-              <h3 className="text-sm font-bold flex items-center gap-1.5">
-                <span>{t.aiTitle || 'comus AI'}</span>
-                <span className="px-1.5 py-0.5 bg-white/20 rounded text-[9px] font-mono">Gemini</span>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-bold text-white leading-tight truncate">
+                {t.aiTitle || 'comusAI - Kişisel İstanbul Rehberiniz'}
               </h3>
-              <p className="text-[10px] text-amber-100">{hotel.name} · {t.room} {roomNumber}</p>
+              <div className="flex items-center gap-1.5 text-[10px] text-amber-100 mt-1">
+                <span className="truncate">{hotel.name} · {t.room} {roomNumber}</span>
+                <span className="text-amber-200/60 shrink-0">•</span>
+                <span className="px-1.5 py-0.5 rounded-md bg-white/20 text-[9px] font-mono text-white/95 font-medium shrink-0 border border-white/20">
+                  Gemini
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => setShowSurvey(!showSurvey)}
               className="px-2.5 py-1 rounded-xl bg-white/20 hover:bg-white/30 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer border border-white/20"
@@ -229,53 +221,6 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
               <X className="w-4 h-4" />
             </button>
           </div>
-        </div>
-
-        {/* Live Token Spending & Cache Savings Bar */}
-        <div className="bg-zinc-900 border-b border-amber-500/30 text-white px-3.5 py-2 text-[11px] flex flex-col gap-1.5 shadow-inner">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="flex items-center gap-1 font-mono font-bold text-amber-300">
-                <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                <span>{tokenStats.totalTokensUsed.toLocaleString()} Token</span>
-              </span>
-              <span className="text-zinc-500">|</span>
-              <span className="font-mono text-zinc-300">
-                ₺{(tokenStats.estimatedCostUSD * 38.5).toFixed(2)}
-              </span>
-              <span className="px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" />
-                <span>%{Math.round((tokenStats.totalTokensSaved / (tokenStats.totalTokensUsed + tokenStats.totalTokensSaved || 1)) * 100)} Tasarruf</span>
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setShowTokenDetails(!showTokenDetails)}
-              className="text-[10px] text-amber-300/80 hover:text-amber-200 flex items-center gap-0.5 font-bold cursor-pointer transition"
-            >
-              <span>{showTokenDetails ? 'Kapat' : 'Detay'}</span>
-              {showTokenDetails ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-            </button>
-          </div>
-
-          {/* Expandable Token Analytics Popover */}
-          {showTokenDetails && (
-            <div className="mt-1 pt-2 border-t border-zinc-800 grid grid-cols-3 gap-2 text-[10px] text-zinc-400 animate-in fade-in">
-              <div className="bg-zinc-800/80 p-1.5 rounded-xl border border-zinc-700/60 text-center">
-                <span className="block text-[9px] text-zinc-500 font-bold">GİRDİ / İSTEM</span>
-                <span className="font-mono font-bold text-white">{tokenStats.totalPromptTokens.toLocaleString()}</span>
-              </div>
-              <div className="bg-zinc-800/80 p-1.5 rounded-xl border border-zinc-700/60 text-center">
-                <span className="block text-[9px] text-zinc-500 font-bold">YANIT / ÇIKTI</span>
-                <span className="font-mono font-bold text-amber-400">{tokenStats.totalCompletionTokens.toLocaleString()}</span>
-              </div>
-              <div className="bg-zinc-800/80 p-1.5 rounded-xl border border-zinc-700/60 text-center">
-                <span className="block text-[9px] text-emerald-400 font-bold">ÖNBELLEK KAZANÇ</span>
-                <span className="font-mono font-bold text-emerald-400">+{tokenStats.totalTokensSaved.toLocaleString()}</span>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Survey Drawer Overlay if open */}
@@ -337,14 +282,7 @@ export function AiChatDrawer({ hotel, roomNumber, lang, isOpen, onClose }: AiCha
                         </div>
                       )}
 
-                      <div className={`text-[9px] font-mono flex items-center justify-between gap-2 ${isUser ? 'text-amber-100 justify-end' : 'text-zinc-400'}`}>
-                        {!isUser && msg.tokenUsage && (
-                          <span className="text-[9px] font-mono text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">
-                            {msg.tokenUsage.source === 'gemini_2_5_flash'
-                              ? `⚡ ${msg.tokenUsage.totalTokens} token`
-                              : '💾 Önbellek (0 token)'}
-                          </span>
-                        )}
+                      <div className={`text-[9px] font-mono flex items-center ${isUser ? 'text-amber-100 justify-end' : 'text-zinc-400 justify-end'}`}>
                         <span>{msg.time}</span>
                       </div>
                     </div>

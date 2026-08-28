@@ -117,8 +117,7 @@ export default function PilotMasterDeckPage() {
   const [newHotelCheckout, setNewHotelCheckout] = useState('11:30');
   const [newHotelReceptionExt, setNewHotelReceptionExt] = useState('9');
 
-  // Token & Broadcast state
-  const [tokenStats, setTokenStats] = useState(() => XeniosStore.getAiTokenStats());
+  // Broadcast state
   const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
   const [broadcastTitle, setBroadcastTitle] = useState('📢 Özel VIP Boğaz Turu Duyurusu');
   const [broadcastBody, setBroadcastBody] = useState('Bu akşama özel gün batımı yat turlarımızda partner otel misafirlerine %15 indirim fırsatı!');
@@ -131,19 +130,16 @@ export default function PilotMasterDeckPage() {
     setHotels(XeniosStore.getHotels());
     setBookings(XeniosStore.getBookings());
     setRequests(XeniosStore.getRequests());
-    setTokenStats(XeniosStore.getAiTokenStats());
   };
 
   useEffect(() => {
     refreshAll();
-    const handleToken = () => setTokenStats(XeniosStore.getAiTokenStats());
     window.addEventListener('xenios_experiences_updated', refreshAll);
     window.addEventListener('xenios_properties_updated', refreshAll);
     window.addEventListener('xenios_investment_leads_updated', refreshAll);
     window.addEventListener('xenios_hotels_updated', refreshAll);
     window.addEventListener('xenios_bookings_updated', refreshAll);
     window.addEventListener('xenios_requests_updated', refreshAll);
-    window.addEventListener('xenios_ai_token_updated', handleToken);
     return () => {
       window.removeEventListener('xenios_experiences_updated', refreshAll);
       window.removeEventListener('xenios_properties_updated', refreshAll);
@@ -151,7 +147,6 @@ export default function PilotMasterDeckPage() {
       window.removeEventListener('xenios_hotels_updated', refreshAll);
       window.removeEventListener('xenios_bookings_updated', refreshAll);
       window.removeEventListener('xenios_requests_updated', refreshAll);
-      window.removeEventListener('xenios_ai_token_updated', handleToken);
     };
   }, []);
 
@@ -921,8 +916,8 @@ export default function PilotMasterDeckPage() {
                   <Bot className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-zinc-900">ComusAI Gemini Concierge & Canlı Token Harcama Sayacı</h3>
-                  <p className="text-xs text-zinc-500">Misafir etkileşimleri, token sarfiyatı ve önbellek tasarruf telemetrisi</p>
+                  <h3 className="text-base font-bold text-zinc-900">ComusAI Gemini Concierge & Sistem Yönetimi</h3>
+                  <p className="text-xs text-zinc-500">PWA push bildirimleri ve merkezi yapay zekâ operasyonları</p>
                 </div>
               </div>
 
@@ -934,44 +929,14 @@ export default function PilotMasterDeckPage() {
                   <BellRing className="w-4 h-4" />
                   <span>📢 PWA Bildirimi Gönder</span>
                 </button>
-
-                <button
-                  onClick={() => {
-                    XeniosStore.resetAiTokenStats();
-                    toast.success("AI Token Harcama Sayacı sıfırlandı!");
-                  }}
-                  className="px-3 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold rounded-2xl text-xs flex items-center gap-1.5 transition cursor-pointer"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Sayacı Sıfırla</span>
-                </button>
               </div>
             </div>
 
-            {/* Live Token Metrics Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-              <div className="p-4 bg-purple-50/80 border border-purple-200 rounded-2xl space-y-1">
-                <span className="text-[10px] font-bold text-purple-700 uppercase">Toplam Harcanan Token</span>
-                <strong className="text-xl font-bold font-mono text-zinc-900 block">{tokenStats.totalTokensUsed.toLocaleString()}</strong>
-                <span className="text-[10px] text-purple-800 font-semibold">{tokenStats.totalPromptTokens.toLocaleString()} Girdi · {tokenStats.totalCompletionTokens.toLocaleString()} Çıktı</span>
-              </div>
-
-              <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl space-y-1">
-                <span className="text-[10px] font-bold text-emerald-800 uppercase">Önbellekten Kurtarılan</span>
-                <strong className="text-xl font-bold font-mono text-emerald-700 block">+{tokenStats.totalTokensSaved.toLocaleString()}</strong>
-                <span className="text-[10px] text-emerald-800 font-semibold">%{Math.round((tokenStats.totalTokensSaved / (tokenStats.totalTokensUsed + tokenStats.totalTokensSaved || 1)) * 100)} Maliyet Tasarrufu</span>
-              </div>
-
-              <div className="p-4 bg-amber-50/80 border border-amber-200 rounded-2xl space-y-1">
-                <span className="text-[10px] font-bold text-amber-800 uppercase">Tahmini Toplam Maliyet</span>
-                <strong className="text-xl font-bold font-mono text-amber-900 block">₺{(tokenStats.estimatedCostUSD * 38.5).toFixed(2)}</strong>
-                <span className="text-[10px] text-zinc-600 font-mono">${tokenStats.estimatedCostUSD.toFixed(5)} USD</span>
-              </div>
-
-              <div className="p-4 bg-blue-50/80 border border-blue-200 rounded-2xl space-y-1">
-                <span className="text-[10px] font-bold text-blue-800 uppercase">Sorgu & Hit Oranı</span>
-                <strong className="text-xl font-bold font-mono text-blue-950 block">{tokenStats.totalQueries} İstek</strong>
-                <span className="text-[10px] text-blue-800 font-semibold">{tokenStats.cacheHitQueries} Önbellek Yanıtı</span>
+            {/* Olympus Central Telemetry Notice */}
+            <div className="p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2 text-amber-900">
+                <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                <span><strong>Canlı Token Telemetrisi:</strong> LLM token tüketimi, maliyet ve tasarruf verileri merkezi <strong>Olympus Master Cockpit</strong> üzerinden izlenmektedir.</span>
               </div>
             </div>
 
