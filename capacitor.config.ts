@@ -5,25 +5,15 @@ const config: CapacitorConfig = {
   appName: 'Xenios Istanbul',
   webDir: 'public',
   server: {
-    androidScheme: 'https',
-    iosScheme: 'https'
+    url: process.env.CAPACITOR_SERVER_URL || undefined,
+    cleartext: true,
+    allowNavigation: ['*'],
   },
-  plugins: {
-    SplashScreen: {
-      launchShowDuration: 1800,
-      launchAutoHide: true,
-      backgroundColor: '#f8f6f0',
-      androidSplashResourceName: 'splash',
-      androidScaleType: 'CENTER_CROP',
-      showSpinner: false,
-      splashFullScreen: true,
-      splashImmersive: true
-    },
-    StatusBar: {
-      style: 'DARK',
-      backgroundColor: '#f8f6f0'
-    }
-  }
+  ios: {
+    contentInset: 'automatic',
+    backgroundColor: '#f8f6f0',
+    preferredContentMode: 'mobile',
+  },
 };
 
 export default config;
