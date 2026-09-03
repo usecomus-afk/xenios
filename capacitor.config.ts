@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Xenios Istanbul',
   webDir: 'public',
   server: {
-    url: process.env.CAPACITOR_SERVER_URL || undefined,
+    url: process.env.CAPACITOR_SERVER_URL || 'https://xenios.usecomus.com',
     cleartext: true,
     allowNavigation: ['*'],
   },
