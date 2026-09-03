@@ -5,8 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HotelAuthGuard } from "@/components/hotel/hotel-auth-guard";
 import { BrandMark } from "@/components/brand-mark";
-import { Building2, BellRing, LogOut, ArrowLeft, ChevronDown } from "lucide-react";
+import { Building2, BellRing, LogOut, ArrowLeft, ChevronDown, Volume2, VolumeX, Sparkles } from "lucide-react";
 import { XeniosStore } from "@/lib/store";
+import { HotelAudioNotification, HotelAudioNotificationPrefs } from "@/lib/hotel-audio-notification";
+import { HotelLiveAlertBanner } from "@/components/hotel/hotel-live-alert-banner";
 import { toast } from "sonner";
 
 export default function HotelPortalLayout({
@@ -18,6 +20,7 @@ export default function HotelPortalLayout({
   const [hotels, setHotels] = useState(() => XeniosStore.getHotels());
   const [activeHotelId, setActiveHotelId] = useState(() => XeniosStore.getActiveHotelId());
   const [pendingReqCount, setPendingReqCount] = useState(0);
+  const [audioPrefs, setAudioPrefs] = useState<HotelAudioNotificationPrefs>(() => HotelAudioNotification.getPreferences());
 
   const refreshState = () => {
     const list = XeniosStore.getHotels();
@@ -32,11 +35,14 @@ export default function HotelPortalLayout({
 
   useEffect(() => {
     refreshState();
+    const handlePrefsUpdate = () => setAudioPrefs(HotelAudioNotification.getPreferences());
     window.addEventListener('xenios_hotels_updated', refreshState);
     window.addEventListener('xenios_requests_updated', refreshState);
+    window.addEventListener('xenios_hotel_audio_prefs_updated', handlePrefsUpdate);
     return () => {
       window.removeEventListener('xenios_hotels_updated', refreshState);
       window.removeEventListener('xenios_requests_updated', refreshState);
+      window.removeEventListener('xenios_hotel_audio_prefs_updated', handlePrefsUpdate);
     };
   }, []);
 
@@ -47,13 +53,15 @@ export default function HotelPortalLayout({
     rooms: []
   };
 
-  const handleHotelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newId = e.target.value;
-    setActiveHotelId(newId);
-    XeniosStore.setActiveHotelId(newId);
-    toast.success(`Yönetilen Otel: ${hotels.find(h => h.id === newId)?.name || newId}`);
-    if (typeof window !== 'undefined') {
-      window.location.reload();
+  const handleToggleSound = () => {
+    const next = !audioPrefs.soundEnabled;
+    HotelAudioNotification.savePreferences({ soundEnabled: next });
+    setAudioPrefs(prev => ({ ...prev, soundEnabled: next }));
+    if (next) {
+      HotelAudioNotification.play();
+      toast.success("Sesli bildirimler aktif edildi!");
+    } else {
+      toast.info("Sesli bildirimler sessize alındı.");
     }
   };
 
@@ -66,6 +74,7 @@ export default function HotelPortalLayout({
 
   return (
     <HotelAuthGuard>
+      <HotelLiveAlertBanner />
       <div className={`${isSubPage ? 'min-h-screen' : 'h-[100dvh] max-h-[100dvh] overflow-hidden'} bg-[#f8f6f0] text-zinc-900 flex flex-col`}>
         {/* Modern Top Header Bar */}
         <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-200/80 shadow-xs px-3.5 sm:px-6 py-2 sm:py-2.5">
@@ -97,8 +106,31 @@ export default function HotelPortalLayout({
               )}
             </div>
 
-            {/* Right: Live Notifications & Logout */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            {/* Right: Sound Toggle, Live Notifications & Logout */}
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              {/* Quick Sound Control Button */}
+              <button
+                onClick={handleToggleSound}
+                title={audioPrefs.soundEnabled ? "Sesli Bildirimler Açık (Tıkla ve Kapat)" : "Sesli Bildirimler Kapalı (Tıkla ve Aç)"}
+                className={`p-2 rounded-2xl border transition shadow-xs flex items-center gap-1.5 text-xs font-bold cursor-pointer ${
+                  audioPrefs.soundEnabled
+                    ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'
+                    : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-500 border-zinc-200'
+                }`}
+              >
+                {audioPrefs.soundEnabled ? (
+                  <>
+                    <Volume2 className="w-4 h-4 text-amber-700 animate-pulse" />
+                    <span className="hidden lg:inline text-[11px]">Ses Açık</span>
+                  </>
+                ) : (
+                  <>
+                    <VolumeX className="w-4 h-4 text-zinc-400" />
+                    <span className="hidden lg:inline text-[11px]">Sessiz</span>
+                  </>
+                )}
+              </button>
+
               {/* Notification Button */}
               <Link
                 href="/hotel-portal/requests"

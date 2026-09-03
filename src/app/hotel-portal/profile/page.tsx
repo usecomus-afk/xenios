@@ -20,14 +20,22 @@ import {
   CheckCircle2, 
   Sparkles,
   BellRing,
-  DoorOpen
+  DoorOpen,
+  Volume2,
+  VolumeX,
+  Play,
+  Music
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { HotelAudioNotification, HotelSoundType, HotelAudioNotificationPrefs } from '@/lib/hotel-audio-notification';
 
 export default function HotelProfileManagementPage() {
   const hotels = XeniosStore.getHotels();
   const activeHotelId = XeniosStore.getActiveHotelId();
   const currentHotel = hotels.find(h => h.id === activeHotelId) || hotels[0];
+
+  // Audio Notification Settings State
+  const [audioPrefs, setAudioPrefs] = useState<HotelAudioNotificationPrefs>(() => HotelAudioNotification.getPreferences());
 
   // Hotel Info State
   const [hotelName, setHotelName] = useState(currentHotel.name || '');
@@ -72,6 +80,39 @@ export default function HotelProfileManagementPage() {
       setNotificationEmail(profile.notificationEmail || 'concierge@heritagehotel.com');
     }
   }, [currentHotel.id]);
+
+  const handleToggleSound = (enabled: boolean) => {
+    HotelAudioNotification.savePreferences({ soundEnabled: enabled });
+    setAudioPrefs(prev => ({ ...prev, soundEnabled: enabled }));
+    if (enabled) {
+      HotelAudioNotification.play();
+      toast.success("Sesli bildirimler açıldı!");
+    } else {
+      toast.info("Sesli bildirimler kapatıldı.");
+    }
+  };
+
+  const handleChangeSoundType = (sound: HotelSoundType) => {
+    HotelAudioNotification.savePreferences({ selectedSound: sound });
+    setAudioPrefs(prev => ({ ...prev, selectedSound: sound }));
+    HotelAudioNotification.play(sound, audioPrefs.volume);
+  };
+
+  const handleChangeVolume = (volume: number) => {
+    HotelAudioNotification.savePreferences({ volume });
+    setAudioPrefs(prev => ({ ...prev, volume }));
+  };
+
+  const handleToggleVisualBanner = (enabled: boolean) => {
+    HotelAudioNotification.savePreferences({ visualBannerEnabled: enabled });
+    setAudioPrefs(prev => ({ ...prev, visualBannerEnabled: enabled }));
+    toast.success(enabled ? "Ekranda canlı uyarı kartı açıldı." : "Ekranda canlı uyarı kartı gizlendi.");
+  };
+
+  const handleTestSound = () => {
+    HotelAudioNotification.play(audioPrefs.selectedSound, audioPrefs.volume);
+    toast.info("🔔 Bildirim zil sesi çalınıyor...");
+  };
 
   const handleSaveHotelAndManager = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -430,6 +471,119 @@ export default function HotelProfileManagementPage() {
               />
               <span>Yeni tur & deneyim rezervasyonlarında bilgilendir</span>
             </label>
+          </div>
+        </div>
+
+        {/* 4. SESLİ BİLDİRİM & CANLI TALEP ALARM AYARLARI */}
+        <div className="p-6 rounded-3xl bg-white border border-amber-200/80 shadow-xs space-y-5">
+          <div className="flex items-center justify-between border-b border-amber-100 pb-3 gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                <Volume2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-zinc-900">Sesli Bildirim & Canlı Talep Uyarı Ayarları</h2>
+                <p className="text-[11px] text-zinc-500">Misafir odalarından gelen canlı taleplerde sesli çan ve ekranda pop-up alarmı.</p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handleToggleSound(!audioPrefs.soundEnabled)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs ${
+                audioPrefs.soundEnabled
+                  ? 'bg-amber-500 text-zinc-950 hover:bg-amber-600'
+                  : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200 border border-zinc-200'
+              }`}
+            >
+              {audioPrefs.soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              <span>{audioPrefs.soundEnabled ? 'Ses Açık' : 'Sessiz'}</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+            {/* Sound Choice */}
+            <div className="space-y-2">
+              <label className="font-bold text-zinc-700 block flex items-center justify-between">
+                <span>Zil Sesi Tipi (Sound Alert)</span>
+                <button
+                  type="button"
+                  onClick={handleTestSound}
+                  className="text-[11px] font-bold text-amber-700 hover:text-amber-900 flex items-center gap-1 hover:underline cursor-pointer"
+                >
+                  <Play className="w-3 h-3 fill-amber-700" /> Sesi Dinle / Test Et
+                </button>
+              </label>
+
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: 'luxury_bell', name: 'Lüks Resepsiyon Çanı', desc: 'Klasik pirinç masa zili (Ding!)' },
+                  { id: 'dual_melody', name: 'İki Tonlu Melodi', desc: 'Modern armonik yükselen çan' },
+                  { id: 'urgent_chime', name: 'Acil / Yüksek Ton', desc: 'Üçlü uyarı tonu (Dikkat!)' },
+                  { id: 'digital_ping', name: 'Dijital Kristal Ping', desc: 'Yumuşak dijital bildirim sesi' }
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => handleChangeSoundType(s.id as HotelSoundType)}
+                    className={`p-3 rounded-2xl border text-left transition cursor-pointer flex flex-col justify-between gap-1 ${
+                      audioPrefs.selectedSound === s.id
+                        ? 'bg-amber-50 border-amber-500 ring-2 ring-amber-500/30'
+                        : 'bg-zinc-50/70 border-zinc-200 hover:border-amber-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-zinc-900 text-xs">{s.name}</span>
+                      {audioPrefs.selectedSound === s.id && (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
+                      )}
+                    </div>
+                    <span className="text-[10px] text-zinc-500">{s.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Volume & Banner Settings */}
+            <div className="space-y-4 bg-amber-50/30 p-4 rounded-2xl border border-amber-100">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="font-bold text-zinc-700 block">Ses Seviyesi (Volume)</label>
+                  <span className="font-mono font-bold text-amber-800 text-xs">
+                    %{Math.round(audioPrefs.volume * 100)}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="1.0"
+                  step="0.05"
+                  value={audioPrefs.volume}
+                  onChange={(e) => handleChangeVolume(parseFloat(e.target.value))}
+                  className="w-full accent-amber-500 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
+                  <span>Kısık</span>
+                  <span>Orta</span>
+                  <span>Maksimum</span>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-amber-200/60 space-y-2">
+                <label className="flex items-center justify-between cursor-pointer">
+                  <span className="font-semibold text-zinc-800 text-xs">Ekranda Canlı Pop-up Kartı Göster</span>
+                  <input
+                    type="checkbox"
+                    checked={audioPrefs.visualBannerEnabled}
+                    onChange={(e) => handleToggleVisualBanner(e.target.checked)}
+                    className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 cursor-pointer"
+                  />
+                </label>
+                <p className="text-[10px] text-zinc-500 leading-relaxed">
+                  Yeni bir misafir talebi geldiğinde ekranın sağ üst köşesinde oda numarası ve notunu içeren canlı kart belirir.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

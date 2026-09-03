@@ -13,10 +13,13 @@ import {
   Search,
   Sparkles,
   AlertTriangle,
-  EyeOff
+  EyeOff,
+  Volume2,
+  VolumeX,
+  Play
 } from 'lucide-react';
 import { toast } from 'sonner';
-
+import { HotelAudioNotification } from '@/lib/hotel-audio-notification';
 
 export default function HotelLiveRequestsPage() {
   const hotels = XeniosStore.getHotels();
@@ -27,6 +30,7 @@ export default function HotelLiveRequestsPage() {
   const [filterDept, setFilterDept] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [search, setSearch] = useState('');
+  const [audioEnabled, setAudioEnabled] = useState(() => HotelAudioNotification.getPreferences().soundEnabled);
 
   const refresh = () => {
     setRequests(XeniosStore.getRequests().filter(r => r.hotelId === currentHotel.id || !r.hotelId));
@@ -34,11 +38,14 @@ export default function HotelLiveRequestsPage() {
 
   useEffect(() => {
     refresh();
+    const handlePrefs = () => setAudioEnabled(HotelAudioNotification.getPreferences().soundEnabled);
     window.addEventListener('xenios_requests_updated', refresh);
     window.addEventListener('xenios_demo_updated', refresh);
+    window.addEventListener('xenios_hotel_audio_prefs_updated', handlePrefs);
     return () => {
       window.removeEventListener('xenios_requests_updated', refresh);
       window.removeEventListener('xenios_demo_updated', refresh);
+      window.removeEventListener('xenios_hotel_audio_prefs_updated', handlePrefs);
     };
   }, [currentHotel.id]);
 
@@ -57,8 +64,9 @@ export default function HotelLiveRequestsPage() {
     ];
     const pick = services[Math.floor(Math.random() * services.length)];
     const randomRoom = currentHotel.rooms[Math.floor(Math.random() * currentHotel.rooms.length)]?.number || '204';
+    const isUrgent = Math.random() > 0.6;
 
-    XeniosStore.addRequest({
+    const newReq = XeniosStore.addRequest({
       hotelId: currentHotel.id,
       hotelName: currentHotel.name,
       roomNumber: randomRoom,
@@ -67,12 +75,19 @@ export default function HotelLiveRequestsPage() {
       notes: pick.note,
       status: 'pending',
       department: pick.dept,
-      priority: Math.random() > 0.6 ? 'acil' : 'standart',
+      priority: isUrgent ? 'acil' : 'standart',
       stage: 'Beklemede'
     });
 
-    toast.info(`Simülasyon: Oda ${randomRoom} için yeni talep geldi!`);
+    toast.info(`Simülasyon: Oda ${randomRoom} için yeni talep geldi!`, {
+      description: `${pick.title} (${pick.dept})`
+    });
     refresh();
+  };
+
+  const handleTestChime = () => {
+    HotelAudioNotification.play();
+    toast.info("🔔 Resepsiyon çanı çalındı!");
   };
 
   const filtered = requests.filter((r) => {
@@ -98,14 +113,23 @@ export default function HotelLiveRequestsPage() {
             Canlı Oda Talepleri & Kat Hizmetleri Masası
           </h1>
           <p className="text-xs text-zinc-500 mt-0.5">
-            Misafir odalarından gelen QR taleplerini departman bazında anlık takip edin ve çözün.
+            Misafir odalarından gelen QR taleplerini sesli uyarı ve canlı ekran bildirimleriyle takip edin.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={handleTestChime}
+            className="px-3.5 py-2 bg-white hover:bg-amber-50 text-amber-900 border border-amber-300 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+            title="Zil Sesini Çal & Test Et"
+          >
+            <Play className="w-3.5 h-3.5 fill-amber-700 text-amber-700" />
+            <span>Zili Test Et</span>
+          </button>
+
           <button
             onClick={handleSimulateRequest}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+            className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-zinc-950 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
           >
             <Sparkles className="w-4 h-4" />
             <span>+ Test Canlı Talep Gönder</span>

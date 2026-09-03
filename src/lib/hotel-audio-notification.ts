@@ -1,0 +1,207 @@
+"use client";
+
+import { ServiceRequest } from './types';
+
+export type HotelSoundType = 'luxury_bell' | 'dual_melody' | 'urgent_chime' | 'digital_ping';
+
+export interface HotelAudioNotificationPrefs {
+  soundEnabled: boolean;
+  selectedSound: HotelSoundType;
+  volume: number; // 0.0 to 1.0
+  visualBannerEnabled: boolean;
+  repeatUrgent: boolean;
+}
+
+const STORAGE_KEY = 'xenios_hotel_audio_notification_prefs';
+
+const DEFAULT_PREFS: HotelAudioNotificationPrefs = {
+  soundEnabled: true,
+  selectedSound: 'luxury_bell',
+  volume: 0.85,
+  visualBannerEnabled: true,
+  repeatUrgent: false,
+};
+
+class HotelAudioNotificationService {
+  private audioCtx: AudioContext | null = null;
+
+  public getPreferences(): HotelAudioNotificationPrefs {
+    if (typeof window === 'undefined') return DEFAULT_PREFS;
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        return { ...DEFAULT_PREFS, ...JSON.parse(stored) };
+      }
+    } catch (e) {}
+    return DEFAULT_PREFS;
+  }
+
+  public savePreferences(prefs: Partial<HotelAudioNotificationPrefs>) {
+    if (typeof window === 'undefined') return;
+    try {
+      const current = this.getPreferences();
+      const updated = { ...current, ...prefs };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('xenios_hotel_audio_prefs_updated', { detail: updated }));
+    } catch (e) {}
+  }
+
+  private getAudioContext(): AudioContext | null {
+    if (typeof window === 'undefined') return null;
+    try {
+      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtxClass) return null;
+      if (!this.audioCtx || this.audioCtx.state === 'closed') {
+        this.audioCtx = new AudioCtxClass();
+      }
+      if (this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume().catch(() => {});
+      }
+      return this.audioCtx;
+    } catch (e) {
+      console.warn('AudioContext init warning:', e);
+      return null;
+    }
+  }
+
+  /**
+   * Synthesize and play authentic luxury hotel desk bell / concierge chime
+   */
+  public async play(soundType?: HotelSoundType, customVolume?: number): Promise<void> {
+    const prefs = this.getPreferences();
+    if (!prefs.soundEnabled && customVolume === undefined) return;
+
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+
+    const sound = soundType || prefs.selectedSound || 'luxury_bell';
+    const volume = customVolume !== undefined ? customVolume : prefs.volume;
+
+    const now = ctx.currentTime;
+
+    try {
+      if (sound === 'luxury_bell') {
+        // 🛎️ Authentic Dual-tone Brass Concierge Desk Bell (D6 1175Hz + A6 1760Hz with harmonic overtone)
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(volume * 0.7, now);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+        masterGain.connect(ctx.destination);
+
+        // Primary fundamental bell
+        const osc1 = ctx.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(1175, now); // D6
+        osc1.connect(masterGain);
+
+        // High crystal overtone
+        const osc2 = ctx.createOscillator();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1760, now); // A6
+        const gain2 = ctx.createGain();
+        gain2.gain.setValueAtTime(0.6, now);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+        osc2.connect(gain2);
+        gain2.connect(masterGain);
+
+        // Metallic harmonic strike
+        const osc3 = ctx.createOscillator();
+        osc3.type = 'triangle';
+        osc3.frequency.setValueAtTime(2350, now);
+        const gain3 = ctx.createGain();
+        gain3.gain.setValueAtTime(0.3, now);
+        gain3.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+        osc3.connect(gain3);
+        gain3.connect(masterGain);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc3.start(now);
+        osc1.stop(now + 1.85);
+        osc2.stop(now + 1.85);
+        osc3.stop(now + 1.85);
+      } else if (sound === 'dual_melody') {
+        // 🎶 Two-tone Ascending Concierge Chime (G5 784Hz -> C6 1046Hz)
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(volume * 0.7, now);
+        masterGain.connect(ctx.destination);
+
+        // Note 1 (G5)
+        const osc1 = ctx.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(784, now);
+        const gain1 = ctx.createGain();
+        gain1.gain.setValueAtTime(0.8, now);
+        gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+        osc1.connect(gain1);
+        gain1.connect(masterGain);
+        osc1.start(now);
+        osc1.stop(now + 0.55);
+
+        // Note 2 (C6)
+        const osc2 = ctx.createOscillator();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1046, now + 0.22);
+        const gain2 = ctx.createGain();
+        gain2.gain.setValueAtTime(0, now);
+        gain2.gain.setValueAtTime(0.9, now + 0.22);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+        osc2.connect(gain2);
+        gain2.connect(masterGain);
+        osc2.start(now + 0.22);
+        osc2.stop(now + 1.55);
+      } else if (sound === 'urgent_chime') {
+        // 🚨 High Priority Urgent Alert (Triple Ping: 880Hz -> 1046Hz -> 1318Hz)
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(volume * 0.8, now);
+        masterGain.connect(ctx.destination);
+
+        const notes = [880, 1046, 1318];
+        notes.forEach((freq, idx) => {
+          const t = now + idx * 0.16;
+          const osc = ctx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, t);
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.85, t);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+          osc.connect(g);
+          g.connect(masterGain);
+          osc.start(t);
+          osc.stop(t + 0.65);
+        });
+      } else {
+        // 💡 Modern Digital Glass Ping (1200Hz soft decay)
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, now);
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(volume * 0.65, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.95);
+      }
+    } catch (e) {
+      console.warn('Audio play error:', e);
+    }
+  }
+
+  /**
+   * Broadcast and trigger on-screen live request alert across all hotel portal pages
+   */
+  public triggerGuestRequestAlert(req: ServiceRequest) {
+    if (typeof window === 'undefined') return;
+
+    // 1. Play sound
+    const isUrgent = req.priority === 'acil';
+    const prefs = this.getPreferences();
+    const soundType = isUrgent ? 'urgent_chime' : prefs.selectedSound;
+    this.play(soundType);
+
+    // 2. Dispatch event for on-screen live banner / modal
+    window.dispatchEvent(new CustomEvent('xenios_hotel_live_request_popup', { detail: req }));
+  }
+}
+
+export const HotelAudioNotification = new HotelAudioNotificationService();
