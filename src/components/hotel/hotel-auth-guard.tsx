@@ -39,11 +39,23 @@ export function HotelAuthGuard({ children }: { children: React.ReactNode }) {
   const activeHotelId = XeniosStore.getActiveHotelId();
   const currentHotel = hotels.find(h => h.id === activeHotelId) || hotels[0];
 
+  const [rememberMe, setRememberMe] = useState(true);
+
   useEffect(() => {
     const check = () => {
-      setIsAuth(XeniosStore.isHotelPortalLoggedIn());
+      const isLogged = XeniosStore.isHotelPortalLoggedIn();
+      setIsAuth(isLogged);
     };
     check();
+
+    // Auto load saved username if available
+    if (typeof window !== 'undefined') {
+      const savedUser = localStorage.getItem('xenios_hotel_saved_user');
+      if (savedUser) {
+        setHotelEmailOrUser(savedUser);
+      }
+    }
+
     window.addEventListener('xenios_hotel_portal_auth', check);
     return () => window.removeEventListener('xenios_hotel_portal_auth', check);
   }, []);
@@ -65,6 +77,15 @@ export function HotelAuthGuard({ children }: { children: React.ReactNode }) {
 
       if (isDemo || isRealEmail || isHeritageManager) {
         XeniosStore.setHotelPortalLoggedIn(true);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('xenios_app_role', 'hotel');
+          if (rememberMe) {
+            localStorage.setItem('xenios_hotel_remember_me', 'true');
+            localStorage.setItem('xenios_hotel_saved_user', input);
+          } else {
+            localStorage.removeItem('xenios_hotel_remember_me');
+          }
+        }
         toast.success(`${currentHotel.name} Yönetim Paneline giriş yapıldı!`, {
           description: `Hoş geldiniz, ${input}`
         });
@@ -185,6 +206,18 @@ export function HotelAuthGuard({ children }: { children: React.ReactNode }) {
                 />
                 <Lock className="w-4 h-4 text-zinc-400 absolute left-3 top-3.5" />
               </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-1">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 accent-amber-500 cursor-pointer"
+                />
+                <span className="text-xs font-semibold text-zinc-700">Beni Hatırla (Otel Masası Olarak Başlat)</span>
+              </label>
             </div>
 
             <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200 text-[11px] text-amber-900 flex items-center justify-between">

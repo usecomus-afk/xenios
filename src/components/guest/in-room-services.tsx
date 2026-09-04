@@ -3,6 +3,7 @@
 import { Language, Hotel, ModuleAdminSettingsMap, InRoomServiceItem } from '@/lib/types';
 import { getT } from '@/lib/i18n';
 import { XeniosStore } from '@/lib/store';
+import { FirestoreService } from '@/lib/firestore-service';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { getModuleConfig, deriveStatus, formatFieldValue, resolvePricing } from '@/lib/service-modules';
@@ -50,13 +51,13 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
     return (t.servicesLabels as any)?.[item.key]?.desc || item.desc;
   };
 
-  const handleStandardRequestSubmit = (details: Record<string, any>) => {
+  const handleStandardRequestSubmit = async (details: Record<string, any>) => {
     if (!selectedService) return;
     const config = getModuleConfig(selectedService.key);
     const serviceTitle = getLocalizedTitle(selectedService);
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
       const firstStage = config?.stages[0]?.id ?? 'pending';
       const isUrgent = config?.urgentIf?.(details) ?? false;
       const summaryFields = config?.fields.filter((f) => f.type !== 'display') ?? [];
@@ -64,7 +65,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
         .map((f) => `${f.label}: ${formatFieldValue(f, details[f.key])}`)
         .join(' · ');
 
-      XeniosStore.addRequest({
+      await FirestoreService.addRequest({
         hotelId: hotel.id,
         hotelName: hotel.name,
         roomNumber: roomNumber,
@@ -84,16 +85,19 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
 
       setIsSubmitting(false);
       setSelectedService(null);
-    }, 400);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      toast.error('Talep iletilirken bir sorun oluştu.');
+    }
   };
 
-  const handleCustomRequestSubmit = (e: React.FormEvent) => {
+  const handleCustomRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedService) return;
     const serviceTitle = getLocalizedTitle(selectedService);
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
       const notesArr: string[] = [];
       if (customOption) notesArr.push(`${t.serviceForm?.optionChoice || 'Seçenek'}: ${customOption}`);
       if (customCount > 1) notesArr.push(`${t.serviceForm?.quantity || 'Adet'}: ${customCount}`);
@@ -102,7 +106,7 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
 
       const summary = notesArr.join(' · ') || 'Standart';
 
-      XeniosStore.addRequest({
+      await FirestoreService.addRequest({
         hotelId: hotel.id,
         hotelName: hotel.name,
         roomNumber: roomNumber,
@@ -124,7 +128,10 @@ export function InRoomServices({ hotel, roomNumber, lang }: InRoomServicesProps)
       setCustomOption('');
       setCustomNote('');
       setCustomCount(1);
-    }, 400);
+    } catch (err) {
+      setIsSubmitting(false);
+      toast.error('Talep iletilirken bir sorun oluştu.');
+    }
   };
 
   return (

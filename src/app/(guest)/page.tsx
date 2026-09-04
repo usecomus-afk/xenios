@@ -57,6 +57,16 @@ export default function GuestPage() {
   const [showRequestsModal, setShowRequestsModal] = useState(false);
 
   useEffect(() => {
+    // 🏨 Auto-redirect if hotel management role is active or remembered
+    if (typeof window !== 'undefined') {
+      const appRole = localStorage.getItem('xenios_app_role');
+      const isHotelLoggedIn = XeniosStore.isHotelPortalLoggedIn();
+      if (appRole === 'hotel' || isHotelLoggedIn) {
+        window.location.replace('/hotel-portal');
+        return;
+      }
+    }
+
     const detected = detectBrowserLanguage();
     setLang(detected);
     XeniosStore.setLanguage(detected);

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { HotelAudioNotification } from '@/lib/hotel-audio-notification';
+import { FirestoreService } from '@/lib/firestore-service';
 
 export default function HotelLiveRequestsPage() {
   const hotels = XeniosStore.getHotels();
@@ -32,30 +33,27 @@ export default function HotelLiveRequestsPage() {
   const [search, setSearch] = useState('');
   const [audioEnabled, setAudioEnabled] = useState(() => HotelAudioNotification.getPreferences().soundEnabled);
 
-  const refresh = () => {
-    setRequests(XeniosStore.getRequests().filter(r => r.hotelId === currentHotel.id || !r.hotelId));
-  };
-
   useEffect(() => {
-    refresh();
     const handlePrefs = () => setAudioEnabled(HotelAudioNotification.getPreferences().soundEnabled);
-    window.addEventListener('xenios_requests_updated', refresh);
-    window.addEventListener('xenios_demo_updated', refresh);
     window.addEventListener('xenios_hotel_audio_prefs_updated', handlePrefs);
+
+    // Subscribe to Cloud Firestore in real-time across all devices!
+    const unsubscribe = FirestoreService.subscribeToLiveRequests(currentHotel.id, (liveList) => {
+      setRequests(liveList);
+    });
+
     return () => {
-      window.removeEventListener('xenios_requests_updated', refresh);
-      window.removeEventListener('xenios_demo_updated', refresh);
       window.removeEventListener('xenios_hotel_audio_prefs_updated', handlePrefs);
+      unsubscribe();
     };
   }, [currentHotel.id]);
 
-  const handleUpdateStatus = (id: string, status: ServiceRequest['status']) => {
-    XeniosStore.updateRequestStatus(id, status);
+  const handleUpdateStatus = async (id: string, status: ServiceRequest['status']) => {
+    await FirestoreService.updateRequestStatus(id, status);
     toast.success('Talep durumu güncellendi.');
-    refresh();
   };
 
-  const handleSimulateRequest = () => {
+  const handleSimulateRequest = async () => {
     const services = [
       { key: 'breakfast', title: 'Odaya Sıcak Kahvaltı', dept: 'Room Service (Mutfak KDS)', note: '2 Kişilik Türk Kahvaltısı · Saat: 09:00' },
       { key: 'towels', title: 'Ekstra Banyo Havlusu', dept: 'Housekeeping', note: '2 Adet Büyük Banyo Havlusu Talebi' },
@@ -66,7 +64,7 @@ export default function HotelLiveRequestsPage() {
     const randomRoom = currentHotel.rooms[Math.floor(Math.random() * currentHotel.rooms.length)]?.number || '204';
     const isUrgent = Math.random() > 0.6;
 
-    const newReq = XeniosStore.addRequest({
+    await FirestoreService.addRequest({
       hotelId: currentHotel.id,
       hotelName: currentHotel.name,
       roomNumber: randomRoom,
@@ -79,10 +77,9 @@ export default function HotelLiveRequestsPage() {
       stage: 'Beklemede'
     });
 
-    toast.info(`Simülasyon: Oda ${randomRoom} için yeni talep geldi!`, {
+    toast.info(`Simülasyon: Oda ${randomRoom} için yeni talep oluşturuldu!`, {
       description: `${pick.title} (${pick.dept})`
     });
-    refresh();
   };
 
   const handleTestChime = () => {

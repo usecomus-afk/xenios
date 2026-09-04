@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HotelAuthGuard } from "@/components/hotel/hotel-auth-guard";
 import { BrandMark } from "@/components/brand-mark";
-import { Building2, BellRing, LogOut, ArrowLeft, ChevronDown, Volume2, VolumeX, Sparkles } from "lucide-react";
+import { Building2, BellRing, LogOut, ArrowLeft, ChevronDown, Volume2, VolumeX, Sparkles, DoorOpen } from "lucide-react";
 import { XeniosStore } from "@/lib/store";
 import { HotelAudioNotification, HotelAudioNotificationPrefs } from "@/lib/hotel-audio-notification";
 import { HotelLiveAlertBanner } from "@/components/hotel/hotel-live-alert-banner";
+import { FirestoreService } from "@/lib/firestore-service";
 import { toast } from "sonner";
 
 export default function HotelPortalLayout({
@@ -27,10 +28,6 @@ export default function HotelPortalLayout({
     setHotels(list);
     const id = XeniosStore.getActiveHotelId();
     setActiveHotelId(id);
-    const reqs = XeniosStore.getRequests().filter(
-      r => (r.hotelId === id || !r.hotelId) && r.status === 'pending'
-    );
-    setPendingReqCount(reqs.length);
   };
 
   useEffect(() => {
@@ -39,14 +36,20 @@ export default function HotelPortalLayout({
     HotelAudioNotification.requestSystemNotificationPermission().catch(() => {});
     const handlePrefsUpdate = () => setAudioPrefs(HotelAudioNotification.getPreferences());
     window.addEventListener('xenios_hotels_updated', refreshState);
-    window.addEventListener('xenios_requests_updated', refreshState);
     window.addEventListener('xenios_hotel_audio_prefs_updated', handlePrefsUpdate);
+
+    // Live subscription to Firestore across all devices
+    const unsubscribe = FirestoreService.subscribeToLiveRequests(activeHotelId, (reqs) => {
+      const pending = reqs.filter(r => (r.hotelId === activeHotelId || !r.hotelId) && r.status === 'pending');
+      setPendingReqCount(pending.length);
+    });
+
     return () => {
       window.removeEventListener('xenios_hotels_updated', refreshState);
-      window.removeEventListener('xenios_requests_updated', refreshState);
       window.removeEventListener('xenios_hotel_audio_prefs_updated', handlePrefsUpdate);
+      unsubscribe();
     };
-  }, []);
+  }, [activeHotelId]);
 
   const currentHotel = hotels.find(h => h.id === activeHotelId) || hotels[0] || {
     id: 'hotel-1',
@@ -69,6 +72,10 @@ export default function HotelPortalLayout({
 
   const handleLogout = () => {
     XeniosStore.setHotelPortalLoggedIn(false);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('xenios_app_role');
+      localStorage.removeItem('xenios_hotel_remember_me');
+    }
     toast.info("Yönetim Paneli oturumu kapatıldı.");
   };
 
@@ -110,6 +117,21 @@ export default function HotelPortalLayout({
 
             {/* Right: Sound Toggle, Live Notifications & Logout */}
             <div className="flex items-center gap-2 sm:gap-2.5">
+              {/* Preview Guest Screen */}
+              <Link
+                href="/"
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    localStorage.setItem('xenios_app_role', 'guest');
+                  }
+                }}
+                className="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-2xl text-xs font-bold transition flex items-center gap-1 shadow-xs cursor-pointer"
+                title="Misafir Ekranını Önizle"
+              >
+                <DoorOpen className="w-3.5 h-3.5 text-amber-700" />
+                <span className="hidden lg:inline text-[11px]">Misafir Görünümü</span>
+              </Link>
+
               {/* Quick Sound Control Button */}
               <button
                 onClick={handleToggleSound}

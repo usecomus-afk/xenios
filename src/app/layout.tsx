@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import { PwaRegister } from "@/components/pwa-register";
-import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 import { AppIntroSplash } from "@/components/app-intro-splash";
 import "./globals.css";
 
@@ -33,7 +32,6 @@ export default function RootLayout({
       <body className="antialiased selection:bg-amber-200">
         <AppIntroSplash />
         <PwaRegister />
-        <PwaInstallPrompt />
         {children}
         <Toaster position="top-center" richColors />
       </body>

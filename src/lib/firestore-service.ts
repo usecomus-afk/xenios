@@ -40,31 +40,66 @@ export const FirestoreService = {
   ): Unsubscribe {
     if (!db || !isFirebaseConfigured) {
       // Fallback: poll local store and return unbind
-      const handler = () => onUpdate(XeniosStore.getRequests());
+      const handler = () => {
+        const reqs = XeniosStore.getRequests();
+        const filtered = hotelId ? reqs.filter(r => !r.hotelId || r.hotelId === hotelId) : reqs;
+        onUpdate(filtered);
+      };
       window.addEventListener('xenios_requests_updated', handler);
-      onUpdate(XeniosStore.getRequests());
+      handler();
       return () => window.removeEventListener('xenios_requests_updated', handler);
     }
 
     try {
       const colRef = collection(db, COLLECTIONS.REQUESTS);
-      const q = hotelId
-        ? query(colRef, where('hotelId', '==', hotelId), orderBy('createdAt', 'desc'))
-        : query(colRef, orderBy('createdAt', 'desc'));
+      // Query without composite index requirement so it never throws missing index error
+      const q = query(colRef, limit(150));
 
       return onSnapshot(q, (snapshot) => {
         const list: ServiceRequest[] = [];
         snapshot.forEach((d) => {
           list.push({ id: d.id, ...(d.data() as any) });
         });
-        onUpdate(list);
+
+        // Filter by hotelId if specified
+        const filtered = hotelId
+          ? list.filter((r) => !r.hotelId || r.hotelId === hotelId)
+          : list;
+
+        // Sort descending by createdAt
+        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+        // Detect newly arrived remote requests
+        if (typeof window !== 'undefined') {
+          const currentLocal = XeniosStore.getRequests();
+          const existingIds = new Set(currentLocal.map((r) => r.id));
+
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === 'added') {
+              const newReq = { id: change.doc.id, ...(change.doc.data() as any) } as ServiceRequest;
+              if (!existingIds.has(newReq.id) && newReq.status === 'pending') {
+                if (!hotelId || !newReq.hotelId || newReq.hotelId === hotelId) {
+                  window.dispatchEvent(new CustomEvent('xenios_request_created', { detail: newReq }));
+                }
+              }
+            }
+          });
+
+          XeniosStore.syncRequestsFromRemote(filtered);
+        }
+
+        onUpdate(filtered);
       }, (err) => {
         console.error("Firestore onSnapshot error:", err);
-        onUpdate(XeniosStore.getRequests());
+        const reqs = XeniosStore.getRequests();
+        const filtered = hotelId ? reqs.filter(r => !r.hotelId || r.hotelId === hotelId) : reqs;
+        onUpdate(filtered);
       });
     } catch (e) {
       console.error("Firestore subscription failed, using local store:", e);
-      onUpdate(XeniosStore.getRequests());
+      const reqs = XeniosStore.getRequests();
+      const filtered = hotelId ? reqs.filter(r => !r.hotelId || r.hotelId === hotelId) : reqs;
+      onUpdate(filtered);
       return () => {};
     }
   },
