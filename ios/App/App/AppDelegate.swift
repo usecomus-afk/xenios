@@ -58,27 +58,27 @@ public class XeniosNotificationPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "XeniosNotificationPlugin"
     public let jsName = "XeniosNotifications"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "requestPermissions", returnType: CAPPluginMethodReturnPromise),
-        CAPPluginMethod(name: "checkPermissions", returnType: CAPPluginMethodReturnPromise),
-        CAPPluginMethod(name: "schedule", returnType: CAPPluginMethodReturnPromise)
+        CAPPluginMethod(name: "requestNotificationPermissions", returnType: "promise"),
+        CAPPluginMethod(name: "checkNotificationPermissions", returnType: "promise"),
+        CAPPluginMethod(name: "scheduleNotification", returnType: "promise")
     ]
 
-    @objc func requestPermissions(_ call: CAPPluginCall) {
+    @objc public func requestNotificationPermissions(_ call: CAPPluginCall) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
             call.resolve(["display": granted ? "granted" : "denied"])
         }
     }
 
-    @objc func checkPermissions(_ call: CAPPluginCall) {
+    @objc public func checkNotificationPermissions(_ call: CAPPluginCall) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             let granted = settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional
             call.resolve(["display": granted ? "granted" : "prompt"])
         }
     }
 
-    @objc func schedule(_ call: CAPPluginCall) {
-        let title = call.getString("title") ?? "Xenios Bildirim"
-        let body = call.getString("body") ?? "Yeni misafir talebi"
+    @objc public func scheduleNotification(_ call: CAPPluginCall) {
+        let title = call.getString("title", "Xenios Bildirim")
+        let body = call.getString("body", "Yeni misafir talebi")
 
         let content = UNMutableNotificationContent()
         content.title = title
@@ -91,7 +91,7 @@ public class XeniosNotificationPlugin: CAPPlugin, CAPBridgedPlugin {
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                call.reject(error.localizedDescription)
+                call.error(error.localizedDescription)
             } else {
                 call.resolve(["success": true])
             }
