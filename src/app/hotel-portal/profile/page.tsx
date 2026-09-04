@@ -24,7 +24,9 @@ import {
   Volume2,
   VolumeX,
   Play,
-  Music
+  Music,
+  Smartphone,
+  Check
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { HotelAudioNotification, HotelSoundType, HotelAudioNotificationPrefs } from '@/lib/hotel-audio-notification';
@@ -107,6 +109,33 @@ export default function HotelProfileManagementPage() {
     HotelAudioNotification.savePreferences({ visualBannerEnabled: enabled });
     setAudioPrefs(prev => ({ ...prev, visualBannerEnabled: enabled }));
     toast.success(enabled ? "Ekranda canlı uyarı kartı açıldı." : "Ekranda canlı uyarı kartı gizlendi.");
+  };
+
+  const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'prompt'>('prompt');
+
+  useEffect(() => {
+    HotelAudioNotification.checkPermissionStatus().then(st => setPermissionStatus(st));
+  }, []);
+
+  const handleRequestPermission = async () => {
+    const granted = await HotelAudioNotification.requestSystemNotificationPermission();
+    const st = await HotelAudioNotification.checkPermissionStatus();
+    setPermissionStatus(st);
+    if (granted) {
+      toast.success("Telefon / iOS bildirim izni başarıyla etkinleştirildi!", {
+        description: "Xenios artık iPhone Ayarlar > Bildirimler menüsünde görünür."
+      });
+    } else {
+      toast.info("Bildirim izni talep edildi. Lütfen ekrandaki sistem bildirimine 'İzin Ver' deyiniz.");
+    }
+  };
+
+  const handleToggleSystemNotification = (enabled: boolean) => {
+    HotelAudioNotification.savePreferences({ systemNotificationEnabled: enabled });
+    setAudioPrefs(prev => ({ ...prev, systemNotificationEnabled: enabled }));
+    if (enabled) {
+      handleRequestPermission();
+    }
   };
 
   const handleTestSound = () => {
@@ -581,6 +610,33 @@ export default function HotelProfileManagementPage() {
                 </label>
                 <p className="text-[10px] text-zinc-500 leading-relaxed">
                   Yeni bir misafir talebi geldiğinde ekranın sağ üst köşesinde oda numarası ve notunu içeren canlı kart belirir.
+                </p>
+              </div>
+
+              {/* iOS / Phone System Notifications */}
+              <div className="pt-3 border-t border-amber-200/60 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Smartphone className="w-4 h-4 text-amber-800" />
+                    <span className="font-bold text-zinc-800 text-xs">Telefon & Kilit Ekranı Bildirimi</span>
+                  </div>
+                  {permissionStatus === 'granted' ? (
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] border border-emerald-300 flex items-center gap-1">
+                      <Check className="w-3 h-3 text-emerald-600" /> İzin Verildi
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleRequestPermission}
+                      className="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold rounded-xl text-[11px] transition cursor-pointer shadow-2xs"
+                    >
+                      İzni Etkinleştir
+                    </button>
+                  )}
+                </div>
+
+                <p className="text-[10px] text-zinc-500 leading-relaxed">
+                  Uygulama arka plandayken veya kilit ekranındayken misafir taleplerini telefon bildirimi olarak alın. İzin verildiğinde iPhone <strong>Ayarlar &gt; Bildirimler &gt; Xenios</strong> altında listelenir.
                 </p>
               </div>
             </div>

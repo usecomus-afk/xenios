@@ -35,6 +35,8 @@ export default function HotelPortalLayout({
 
   useEffect(() => {
     refreshState();
+    // Auto-request notification permissions on native device / browser
+    HotelAudioNotification.requestSystemNotificationPermission().catch(() => {});
     const handlePrefsUpdate = () => setAudioPrefs(HotelAudioNotification.getPreferences());
     window.addEventListener('xenios_hotels_updated', refreshState);
     window.addEventListener('xenios_requests_updated', refreshState);

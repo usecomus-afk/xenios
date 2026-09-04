@@ -1,6 +1,8 @@
 "use client";
 
 import { ServiceRequest } from './types';
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 export type HotelSoundType = 'luxury_bell' | 'dual_melody' | 'urgent_chime' | 'digital_ping';
 
@@ -10,6 +12,7 @@ export interface HotelAudioNotificationPrefs {
   volume: number; // 0.0 to 1.0
   visualBannerEnabled: boolean;
   repeatUrgent: boolean;
+  systemNotificationEnabled: boolean;
 }
 
 const STORAGE_KEY = 'xenios_hotel_audio_notification_prefs';
@@ -20,6 +23,7 @@ const DEFAULT_PREFS: HotelAudioNotificationPrefs = {
   volume: 0.85,
   visualBannerEnabled: true,
   repeatUrgent: false,
+  systemNotificationEnabled: true,
 };
 
 class HotelAudioNotificationService {
@@ -44,6 +48,58 @@ class HotelAudioNotificationService {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       window.dispatchEvent(new CustomEvent('xenios_hotel_audio_prefs_updated', { detail: updated }));
     } catch (e) {}
+  }
+
+  /**
+   * Request iOS Native System Notification Permission
+   * This registers the app into iPhone Settings -> Notifications!
+   */
+  public async requestSystemNotificationPermission(): Promise<boolean> {
+    if (typeof window === 'undefined') return false;
+
+    // 1. Native iOS / Android via Capacitor
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const permStatus = await LocalNotifications.requestPermissions();
+        return permStatus.display === 'granted';
+      } catch (err) {
+        console.warn('Native local notification request error:', err);
+      }
+    }
+
+    // 2. Web Browser Fallback
+    if ('Notification' in window) {
+      try {
+        const permission = await Notification.requestPermission();
+        return permission === 'granted';
+      } catch (err) {
+        console.warn('Web notification request error:', err);
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Check if notification permission is currently granted
+   */
+  public async checkPermissionStatus(): Promise<'granted' | 'denied' | 'prompt'> {
+    if (typeof window === 'undefined') return 'prompt';
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const status = await LocalNotifications.checkPermissions();
+        return status.display as any;
+      } catch (err) {
+        return 'prompt';
+      }
+    }
+
+    if ('Notification' in window) {
+      return Notification.permission as any;
+    }
+
+    return 'prompt';
   }
 
   private getAudioContext(): AudioContext | null {
@@ -188,19 +244,58 @@ class HotelAudioNotificationService {
   }
 
   /**
-   * Broadcast and trigger on-screen live request alert across all hotel portal pages
+   * Broadcast and trigger on-screen live request alert and native iOS notification
    */
-  public triggerGuestRequestAlert(req: ServiceRequest) {
+  public async triggerGuestRequestAlert(req: ServiceRequest) {
     if (typeof window === 'undefined') return;
 
-    // 1. Play sound
     const isUrgent = req.priority === 'acil';
     const prefs = this.getPreferences();
-    const soundType = isUrgent ? 'urgent_chime' : prefs.selectedSound;
-    this.play(soundType);
+
+    // 1. Play sound chime
+    if (prefs.soundEnabled) {
+      const soundType = isUrgent ? 'urgent_chime' : prefs.selectedSound;
+      this.play(soundType);
+    }
 
     // 2. Dispatch event for on-screen live banner / modal
     window.dispatchEvent(new CustomEvent('xenios_hotel_live_request_popup', { detail: req }));
+
+    // 3. Trigger Native iOS Local Notification (Banner, Lock Screen, Sound)
+    if (prefs.systemNotificationEnabled) {
+      try {
+        const title = isUrgent
+          ? `🚨 ACİL TALEP: Oda ${req.roomNumber}`
+          : `🛎️ Yeni Talep: Oda ${req.roomNumber}`;
+        const body = `${req.serviceTitle}${req.notes ? ` · ${req.notes}` : ''}`;
+
+        if (Capacitor.isNativePlatform()) {
+          await LocalNotifications.schedule({
+            notifications: [
+              {
+                title,
+                body,
+                id: Math.floor(Date.now() % 1000000),
+                schedule: { at: new Date(Date.now() + 100) },
+                sound: undefined,
+                actionTypeId: '',
+                extra: {
+                  requestId: req.id,
+                  roomNumber: req.roomNumber,
+                }
+              }
+            ]
+          });
+        } else if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification(title, {
+            body,
+            icon: '/icon.png',
+          });
+        }
+      } catch (err) {
+        console.warn('System notification trigger warning:', err);
+      }
+    }
   }
 }
 

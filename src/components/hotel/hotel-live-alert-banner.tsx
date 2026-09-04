@@ -35,14 +35,8 @@ export function HotelLiveAlertBanner() {
       const activeHotelId = XeniosStore.getActiveHotelId();
       // If request belongs to current hotel or global
       if (!req.hotelId || req.hotelId === activeHotelId) {
-        // 1. Play sound
+        HotelAudioNotification.triggerGuestRequestAlert(req);
         const currentPrefs = HotelAudioNotification.getPreferences();
-        if (currentPrefs.soundEnabled) {
-          const soundToPlay = req.priority === 'acil' ? 'urgent_chime' : currentPrefs.selectedSound;
-          HotelAudioNotification.play(soundToPlay, currentPrefs.volume);
-        }
-
-        // 2. Show on-screen banner if enabled
         if (currentPrefs.visualBannerEnabled) {
           setActiveAlert(req);
         }
