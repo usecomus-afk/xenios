@@ -90,11 +90,7 @@ public class XeniosNotificationPlugin: CAPPlugin, CAPBridgedPlugin {
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                call.error(error.localizedDescription)
-            } else {
-                call.resolve(["success": true])
-            }
+            call.resolve(["success": error == nil])
         }
     }
 }
