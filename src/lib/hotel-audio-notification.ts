@@ -1,8 +1,7 @@
 "use client";
 
 import { ServiceRequest } from './types';
-import { Capacitor } from '@capacitor/core';
-import { LocalNotifications } from '@capacitor/local-notifications';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 
 export type HotelSoundType = 'luxury_bell' | 'dual_melody' | 'urgent_chime' | 'digital_ping';
 
@@ -14,6 +13,14 @@ export interface HotelAudioNotificationPrefs {
   repeatUrgent: boolean;
   systemNotificationEnabled: boolean;
 }
+
+interface XeniosNotificationPluginType {
+  requestPermissions(): Promise<{ display: 'granted' | 'denied' }>;
+  checkPermissions(): Promise<{ display: 'granted' | 'denied' | 'prompt' }>;
+  schedule(options: { title: string; body: string }): Promise<{ success: boolean }>;
+}
+
+const XeniosNotifications = registerPlugin<XeniosNotificationPluginType>('XeniosNotifications');
 
 const STORAGE_KEY = 'xenios_hotel_audio_notification_prefs';
 
@@ -57,13 +64,13 @@ class HotelAudioNotificationService {
   public async requestSystemNotificationPermission(): Promise<boolean> {
     if (typeof window === 'undefined') return false;
 
-    // 1. Native iOS / Android via Capacitor
+    // 1. Native iOS via Custom Native Bridge
     if (Capacitor.isNativePlatform()) {
       try {
-        const permStatus = await LocalNotifications.requestPermissions();
-        return permStatus.display === 'granted';
+        const res = await XeniosNotifications.requestPermissions();
+        return res.display === 'granted';
       } catch (err) {
-        console.warn('Native local notification request error:', err);
+        console.warn('Native notification request error:', err);
       }
     }
 
@@ -88,8 +95,8 @@ class HotelAudioNotificationService {
 
     if (Capacitor.isNativePlatform()) {
       try {
-        const status = await LocalNotifications.checkPermissions();
-        return status.display as any;
+        const status = await XeniosNotifications.checkPermissions();
+        return status.display;
       } catch (err) {
         return 'prompt';
       }
@@ -270,21 +277,9 @@ class HotelAudioNotificationService {
         const body = `${req.serviceTitle}${req.notes ? ` · ${req.notes}` : ''}`;
 
         if (Capacitor.isNativePlatform()) {
-          await LocalNotifications.schedule({
-            notifications: [
-              {
-                title,
-                body,
-                id: Math.floor(Date.now() % 1000000),
-                schedule: { at: new Date(Date.now() + 100) },
-                sound: undefined,
-                actionTypeId: '',
-                extra: {
-                  requestId: req.id,
-                  roomNumber: req.roomNumber,
-                }
-              }
-            ]
+          await XeniosNotifications.schedule({
+            title,
+            body,
           });
         } else if ('Notification' in window && Notification.permission === 'granted') {
           new Notification(title, {

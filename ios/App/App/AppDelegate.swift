@@ -12,7 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().delegate = self
 
         // Request native iOS notification authorization (Alert, Sound, Badge)
-        // This registers Xenios into iPhone Settings -> Notifications immediately!
+        // This registers Xenios into iPhone Settings -> Notifications on first launch!
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
                 DispatchQueue.main.async {
@@ -50,5 +50,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                           sessionRole: connectingSceneSession.role)
         config.delegateClass = SceneDelegate.self
         return config
+    }
+}
+
+@objc(XeniosNotificationPlugin)
+public class XeniosNotificationPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "XeniosNotificationPlugin"
+    public let jsName = "XeniosNotifications"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "requestPermissions", returnType: CAPPluginMethodReturnPromise),
+        CAPPluginMethod(name: "checkPermissions", returnType: CAPPluginMethodReturnPromise),
+        CAPPluginMethod(name: "schedule", returnType: CAPPluginMethodReturnPromise)
+    ]
+
+    @objc func requestPermissions(_ call: CAPPluginCall) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+            call.resolve(["display": granted ? "granted" : "denied"])
+        }
+    }
+
+    @objc func checkPermissions(_ call: CAPPluginCall) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            let granted = settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional
+            call.resolve(["display": granted ? "granted" : "prompt"])
+        }
+    }
+
+    @objc func schedule(_ call: CAPPluginCall) {
+        let title = call.getString("title") ?? "Xenios Bildirim"
+        let body = call.getString("body") ?? "Yeni misafir talebi"
+
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = UNNotificationSound.default
+        content.badge = 1
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                call.reject(error.localizedDescription)
+            } else {
+                call.resolve(["success": true])
+            }
+        }
     }
 }
